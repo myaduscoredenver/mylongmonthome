@@ -338,7 +338,7 @@
                     </p>
                 </div>
 
-                <form id="contactForm" class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border-2 border-cyan-200">
+                <form id="contactForm" action="https://formspree.io/f/xaqzkajp" method="POST" class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border-2 border-cyan-200">
                     <!-- Name -->
                     <div class="mb-6">
                         <label class="block text-sm font-bold text-slate-900 mb-3">
@@ -726,6 +726,30 @@
                 opacity: 1,
                 fillOpacity: 0.8
             }).bindPopup(`<strong>${address}</strong><br>${price}`).addTo(map);
+        });
+        // Form submission handler
+        const contactForm = document.getElementById('contactForm');
+        const successMessage = document.getElementById('successMessage');
+        
+        contactForm.addEventListener('submit', function(e) {
+            // Formspree handles the submission automatically
+            // Show success message after a short delay
+            setTimeout(() => {
+                successMessage.classList.remove('hidden');
+                contactForm.style.opacity = '0.6';
+                contactForm.style.pointerEvents = 'none';
+                
+                // Scroll to success message
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Reset form after 2 seconds
+                setTimeout(() => {
+                    contactForm.reset();
+                    contactForm.style.opacity = '1';
+                    contactForm.style.pointerEvents = 'auto';
+                    successMessage.classList.add('hidden');
+                }, 3000);
+            }, 500);
         });
     
     </script>
