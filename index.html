@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Your Home with Homestead Real Estate - 0.9% Commission</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.min.js"></script>
+</head>
+<body class="bg-white">
+    <div id="app">
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center gap-4">
+                <img src="https://via.placeholder.com/180x60/1e3a8a/ffffff?text=Homestead" alt="Homestead Real Estate" class="h-12 sm:h-14">
+                <a href="#form" class="ml-auto bg-yellow-400 hover:bg-yellow-500 text-slate-900 text-xs sm:text-sm font-bold px-4 sm:px-6 py-2 rounded-lg transition-colors cursor-pointer whitespace-nowrap">
+                    0.9% Commission Available
+                </a>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-r from-blue-900 via-blue-800 to-cyan-700">
+            <div class="absolute inset-0 opacity-20" style="background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 800%22><defs><pattern id=%22grid%22 width=%2240%22 height=%2240%22 patternUnits=%22userSpaceOnUse%22><path d=%22M 40 0 L 0 0 0 40%22 fill=%22none%22 stroke=%22white%22 stroke-width=%220.5%22/></pattern></defs><rect width=%221200%22 height=%22800%22 fill=%22url(%23grid)%22/></svg>')"></div>
+            
+            <div class="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="mb-6 inline-block bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+                    <p class="text-white font-semibold text-sm">Lowest Commission in Longmont</p>
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+                    In a time where everything costs a lot, my commission doesn't.
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-blue-50 mb-4 font-light">
+                    I am your local Longmont full service real estate agent with 17 years of experience.
+                </p>
+
+                <p class="text-lg text-blue-100 mb-8">
+                    Save thousands with transparent, honest commission rates.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                    <div class="bg-white/95 backdrop-blur px-8 py-4 rounded-xl shadow-lg">
+                        <p class="text-gray-600 text-sm font-medium mb-1">Buy & Sell with Me</p>
+                        <p class="text-4xl font-black text-cyan-600">0.9%</p>
+                    </div>
+                    <div class="bg-cyan-50/95 backdrop-blur px-8 py-4 rounded-xl shadow-lg">
+                        <p class="text-gray-600 text-sm font-medium mb-1">Sell Only</p>
+                        <p class="text-4xl font-black text-blue-600">1.9%</p>
+                    </div>
+                </div>
+
+                <a href="#calculator" class="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold py-4 px-8 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
+                    See Your Savings
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- Calculator Section -->
+        <section id="calculator" class="bg-gradient-to-br from-slate-50 via-white to-cyan-50 py-20">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">
+                        See Your Savings
+                    </h2>
+                    <p class="text-xl text-slate-600 max-w-2xl mx-auto">
+                        Use our calculator to see exactly how much you could save by working with Homestead
+                    </p>
+                </div>
+
+                <!-- Price Slider -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg mb-12">
+                    <label class="block text-lg font-bold text-slate-900 mb-6">
+                        What's your home worth?
+                    </label>
+                    <div class="flex gap-6 items-center mb-4">
+                        <input 
+                            type="range" 
+                            id="salePrice" 
+                            min="100000" 
+                            max="2000000" 
+                            step="25000" 
+                            value="500000"
+                            class="flex-1 h-4 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-lg appearance-none cursor-pointer"
+                            style="accent-color: #facc15;"
+                        >
+                        <div id="salePriceDisplay" class="text-3xl font-black text-cyan-600 whitespace-nowrap min-w-fit">
+                            $500,000
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-500">Drag to adjust your home value</p>
+                </div>
+
+                <!-- Buyer Agent Rate -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg mb-12">
+                    <label class="block text-lg font-bold text-slate-900 mb-6">
+                        Buyer's agent commission offered
+                    </label>
+                    <div class="flex gap-6 items-center mb-4">
+                        <input 
+                            type="range" 
+                            id="buyerAgentRate" 
+                            min="1.5" 
+                            max="4.0" 
+                            step="0.1" 
+                            value="2.8"
+                            class="flex-1 h-4 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-lg appearance-none cursor-pointer"
+                            style="accent-color: #facc15;"
+                        >
+                        <div id="buyerRateDisplay" class="text-2xl font-black text-cyan-600 whitespace-nowrap">
+                            2.8%
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-500">Adjust based on your agreement with the buyer's agent</p>
+                </div>
+
+                <!-- Comparison Cards -->
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Buy & Sell -->
+                    <div class="bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-300 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-12 h-12 bg-emerald-200 rounded-xl flex items-center justify-center">
+                                📈
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900">
+                                Buy & Sell with Me
+                            </h3>
+                        </div>
+                        <div class="space-y-3 mb-8 bg-white/60 rounded-xl p-4">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-700">My listing commission (0.9%)</span>
+                                <span class="font-bold text-slate-900" id="card1comm">$4,500</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-700">Buyer's agent (<span id="card1rate">2.8</span>%)</span>
+                                <span class="font-bold text-slate-900" id="card1buyer">$14,000</span>
+                            </div>
+                            <div class="border-t border-emerald-300 pt-3 flex justify-between">
+                                <span class="font-bold text-slate-900">Total Paid</span>
+                                <span class="font-black text-emerald-700 text-lg" id="card1total">$18,500</span>
+                            </div>
+                        </div>
+                        <div class="bg-emerald-100 border-2 border-emerald-400 rounded-xl p-4">
+                            <p class="text-sm font-black text-emerald-900">
+                                💰 You Save: <span id="card1save">$9,500</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Sell Only -->
+                    <div class="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-cyan-300 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-12 h-12 bg-cyan-200 rounded-xl flex items-center justify-center">
+                                💵
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900">
+                                Sell Only
+                            </h3>
+                        </div>
+                        <div class="space-y-3 mb-8 bg-white/60 rounded-xl p-4">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-700">My listing commission (1.9%)</span>
+                                <span class="font-bold text-slate-900" id="card2comm">$9,500</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-700">Buyer's agent (<span id="card2rate">2.8</span>%)</span>
+                                <span class="font-bold text-slate-900" id="card2buyer">$14,000</span>
+                            </div>
+                            <div class="border-t border-cyan-300 pt-3 flex justify-between">
+                                <span class="font-bold text-slate-900">Total Paid</span>
+                                <span class="font-black text-cyan-700 text-lg" id="card2total">$23,500</span>
+                            </div>
+                        </div>
+                        <div class="bg-cyan-100 border-2 border-cyan-400 rounded-xl p-4">
+                            <p class="text-sm font-black text-cyan-900">
+                                💰 You Save: <span id="card2save">$4,500</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Typical -->
+                    <div class="bg-gradient-to-br from-slate-100 to-slate-50 border-2 border-slate-300 rounded-2xl p-8 shadow-lg">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-12 h-12 bg-slate-300 rounded-xl flex items-center justify-center">
+                                🏆
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900">
+                                Typical (5.6%)
+                            </h3>
+                        </div>
+                        <div class="space-y-3 mb-8 bg-white/60 rounded-xl p-4">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-700">Listing agent (2.8%)</span>
+                                <span class="font-bold text-slate-900" id="card3list">$14,000</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-slate-700">Buyer's agent (2.8%)</span>
+                                <span class="font-bold text-slate-900" id="card3buyer">$14,000</span>
+                            </div>
+                            <div class="border-t border-slate-300 pt-3 flex justify-between">
+                                <span class="font-bold text-slate-900">Total Paid</span>
+                                <span class="font-black text-slate-700 text-lg" id="card3total">$28,000</span>
+                            </div>
+                        </div>
+                        <div class="bg-slate-300/30 border-2 border-slate-400 rounded-xl p-4">
+                            <p class="text-sm font-semibold text-slate-600">
+                                What most agents charge
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Affordability & Expertise Section -->
+        <section class="bg-gradient-to-r from-blue-50 via-cyan-50 to-blue-50 py-20 border-t-4 border-cyan-400">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white rounded-2xl shadow-xl p-12 border-2 border-cyan-200">
+                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-6">
+                        Remove the Friction. Make Your Move.
+                    </h2>
+                    
+                    <div class="space-y-6 text-lg text-slate-700 leading-relaxed">
+                        <p>
+                            As your local Longmont expert with 17 years of experience, I believe everyone deserves the freedom to move when they want. Whether you're moving out of need or want, that's your choice to make.
+                        </p>
+                        
+                        <p>
+                            Too many people are stuck in homes that don't fit their lives anymore. You shouldn't have to stay because a real estate agent's commission makes the move financially painful.
+                        </p>
+                        
+                        <p>
+                            That's why I offer lower commissions. I've streamlined my business to be efficient and all-encompassing. I handle everything. No hidden fees, no friction, no complications. My lower rates don't mean less service. It means I've removed the barriers between you and your next chapter.
+                        </p>
+                        
+                        <p>
+                            I know West Longmont inside and out. I've sold 62 homes in our community. And I'm committed to making your move frictionless so you can focus on what matters: living in a home that actually fits your life.
+                        </p>
+                        
+                        <p class="font-bold text-cyan-700 text-xl">
+                            Your next move shouldn't be complicated. Let's make it simple.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="bg-white py-20 border-t-4 border-cyan-400">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <div class="inline-block bg-cyan-100 text-cyan-800 px-4 py-2 rounded-full text-sm font-bold mb-4">
+                        62+ SOLD PROPERTIES
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">
+                        My Track Record in Longmont
+                    </h2>
+                    <p class="text-xl text-slate-600 max-w-2xl mx-auto">
+                        Every pin on this map represents a home I've helped sell—from $178K to $916K. 
+                        This is where I've built my reputation.
+                    </p>
+                </div>
+
+                <div id="map" class="bg-gradient-to-br from-slate-100 to-cyan-50 rounded-2xl overflow-hidden shadow-2xl h-96 md:h-[500px] border-2 border-cyan-300"></div>
+
+                <div class="grid md:grid-cols-3 gap-8 mt-16">
+                    <div class="bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl p-8 border-2 border-emerald-200">
+                        <div class="text-4xl font-black text-emerald-600 mb-2">$26.2M*</div>
+                        <p class="text-slate-700 font-semibold mb-4">Total Sales Volume</p>
+                        <p class="text-xs text-slate-600 italic">*just in Longmont!</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-8 border-2 border-cyan-200">
+                        <div class="text-4xl font-black text-cyan-600 mb-2">62</div>
+                        <p class="text-slate-700 font-semibold">Properties Sold</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 border-2 border-purple-200">
+                        <div class="text-4xl font-black text-purple-600 mb-2">17+</div>
+                        <p class="text-slate-700 font-semibold">Years Selling Real Estate</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="bg-gradient-to-br from-slate-900 via-blue-900 to-cyan-800 py-20">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <div class="bg-gradient-to-br from-slate-400 to-slate-300 rounded-2xl w-full h-96 flex items-center justify-center shadow-2xl">
+                            <p class="text-white text-center text-2xl font-bold">Photo: James Taylor</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-4xl md:text-5xl font-black text-white mb-6">
+                            I'm James Taylor
+                        </h2>
+                        <p class="text-lg text-cyan-100 mb-8 leading-relaxed">
+                            I've been helping Longmont homeowners buy and sell since 2009. I know this market inside and out, and I know how to help you navigate it—without breaking the bank on commission.
+                        </p>
+
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/20">
+                                <div class="text-3xl font-black text-cyan-300">$70M+</div>
+                                <p class="text-sm text-cyan-100 mt-1">Total Sales Volume</p>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/20">
+                                <div class="text-3xl font-black text-cyan-300">13+</div>
+                                <p class="text-sm text-cyan-100 mt-1">Years in Longmont</p>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/20">
+                                <div class="text-3xl font-black text-cyan-300">⭐ 5.0</div>
+                                <p class="text-sm text-cyan-100 mt-1">Star Reviews</p>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/20">
+                                <div class="text-3xl font-black text-cyan-300">Lic. 2009</div>
+                                <p class="text-sm text-cyan-100 mt-1">Colorado Broker</p>
+                            </div>
+                        </div>
+
+                        <p class="text-cyan-100">
+                            Whether you're upsizing, downsizing, or just ready for a change, I'll handle the details so you can focus on what matters. My job is to make this process smooth, transparent, and affordable.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Form Section -->
+        <section id="form" class="bg-gradient-to-br from-slate-50 via-white to-cyan-50 py-20">
+            <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">
+                        Let's Talk About Your Move
+                    </h2>
+                    <p class="text-xl text-slate-600">
+                        No pressure. Just honest conversation about your situation.
+                    </p>
+                </div>
+
+                <form id="contactForm" class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border-2 border-cyan-200">
+                    <!-- Name -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-slate-900 mb-3">
+                            Your Name *
+                        </label>
+                        <input
+                            type="text"
+                            name="name"
+                            required
+                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
+                            placeholder="Your full name"
+                        >
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-slate-900 mb-3">
+                            Email Address *
+                        </label>
+                        <input
+                            type="email"
+                            name="email"
+                            required
+                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
+                            placeholder="you@example.com"
+                        >
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-slate-900 mb-3">
+                            Phone Number *
+                        </label>
+                        <input
+                            type="tel"
+                            name="phone"
+                            required
+                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
+                            placeholder="(720) 555-0123"
+                        >
+                    </div>
+
+                    <!-- Home Address -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-slate-900 mb-3">
+                            Your Home Address *
+                        </label>
+                        <input
+                            type="text"
+                            name="address"
+                            required
+                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
+                            placeholder="123 Main St, Longmont, CO"
+                        >
+                    </div>
+
+                    <!-- Timeline -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-slate-900 mb-3">
+                            When are you thinking about moving? *
+                        </label>
+                        <select
+                            name="timeline"
+                            required
+                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
+                        >
+                            <option value="">Select a timeframe</option>
+                            <option value="asap">As soon as possible</option>
+                            <option value="3-6-months">Within 3-6 months</option>
+                            <option value="6-12-months">Within 6-12 months</option>
+                            <option value="next-year">Next year or later</option>
+                            <option value="just-exploring">Just exploring for now</option>
+                        </select>
+                    </div>
+
+                    <!-- Services -->
+                    <div class="mb-8">
+                        <label class="block text-sm font-bold text-slate-900 mb-4">
+                            What would be most helpful?
+                        </label>
+                        <div class="space-y-3">
+                            <label class="flex items-center p-4 border-2 border-slate-200 rounded-xl hover:border-cyan-400 hover:bg-cyan-50 cursor-pointer transition-all">
+                                <input type="checkbox" name="services" value="consultation" class="w-5 h-5 text-cyan-600 rounded">
+                                <span class="ml-4 text-slate-900 font-semibold">Free consultation</span>
+                            </label>
+                            <label class="flex items-center p-4 border-2 border-slate-200 rounded-xl hover:border-cyan-400 hover:bg-cyan-50 cursor-pointer transition-all">
+                                <input type="checkbox" name="services" value="settlement" class="w-5 h-5 text-cyan-600 rounded">
+                                <span class="ml-4 text-slate-900 font-semibold">Estimated settlement statement</span>
+                            </label>
+                            <label class="flex items-center p-4 border-2 border-slate-200 rounded-xl hover:border-cyan-400 hover:bg-cyan-50 cursor-pointer transition-all">
+                                <input type="checkbox" name="services" value="phone" class="w-5 h-5 text-cyan-600 rounded">
+                                <span class="ml-4 text-slate-900 font-semibold">Just a phone call for now</span>
+                            </label>
+                            <label class="flex items-center p-4 border-2 border-slate-200 rounded-xl hover:border-cyan-400 hover:bg-cyan-50 cursor-pointer transition-all">
+                                <input type="checkbox" name="services" value="other" class="w-5 h-5 text-cyan-600 rounded">
+                                <span class="ml-4 text-slate-900 font-semibold">Something else</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button
+                        type="submit"
+                        class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-black py-4 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105 text-lg flex items-center justify-center gap-3"
+                    >
+                        Get Your Free Consultation
+                        <svg class="w-6 h-6 rotate-[-90deg]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                    </button>
+
+                    <!-- Success Message -->
+                    <div id="successMessage" class="mt-6 bg-emerald-50 border-2 border-emerald-400 text-emerald-800 px-6 py-4 rounded-xl text-center font-semibold hidden">
+                        ✓ Thanks! I'll be in touch within 24 hours.
+                    </div>
+                </form>
+
+                <p class="text-center text-sm text-slate-500 mt-8">
+                    Your information is secure and private. I'll only contact you how you prefer.
+                </p>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 py-20">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-black text-white mb-4">
+                        What Clients Say
+                    </h2>
+                    <p class="text-xl text-blue-100 max-w-2xl mx-auto">
+                        Real feedback from real clients
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
+                        <p class="text-white mb-6 leading-relaxed italic">"James is wonderful to work with! We bought our first home this past April and couldn't have done it without him. He was extremely responsive, knowledgeable and compassionate throughout the whole process. We LOVE our new home and we are so glad that we worked with James."</p>
+                        <div class="border-t border-white/20 pt-4">
+                            <p class="text-cyan-300 font-bold">Colorado Homebuyer</p>
+                            <p class="text-blue-100 text-sm">First-Time Buyer</p>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 2 -->
+                    <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
+                        <p class="text-white mb-6 leading-relaxed italic">"James did a fantastic job guiding my wife and me through the purchase process of our new home. He was easy to work with, knew when to give us space and when to jump in with additional info. He helped us understand different communities and settle on a neighborhood we loved."</p>
+                        <div class="border-t border-white/20 pt-4">
+                            <p class="text-cyan-300 font-bold">California to Colorado Move</p>
+                            <p class="text-blue-100 text-sm">Home Buyer</p>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 3 -->
+                    <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
+                        <p class="text-white mb-6 leading-relaxed italic">"James helped us buy and sell a home in Longmont, Colorado. He's very professional, knowledgeable, honest and patient. I'd use him again in a heartbeat!"</p>
+                        <div class="border-t border-white/20 pt-4">
+                            <p class="text-cyan-300 font-bold">Longmont Clients</p>
+                            <p class="text-blue-100 text-sm">Buyer & Seller</p>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 4 -->
+                    <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
+                        <p class="text-white mb-6 leading-relaxed italic">"James is great! He helped guide my husband and me through the entire process of buying our first home. He got us in to see our future house the day it went on the market. When we had to relocate, we knew we would go with James to sell our house."</p>
+                        <div class="border-t border-white/20 pt-4">
+                            <p class="text-cyan-300 font-bold">Colorado Family</p>
+                            <p class="text-blue-100 text-sm">Buyer & Seller</p>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 5 -->
+                    <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
+                        <p class="text-white mb-6 leading-relaxed italic">"James was on-point, several times he got us in to see places that were just listed before anyone else had seen them which ultimately allowed us to buy one of the few non zillion-dollar homes for sale in Boulder. He was patient with our vague search and ultimately won us over."</p>
+                        <div class="border-t border-white/20 pt-4">
+                            <p class="text-cyan-300 font-bold">Boulder Buyer</p>
+                            <p class="text-blue-100 text-sm">Home Buyer</p>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 6 -->
+                    <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
+                        <p class="text-white mb-6 leading-relaxed italic">"James helped our daughter and her family find a home and it went very smoothly. It wasn't an easy task with our visits being short and infrequent, but he stuck with us. He took care of everything in a professional and timely manner and made the entire experience seem easy."</p>
+                        <div class="border-t border-white/20 pt-4">
+                            <p class="text-cyan-300 font-bold">Family Referral</p>
+                            <p class="text-blue-100 text-sm">Home Buyer</p>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 7 -->
+                    <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
+                        <p class="text-white mb-6 leading-relaxed italic">"Working with James was so easy, he had an excellent grasp on what we were looking for and was SUPER patient with us through the whole process. As first time home buyers, James was able to clearly answer all questions and help us understand the ins and outs."</p>
+                        <div class="border-t border-white/20 pt-4">
+                            <p class="text-cyan-300 font-bold">First-Time Buyers</p>
+                            <p class="text-blue-100 text-sm">Home Buyers</p>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 8 -->
+                    <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
+                        <p class="text-white mb-6 leading-relaxed italic">"James did a fantastic job selling our house in Longmont. He is the most responsive agent I've ever worked with and his attention to detail is great."</p>
+                        <div class="border-t border-white/20 pt-4">
+                            <p class="text-cyan-300 font-bold">Longmont Seller</p>
+                            <p class="text-blue-100 text-sm">Home Seller</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-slate-900 text-slate-300 py-12">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid md:grid-cols-3 gap-8 mb-8">
+                    <div>
+                        <p class="font-bold text-white text-lg mb-4">Homestead Real Estate</p>
+                        <p class="text-sm">Honest real estate. Fair commissions. Better results.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-white mb-3 text-lg">Contact</p>
+                        <p class="text-base">📞 720-340-6743</p>
+                        <p class="text-base">✉️ JamesTaylorHomeSales@gmail.com</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-white mb-3 text-lg">Online</p>
+                        <p class="text-base">🌐 JamesTaylorHomeSales.com</p>
+                        <p class="text-base mt-3">Longmont, Colorado</p>
+                        <p class="text-base">Licensed Colorado Real Estate Broker</p>
+                    </div>
+                </div>
+                <div class="border-t border-slate-700 pt-8 text-center text-xs">
+                    <p>© 2026 Homestead Real Estate, LLC. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Calculator functionality
+        const salePriceInput = document.getElementById('salePrice');
+        const buyerAgentInput = document.getElementById('buyerAgentRate');
+        
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+            }).format(num);
+        }
+
+        function updateCalculator() {
+            const salePrice = parseInt(salePriceInput.value);
+            const buyerRate = parseFloat(buyerAgentInput.value);
+
+            // Update displays
+            document.getElementById('salePriceDisplay').textContent = formatCurrency(salePrice);
+            document.getElementById('buyerRateDisplay').textContent = buyerRate.toFixed(1) + '%';
+
+            // Card 1: Buy & Sell
+            const card1Comm = salePrice * 0.009;
+            const card1Buyer = salePrice * (buyerRate / 100);
+            const card1Total = card1Comm + card1Buyer;
+            const card1Save = (salePrice * 0.056) - card1Total;
+
+            document.getElementById('card1comm').textContent = formatCurrency(card1Comm);
+            document.getElementById('card1rate').textContent = buyerRate.toFixed(1);
+            document.getElementById('card1buyer').textContent = formatCurrency(card1Buyer);
+            document.getElementById('card1total').textContent = formatCurrency(card1Total);
+            document.getElementById('card1save').textContent = formatCurrency(card1Save);
+
+            // Card 2: Sell Only
+            const card2Comm = salePrice * 0.019;
+            const card2Buyer = salePrice * (buyerRate / 100);
+            const card2Total = card2Comm + card2Buyer;
+            const card2Save = (salePrice * 0.056) - card2Total;
+
+            document.getElementById('card2comm').textContent = formatCurrency(card2Comm);
+            document.getElementById('card2rate').textContent = buyerRate.toFixed(1);
+            document.getElementById('card2buyer').textContent = formatCurrency(card2Buyer);
+            document.getElementById('card2total').textContent = formatCurrency(card2Total);
+            document.getElementById('card2save').textContent = formatCurrency(card2Save);
+
+            // Card 3: Typical
+            const card3List = salePrice * 0.028;
+            const card3Buyer = salePrice * 0.028;
+            const card3Total = card3List + card3Buyer;
+
+            document.getElementById('card3list').textContent = formatCurrency(card3List);
+            document.getElementById('card3buyer').textContent = formatCurrency(card3Buyer);
+            document.getElementById('card3total').textContent = formatCurrency(card3Total);
+        }
+
+        salePriceInput.addEventListener('input', updateCalculator);
+        buyerAgentInput.addEventListener('input', updateCalculator);
+
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const successMessage = document.getElementById('successMessage');
+            successMessage.classList.remove('hidden');
+            this.style.opacity = '0.5';
+            setTimeout(() => {
+                this.reset();
+                this.style.opacity = '1';
+                successMessage.classList.add('hidden');
+            }, 3000);
+        });
+
+        // Initialize calculator
+        updateCalculator();
+
+        // Initialize Map
+        const mapCenter = [40.1674, -105.1019]; // Longmont center
+        const map = L.map('map').setView(mapCenter, 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // All properties from MLS transactions - coordinates extracted from map screenshots
+        const properties = [
+            [40.1802, -105.1214, "1218 Sunset St", "$515,000"],
+            [40.1750, -105.1096, "926 Gay St", "$178,000"],
+            [40.1724, -105.1343, "805 Summer Hawk Dr", "$220,000"],
+            [40.1791, -105.1299, "50 Frontier Pl", "$235,000"],
+            [40.1852, -105.0996, "1509 Emery St", "$286,500"],
+            [40.1766, -105.1071, "1020 Pratt St", "$335,000"],
+            [40.1764, -105.1318, "1419 Red Mountain Dr", "$338,000"],
+            [40.1980, -105.1133, "2161 Bowen St", "$352,000"],
+            [40.1720, -105.1125, "232 River View Ct", "$382,500"],
+            [40.1801, -105.1104, "1221 Gay St", "$425,000"],
+            [40.1762, -105.1052, "1009 Terry St", "$425,000"],
+            [40.1705, -105.1206, "1720 Longs Peak Ave", "$430,000"],
+            [40.1991, -105.1305, "2191 Steele St", "$435,000"],
+            [40.1763, -105.1096, "1008 Gay St", "$444,000"],
+            [40.1802, -105.1210, "1223 Juniper St", "$480,000"],
+            [40.1506, -105.1481, "661 Stonebridge Dr", "$482,000"],
+            [40.1747, -105.1139, "918 Grant St", "$531,000"],
+            [40.1683, -105.1181, "339 Judson St", "$580,000"],
+            [40.1700, -105.1106, "627 Gay St", "$590,000"],
+            [40.1655, -105.0956, "113 4th Ave", "$630,000"],
+            [40.1366, -105.1453, "1814 Clover Creek Dr", "$657,500"],
+            [40.1664, -105.1048, "412 Terry St", "$705,000"],
+            [40.1460, -105.0934, "1037 Woodgate Ct", "$760,000"],
+            [40.1448, -105.1545, "3946 Da Vinci Dr", "$725,000"],
+            [40.1356, -105.1055, "809 Tenacity Dr", "$916,000"],
+            [40.1771, -105.1107, "1034 Venice St", "$450,000"],
+            [40.1889, -105.1436, "3053 McIntosh Dr", "$459,200"],
+            [40.1748, -105.1010, "916 Kimbark St", "$420,000"],
+            [40.1811, -105.1201, "1251 Sumner St", "$425,000"],
+            [40.1703, -105.1300, "2209 Longs Peak Ave", "$479,000"],
+            [40.1725, -105.1186, "804 Vivian St", "$525,000"],
+            [40.1683, -105.1156, "343 Sherman St", "$526,000"],
+            [40.1818, -105.1146, "1403 Sanborn Pl", "$529,000"],
+            [40.1880, -105.1164, "1633 Francis Way", "$570,000"],
+            [40.1977, -105.1260, "2143 Spencer St", "$571,000"],
+            [40.1953, -105.1141, "2031 Lincoln St", "$575,000"],
+            [40.1862, -105.1465, "3 University Cir", "$590,000"],
+            [40.1369, -105.1617, "4521 Maxwell Ave", "$607,500"],
+            [40.1673, -105.1140, "318 Grant St", "$647,900"],
+            [40.1514, -105.1753, "5718 Wheaton Ave", "$769,580"],
+            [40.1815, -105.1153, "1420 Mountain View Ave", "$340,000"],
+            [40.1413, -105.1136, "1315 Lefthand Dr", "$346,000"],
+            [40.1413, -105.1079, "1449 Pratt Way", "$406,000"],
+            [40.1666, -105.1186, "1505 3rd Ave", "$395,359"],
+            [40.1678, -105.0815, "521 Elliott St", "$282,500"],
+            [40.1497, -105.1095, "813 James St", "$294,000"],
+            [40.1660, -105.0952, "102 4th Ave", "$285,000"],
+            [40.1680, -105.1165, "327 Francis St", "$198,000"],
+            [40.1688, -105.1160, "408 Francis St", "$254,000"],
+            [40.2093, -105.1086, "12923 Columbine Dr", "$459,200"],
+            [40.2012, -105.0948, "2405 Meadow St", "$197,500"],
+            [40.1501, -105.1589, "731 Snowberry St", "$240,000"]
+        ];
+
+        // Add clickable markers for each property
+        properties.forEach(prop => {
+            const [lat, lng, address, price] = prop;
+            const marker = L.circleMarker([lat, lng], {
+                radius: 6,
+                fillColor: "#06b6d4",
+                color: "#0891b2",
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).bindPopup(`<strong>${address}</strong><br>${price}`).addTo(map);
+        });
+    
+    </script>
+</body>
+</html>
