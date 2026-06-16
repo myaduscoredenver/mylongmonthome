@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.min.js"></script>
+    <script src="https://forminit.com/sdk/v1/forminit.js"></script>
 </head>
 <body class="bg-white">
     <div id="app">
@@ -338,18 +339,32 @@
                     </p>
                 </div>
 
-                <form id="contactForm" action="https://forminit.com/f/rxqp8tijar0" method="POST" class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border-2 border-cyan-200">
+                <form id="contactForm" class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border-2 border-cyan-200">
                     <!-- Name -->
                     <div class="mb-6">
                         <label class="block text-sm font-bold text-slate-900 mb-3">
-                            Your Name *
+                            Your First Name *
                         </label>
                         <input
                             type="text"
-                            name="name"
+                            name="fi-sender-firstName"
                             required
                             class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
-                            placeholder="Your full name"
+                            placeholder="First name"
+                        >
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-slate-900 mb-3">
+                            Your Last Name *
+                        </label>
+                        <input
+                            type="text"
+                            name="fi-sender-lastName"
+                            required
+                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
+                            placeholder="Last name"
                         >
                     </div>
 
@@ -360,7 +375,7 @@
                         </label>
                         <input
                             type="email"
-                            name="email"
+                            name="fi-sender-email"
                             required
                             class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
                             placeholder="you@example.com"
@@ -374,7 +389,7 @@
                         </label>
                         <input
                             type="tel"
-                            name="phone"
+                            name="fi-sender-phone"
                             required
                             class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
                             placeholder="(720) 555-0123"
@@ -388,7 +403,7 @@
                         </label>
                         <input
                             type="text"
-                            name="address"
+                            name="fi-sender-address"
                             required
                             class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
                             placeholder="123 Main St, Longmont, CO"
@@ -401,7 +416,7 @@
                             When are you thinking about moving? *
                         </label>
                         <select
-                            name="timeline"
+                            name="fi-select-timeline"
                             required
                             class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
                         >
@@ -421,19 +436,19 @@
                         </label>
                         <div class="space-y-3">
                             <label class="flex items-center p-4 border-2 border-slate-200 rounded-xl hover:border-cyan-400 hover:bg-cyan-50 cursor-pointer transition-all">
-                                <input type="checkbox" name="services" value="consultation" class="w-5 h-5 text-cyan-600 rounded">
+                                <input type="checkbox" name="fi-checkbox-services" value="consultation" class="w-5 h-5 text-cyan-600 rounded">
                                 <span class="ml-4 text-slate-900 font-semibold">Free consultation</span>
                             </label>
                             <label class="flex items-center p-4 border-2 border-slate-200 rounded-xl hover:border-cyan-400 hover:bg-cyan-50 cursor-pointer transition-all">
-                                <input type="checkbox" name="services" value="settlement" class="w-5 h-5 text-cyan-600 rounded">
+                                <input type="checkbox" name="fi-checkbox-services" value="settlement" class="w-5 h-5 text-cyan-600 rounded">
                                 <span class="ml-4 text-slate-900 font-semibold">Estimated settlement statement</span>
                             </label>
                             <label class="flex items-center p-4 border-2 border-slate-200 rounded-xl hover:border-cyan-400 hover:bg-cyan-50 cursor-pointer transition-all">
-                                <input type="checkbox" name="services" value="phone" class="w-5 h-5 text-cyan-600 rounded">
+                                <input type="checkbox" name="fi-checkbox-services" value="phone" class="w-5 h-5 text-cyan-600 rounded">
                                 <span class="ml-4 text-slate-900 font-semibold">Just a phone call for now</span>
                             </label>
                             <label class="flex items-center p-4 border-2 border-slate-200 rounded-xl hover:border-cyan-400 hover:bg-cyan-50 cursor-pointer transition-all">
-                                <input type="checkbox" name="services" value="other" class="w-5 h-5 text-cyan-600 rounded">
+                                <input type="checkbox" name="fi-checkbox-services" value="other" class="w-5 h-5 text-cyan-600 rounded">
                                 <span class="ml-4 text-slate-900 font-semibold">Something else</span>
                             </label>
                         </div>
@@ -452,6 +467,9 @@
                     <div id="successMessage" class="mt-6 bg-emerald-50 border-2 border-emerald-400 text-emerald-800 px-6 py-4 rounded-xl text-center font-semibold hidden">
                         ✓ Thanks! I'll be in touch within 24 hours.
                     </div>
+
+                    <!-- Error Message -->
+                    <div id="errorMessage" class="mt-6 bg-red-50 border-2 border-red-400 text-red-800 px-6 py-4 rounded-xl text-center font-semibold hidden"></div>
                 </form>
 
                 <p class="text-center text-sm text-slate-500 mt-8">
@@ -727,30 +745,46 @@
                 fillOpacity: 0.8
             }).bindPopup(`<strong>${address}</strong><br>${price}`).addTo(map);
         });
-        // Form submission handler
+        // Form submission handler with Forminit SDK
         const contactForm = document.getElementById('contactForm');
         const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
         
-        contactForm.addEventListener('submit', function(e) {
-            // Formspree handles the submission automatically
-            // Show success message after a short delay
+        contactForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Hide messages
+            successMessage.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            
+            // Disable button during submission
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.6';
+            
+            // Submit form to Forminit
+            const forminit = new Forminit();
+            const { data, error } = await forminit.submit('rxqp8tijar0', new FormData(contactForm));
+            
+            // Re-enable button
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+            
+            if (error) {
+                errorMessage.textContent = `Error: ${error.message}`;
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+            
+            // Show success
+            successMessage.classList.remove('hidden');
+            successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Reset form after 2 seconds
             setTimeout(() => {
-                successMessage.classList.remove('hidden');
-                contactForm.style.opacity = '0.6';
-                contactForm.style.pointerEvents = 'none';
-                
-                // Scroll to success message
-                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                // Reset form after 2 seconds
-                setTimeout(() => {
-                    contactForm.reset();
-                    contactForm.style.opacity = '1';
-                    contactForm.style.pointerEvents = 'auto';
-                    successMessage.classList.add('hidden');
-                }, 3000);
-            }, 500);
-        });
+                contactForm.reset();
+                successMessage.classList.add('hidden');
+            }, 3000);
     
     </script>
 </body>
