@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller's Guide - Homestead Real Estate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
+    <style>
+        .james-bubble {
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .bubble-trigger {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .bubble-trigger:hover {
+            transform: scale(1.05);
+        }
+
+        .james-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1e40af, #0891b2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <!-- Header -->
+    <header class="bg-amber-50 shadow-sm sticky top-0 z-50 border-b-2 border-amber-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center gap-4">
+            <a href="index.html" class="flex items-center">
+                <img src="logo.png" alt="Homestead Real Estate" class="h-12 sm:h-14">
+            </a>
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="index.html" class="text-slate-700 hover:text-amber-950 font-medium">Home</a>
+                <a href="sellers-guide.html" class="text-slate-700 hover:text-amber-950 font-medium">Seller's Guide</a>
+                <a href="index.html#form" class="text-slate-700 hover:text-amber-950 font-medium">Contact</a>
+            </nav>
+            <a href="index.html#form" class="bg-blue-900 hover:bg-blue-950 text-white text-xs sm:text-sm font-bold px-4 sm:px-6 py-2 rounded-lg transition-colors">
+                Free Consultation
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-amber-950 via-amber-900 to-blue-900 text-white py-12 sm:py-20">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-black mb-4 leading-snug">
+                How to Sell Your Longmont Home
+            </h1>
+            <p class="text-xl md:text-2xl text-amber-50 max-w-3xl mx-auto">
+                A complete guide to preparing, marketing, and selling your home for maximum value. Let's work together to make your move easier.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+
+        <!-- Step 1: Free Consultation -->
+        <section class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-amber-950 text-white rounded-full flex items-center justify-center text-xl font-bold">1</div>
+                <h2 class="text-3xl sm:text-4xl font-black text-slate-900">Start With a Free Consultation</h2>
+            </div>
+            <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-2xl p-8 mb-6">
+                <p class="text-lg text-slate-700 mb-6">
+                    Every successful home sale starts with a clear strategy. I'll work with you to understand your goals, timeline, and budget.
+                </p>
+                <div class="grid sm:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-amber-950">
+                        <div class="flex items-start gap-3 mb-3">
+                            <svg class="w-6 h-6 text-amber-950 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <h3 class="font-bold text-slate-900">Prioritize Your Projects</h3>
+                        </div>
+                        <p class="text-slate-600">We'll identify what MUST be done, what SHOULD be done, and what can be skipped entirely.</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-amber-950">
+                        <div class="flex items-start gap-3 mb-3">
+                            <svg class="w-6 h-6 text-amber-950 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <h3 class="font-bold text-slate-900">Save Time & Money</h3>
+                        </div>
+                        <p class="text-slate-600">Smart preparation means you won't waste money on projects that don't move the needle.</p>
+                    </div>
+                </div>
+                <a href="index.html#form" class="inline-block bg-blue-900 hover:bg-blue-950 text-white font-bold py-3 px-8 rounded-lg transition-colors">
+                    Schedule Your Free Consultation
+                </a>
+            </div>
+
+            <!-- James Says: Life Balance -->
+            <div class="mb-6">
+                <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="bubble-trigger flex items-start gap-4 w-full p-4 bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">
+                    <div class="james-icon">J</div>
+                    <div class="text-left flex-1">
+                        <p class="font-bold text-slate-900">James Says: Your Effort, Your Timeline</p>
+                        <p class="text-sm text-slate-600 mt-1">Click to expand →</p>
+                    </div>
+                </button>
+                <div class="hidden mt-2 ml-20 p-4 bg-white border-l-4 border-amber-400 rounded">
+                    <p class="text-slate-700 leading-relaxed">
+                        "I believe in work-life balance. The energy you invest in preparing your home should fit YOUR lifestyle—not stress you out. Whether you're doing minimal updates or a full refresh, I'll help you get results without burning yourself out."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 2: Prepare Your Home -->
+        <section class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-amber-950 text-white rounded-full flex items-center justify-center text-xl font-bold">2</div>
+                <h2 class="text-3xl sm:text-4xl font-black text-slate-900">Prepare Your Home</h2>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 mb-6 border-2 border-amber-950">
+                <h3 class="text-2xl font-bold text-slate-900 mb-6">The Essential Priority List</h3>
+                <div class="space-y-4 mb-8">
+                    <div class="flex gap-4 p-4 bg-amber-50 rounded-lg">
+                        <div class="text-3xl font-black text-amber-950">1</div>
+                        <div>
+                            <p class="font-bold text-slate-900">Paint</p>
+                            <p class="text-slate-600">Fresh, neutral paint is the quickest ROI. Transform rooms instantly.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 p-4 bg-amber-50 rounded-lg">
+                        <div class="text-3xl font-black text-amber-950">2</div>
+                        <div>
+                            <p class="font-bold text-slate-900">Flooring</p>
+                            <p class="text-slate-600">Clean, updated floors make a huge visual impact.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 p-4 bg-amber-50 rounded-lg">
+                        <div class="text-3xl font-black text-amber-950">3</div>
+                        <div>
+                            <p class="font-bold text-slate-900">Declutter</p>
+                            <p class="text-slate-600">Less is more. Buyers need to imagine themselves living in YOUR home.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 p-4 bg-amber-50 rounded-lg">
+                        <div class="text-3xl font-black text-amber-950">4</div>
+                        <div>
+                            <p class="font-bold text-slate-900">Clean</p>
+                            <p class="text-slate-600">Spotless homes sell faster. Every surface matters.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- James Says: Interior vs Exterior -->
+            <div class="mb-6">
+                <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="bubble-trigger flex items-start gap-4 w-full p-4 bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">
+                    <div class="james-icon">J</div>
+                    <div class="text-left flex-1">
+                        <p class="font-bold text-slate-900">James Says: The 55-5 Rule</p>
+                        <p class="text-sm text-slate-600 mt-1">Click to expand →</p>
+                    </div>
+                </button>
+                <div class="hidden mt-2 ml-20 p-4 bg-white border-l-4 border-amber-400 rounded">
+                    <p class="text-slate-700 leading-relaxed">
+                        "For every hour you spend preparing your home, dedicate 55 minutes inside and 5 minutes outside. Buyers spend more time in the home, so that's where your effort pays off. A beautiful kitchen or fresh paint matters far more than a perfect lawn."
+                    </p>
+                </div>
+            </div>
+
+            <!-- James Says: Finish Projects -->
+            <div class="mb-6">
+                <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="bubble-trigger flex items-start gap-4 w-full p-4 bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">
+                    <div class="james-icon">J</div>
+                    <div class="text-left flex-1">
+                        <p class="font-bold text-slate-900">James Says: No Half-Finished Projects</p>
+                        <p class="text-sm text-slate-600 mt-1">Click to expand →</p>
+                    </div>
+                </button>
+                <div class="hidden mt-2 ml-20 p-4 bg-white border-l-4 border-amber-400 rounded">
+                    <p class="text-slate-700 leading-relaxed">
+                        "Today's buyers are savvy and selective. If you're going to remodel, finish it completely before listing. Partial projects raise red flags and create negotiation leverage for buyers. Done is better than perfect."
+                    </p>
+                </div>
+            </div>
+
+            <!-- James Says: Neutral Colors -->
+            <div class="mb-6">
+                <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="bubble-trigger flex items-start gap-4 w-full p-4 bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">
+                    <div class="james-icon">J</div>
+                    <div class="text-left flex-1">
+                        <p class="font-bold text-slate-900">James Says: Go Neutral</p>
+                        <p class="text-sm text-slate-600 mt-1">Click to expand →</p>
+                    </div>
+                </button>
+                <div class="hidden mt-2 ml-20 p-4 bg-white border-l-4 border-amber-400 rounded">
+                    <p class="text-slate-700 leading-relaxed">
+                        "I know bright, bold colors express your personality—and that's great! But when it's time to sell, neutral walls give every buyer the blank canvas to imagine their own style. Paint that feature wall a soft gray or warm white. You'll reach more buyers, period."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 3: Full Service Marketing -->
+        <section class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-amber-950 text-white rounded-full flex items-center justify-center text-xl font-bold">3</div>
+                <h2 class="text-3xl sm:text-4xl font-black text-slate-900">Full Service Marketing</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-300">
+                    <svg class="w-12 h-12 text-slate-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Professional Photography</h3>
+                    <p class="text-slate-600">High-quality photos are non-negotiable. They're the first impression 95% of buyers get. Our photos highlight your home's best features and sell emotions, not just square footage.</p>
+                </div>
+                <div class="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-300">
+                    <svg class="w-12 h-12 text-slate-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6a2 2 0 012-2h4a2 2 0 012 2v13m-6 0a2 2 0 002 2h4a2 2 0 002-2m0 0V9a2 2 0 00-2-2h-4a2 2 0 00-2 2v13"></path></svg>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">3D Virtual Tours</h3>
+                    <p class="text-slate-600">Let buyers explore your home from their couch. 3D tours increase engagement, reduce showings from unqualified buyers, and create urgency for serious buyers ready to move.</p>
+                </div>
+                <div class="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6 border border-slate-300">
+                    <svg class="w-12 h-12 text-slate-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Floor Plans</h3>
+                    <p class="text-slate-600">Clear, professional floor plans help buyers understand layout and flow. They're essential for online listings and give serious buyers everything they need to make decisions.</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200">
+                    <svg class="w-12 h-12 text-amber-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v11m0 5a2 2 0 002 2h10a2 2 0 002-2m-7-4a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Single Page Website</h3>
+                    <p class="text-slate-600">Create a personalized domain using your address (like 123Main.com). Paired with an eye-catching sign rider, passersby get instant access to your home's photos, tours, and details. Buyers driving by can scan a QR code or visit your custom domain right from the street.</p>
+                </div>
+                <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200">
+                    <svg class="w-12 h-12 text-amber-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Open Houses</h3>
+                    <p class="text-slate-600">Strategic open houses timed to maximize traffic and buyer interest. We'll handle marketing, setup, and coordination so you can relax and focus on making great impressions.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 4: Targeted Marketing Strategy -->
+        <section class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-amber-950 text-white rounded-full flex items-center justify-center text-xl font-bold">4</div>
+                <h2 class="text-3xl sm:text-4xl font-black text-slate-900">Targeted Marketing Strategy</h2>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-8 mb-6">
+                <p class="text-lg text-slate-700 mb-8">
+                    Just listing your home isn't enough. We use strategic, multi-channel marketing to reach qualified buyers:
+                </p>
+                <div class="space-y-4">
+                    <div class="flex gap-4 p-4 bg-white rounded-lg border-l-4 border-amber-950">
+                        <svg class="w-6 h-6 text-amber-950 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <div>
+                            <p class="font-bold text-slate-900">Facebook & Instagram Ads</p>
+                            <p class="text-sm text-slate-600">Targeted to local buyers actively searching for homes in your neighborhood</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 p-4 bg-white rounded-lg border-l-4 border-amber-950">
+                        <svg class="w-6 h-6 text-amber-950 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <div>
+                            <p class="font-bold text-slate-900">MLS & Listing Sites</p>
+                            <p class="text-sm text-slate-600">Syndicated across Zillow, Realtor.com, Redfin, and every major portal</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 p-4 bg-white rounded-lg border-l-4 border-amber-950">
+                        <svg class="w-6 h-6 text-amber-950 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <div>
+                            <p class="font-bold text-slate-900">Open Houses</p>
+                            <p class="text-sm text-slate-600">Strategic open houses timed to maximize traffic and buyer interest</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 5: Disclosure & Transparency -->
+        <section class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-amber-950 text-white rounded-full flex items-center justify-center text-xl font-bold">5</div>
+                <h2 class="text-3xl sm:text-4xl font-black text-slate-900">Be Transparent About Your Home</h2>
+            </div>
+
+            <div class="bg-amber-50 rounded-2xl p-8 mb-6 border-2 border-amber-200">
+                <p class="text-lg text-slate-700 mb-6">
+                    Honesty builds trust. Keep detailed records of everything about your home:
+                </p>
+                <div class="space-y-3">
+                    <div class="flex gap-3">
+                        <svg class="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <p class="text-slate-700"><span class="font-bold">Receipts & Invoices</span> from all contractors and vendors</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <svg class="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <p class="text-slate-700"><span class="font-bold">Warranties & Manuals</span> for appliances and systems</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <svg class="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <p class="text-slate-700"><span class="font-bold">Maintenance Records</span> of repairs and updates</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <svg class="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <p class="text-slate-700"><span class="font-bold">Age of Major Systems</span> (roof, HVAC, water heater, etc.)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- James Says: Full Disclosure -->
+            <div class="mb-6">
+                <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="bubble-trigger flex items-start gap-4 w-full p-4 bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">
+                    <div class="james-icon">J</div>
+                    <div class="text-left flex-1">
+                        <p class="font-bold text-slate-900">James Says: No Surprises</p>
+                        <p class="text-sm text-slate-600 mt-1">Click to expand →</p>
+                    </div>
+                </button>
+                <div class="hidden mt-2 ml-20 p-4 bg-white border-l-4 border-amber-400 rounded">
+                    <p class="text-slate-700 leading-relaxed">
+                        "Buyers today are informed and inspections are thorough. Be upfront about everything—the good, the bad, and the minor issues. Honesty prevents last-minute negotiations and inspections from derailing the sale. Happy buyers = faster closings at better prices."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 6: Negotiations & Flexibility -->
+        <section class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-amber-950 text-white rounded-full flex items-center justify-center text-xl font-bold">6</div>
+                <h2 class="text-3xl sm:text-4xl font-black text-slate-900">Stay Flexible & Strategic</h2>
+            </div>
+
+            <!-- James Says: Flexibility -->
+            <div class="mb-6">
+                <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="bubble-trigger flex items-start gap-4 w-full p-4 bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">
+                    <div class="james-icon">J</div>
+                    <div class="text-left flex-1">
+                        <p class="font-bold text-slate-900">James Says: Separate Your Timelines</p>
+                        <p class="text-sm text-slate-600 mt-1">Click to expand →</p>
+                    </div>
+                </button>
+                <div class="hidden mt-2 ml-20 p-4 bg-white border-l-4 border-amber-400 rounded">
+                    <p class="text-slate-700 leading-relaxed">
+                        "If you can separate selling and buying into two transactions, you'll stress less and negotiate better. When you're not desperate to close by a certain date, you have leverage. You can be selective, wait for better offers, and get better pricing on your next home."
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-8 mt-8">
+                <p class="text-lg text-slate-700 leading-relaxed">
+                    Real estate moves fast. Be ready to adapt—whether that's open houses at unconventional times, accepting contingent offers, or adjusting price strategically. I'll guide every decision to keep YOU in control.
+                </p>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="bg-gradient-to-r from-amber-950 to-blue-900 text-white rounded-2xl p-8 sm:p-12 text-center mb-12">
+            <h2 class="text-3xl sm:text-4xl font-black mb-4">Ready to Sell Your Longmont Home?</h2>
+            <p class="text-xl text-amber-50 mb-8 max-w-2xl mx-auto">
+                Let's start with a free consultation. I'll walk you through your options and create a plan tailored to your situation.
+            </p>
+            <a href="index.html#form" class="inline-block bg-blue-900 hover:bg-blue-950 text-white font-bold py-4 px-8 rounded-lg transition-colors text-lg">
+                Schedule Your Free Consultation
+            </a>
+        </section>
+
+        <!-- Contact Info -->
+        <section class="bg-slate-50 rounded-2xl p-8 text-center">
+            <h3 class="text-2xl font-bold text-slate-900 mb-6">Questions? Get in Touch</h3>
+            <div class="flex flex-col sm:flex-row justify-center gap-8">
+                <div>
+                    <p class="text-sm text-slate-600 mb-2">Phone</p>
+                    <a href="tel:7203406743" class="text-xl font-bold text-blue-600 hover:text-blue-700 transition-colors">720-340-6743</a>
+                </div>
+                <div class="hidden sm:block w-px bg-slate-300"></div>
+                <div>
+                    <p class="text-sm text-slate-600 mb-2">Email</p>
+                    <a href="mailto:JamesTaylorHomeSales@gmail.com" class="text-xl font-bold text-blue-600 hover:text-blue-700 transition-colors">JamesTaylorHomeSales@gmail.com</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- James Says: Communication -->
+        <div class="mt-8">
+            <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="bubble-trigger flex items-start gap-4 w-full p-4 bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">
+                <div class="james-icon">J</div>
+                <div class="text-left flex-1">
+                    <p class="font-bold text-slate-900">James Says: Communication Matters</p>
+                    <p class="text-sm text-slate-600 mt-1">Click to expand →</p>
+                </div>
+            </button>
+            <div class="hidden mt-2 ml-20 p-4 bg-white border-l-4 border-amber-400 rounded">
+                <p class="text-slate-700 leading-relaxed">
+                    "You won't get lost in the shuffle. I actually answer my phone and respond to emails quickly. Selling a home is personal, and you deserve a realtor who stays in touch and keeps you informed every step of the way."
+                </p>
+            </div>
+        </div>
+
+        <!-- James Says: Commission -->
+        <div class="mt-6">
+            <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="bubble-trigger flex items-start gap-4 w-full p-4 bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">
+                <div class="james-icon">J</div>
+                <div class="text-left flex-1">
+                    <p class="font-bold text-slate-900">James Says: Keep More of Your Money</p>
+                    <p class="text-sm text-slate-600 mt-1">Click to expand →</p>
+                </div>
+            </button>
+            <div class="hidden mt-2 ml-20 p-4 bg-white border-l-4 border-amber-400 rounded">
+                <p class="text-slate-700 leading-relaxed">
+                    "I'm here to help you maximize what you take home. With some of the most competitive commission rates in Longmont, you'll keep thousands more from your sale. Smart strategy + fair pricing = better outcomes for you."
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Add smooth scroll to contact form
+        document.querySelectorAll('a[href="#form"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const form = document.getElementById('form') || document.querySelector('[id*="contact"]');
+                if (form) {
+                    form.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    window.open('index.html#form', '_self');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

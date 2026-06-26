@@ -24,9 +24,9 @@
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            background: #facc15;
+            background: #1e3a8a;
             cursor: pointer;
-            border: 2px solid #fbbf24;
+            border: 2px solid #1e40af;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
@@ -35,35 +35,42 @@
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            background: #facc15;
+            background: #1e3a8a;
             cursor: pointer;
-            border: 2px solid #fbbf24;
+            border: 2px solid #1e40af;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         input[type="range"]::-webkit-slider-thumb:hover {
-            background: #f59e0b;
+            background: #172554;
         }
 
         input[type="range"]::-moz-range-thumb:hover {
-            background: #f59e0b;
+            background: #172554;
         }
     </style>
 </head>
 <body class="bg-white">
     <div id="app">
         <!-- Header -->
-        <header class="bg-white shadow-sm sticky top-0 z-50">
+        <header class="bg-amber-50 shadow-sm sticky top-0 z-50 border-b-2 border-amber-950">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center gap-4">
-                <img src="logo.png" alt="Homestead Real Estate" class="h-12 sm:h-14">
-                <a href="#form" class="ml-auto bg-yellow-400 hover:bg-yellow-500 text-slate-900 text-xs sm:text-sm font-bold px-4 sm:px-6 py-2 rounded-lg transition-colors cursor-pointer whitespace-nowrap">
-                    0.9% Commission Available
+                <a href="index.html" class="flex items-center">
+                    <img src="logo.png" alt="Homestead Real Estate" class="h-12 sm:h-14">
+                </a>
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-slate-700 hover:text-amber-950 font-medium">Home</a>
+                    <a href="sellers-guide.html" class="text-slate-700 hover:text-amber-950 font-medium">Seller's Guide</a>
+                    <a href="#form" class="text-slate-700 hover:text-amber-950 font-medium">Contact</a>
+                </nav>
+                <a href="#form" class="ml-auto bg-blue-900 hover:bg-blue-950 text-white text-xs sm:text-sm font-bold px-4 sm:px-6 py-2 rounded-lg transition-colors cursor-pointer whitespace-nowrap">
+                    Free Consultation
                 </a>
             </div>
         </header>
 
         <!-- Hero Section -->
-        <section class="relative min-h-screen md:h-screen flex items-center justify-center overflow-hidden bg-gradient-to-r from-blue-900 via-blue-800 to-cyan-700">
+        <section class="relative min-h-screen md:h-screen flex items-center justify-center overflow-hidden bg-gradient-to-r from-amber-950 via-amber-900 to-blue-900">
             <div class="absolute inset-0 opacity-20" style="background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 800%22><defs><pattern id=%22grid%22 width=%2240%22 height=%2240%22 patternUnits=%22userSpaceOnUse%22><path d=%22M 40 0 L 0 0 0 40%22 fill=%22none%22 stroke=%22white%22 stroke-width=%220.5%22/></pattern></defs><rect width=%221200%22 height=%22800%22 fill=%22url(%23grid)%22/></svg>')"></div>
             
             <div class="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-16 sm:py-20 md:py-0">
@@ -75,26 +82,26 @@
                     In a time where everything costs a lot, my commission doesn't.
                 </h1>
                 
-                <p class="text-xl md:text-2xl text-blue-50 mb-4 font-light">
+                <p class="text-xl md:text-2xl text-amber-50 mb-4 font-light">
                     I am your local Longmont full service real estate agent with 17 years of experience.
                 </p>
 
-                <p class="text-lg text-blue-100 mb-8">
+                <p class="text-lg text-amber-100 mb-8">
                     Save thousands with transparent, honest commission rates.
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-6 justify-center mb-12">
                     <div class="bg-white/95 backdrop-blur px-6 sm:px-8 py-6 sm:py-4 rounded-xl shadow-lg">
                         <p class="text-gray-600 text-sm font-medium mb-1">Buy & Sell with Me</p>
-                        <p class="text-4xl font-black text-cyan-600">0.9%</p>
+                        <p class="text-4xl font-black text-amber-950">0.9%</p>
                     </div>
-                    <div class="bg-cyan-50/95 backdrop-blur px-6 sm:px-8 py-6 sm:py-4 rounded-xl shadow-lg">
+                    <div class="bg-amber-50/95 backdrop-blur px-6 sm:px-8 py-6 sm:py-4 rounded-xl shadow-lg">
                         <p class="text-gray-600 text-sm font-medium mb-1">Sell Only</p>
-                        <p class="text-4xl font-black text-blue-600">1.9%</p>
+                        <p class="text-4xl font-black text-amber-900">1.9%</p>
                     </div>
                 </div>
 
-                <a href="#calculator" class="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold py-4 px-8 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
+                <a href="#calculator" class="inline-flex items-center gap-2 bg-blue-900 hover:bg-blue-950 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
                     See Your Savings
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                 </a>
@@ -102,7 +109,7 @@
         </section>
 
         <!-- Calculator Section -->
-        <section id="calculator" class="bg-gradient-to-br from-slate-50 via-white to-cyan-50 py-12 sm:py-20">
+        <section id="calculator" class="bg-gradient-to-br from-amber-50 via-white to-slate-50 py-12 sm:py-20">
             <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-8 sm:mb-16">
                     <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">
@@ -193,9 +200,9 @@
                     </div>
 
                     <!-- Sell Only -->
-                    <div class="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-cyan-300 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
+                    <div class="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-950 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
                         <div class="flex items-center gap-3 mb-6">
-                            <div class="w-12 h-12 bg-cyan-200 rounded-xl flex items-center justify-center">
+                            <div class="w-12 h-12 bg-amber-200 rounded-xl flex items-center justify-center">
                                 💵
                             </div>
                             <h3 class="text-xl font-bold text-slate-900">
@@ -211,13 +218,13 @@
                                 <span class="text-slate-700">Buyer's agent (<span id="card2rate">2.8</span>%)</span>
                                 <span class="font-bold text-slate-900" id="card2buyer">$14,000</span>
                             </div>
-                            <div class="border-t border-cyan-300 pt-3 flex justify-between">
+                            <div class="border-t border-amber-950 pt-3 flex justify-between">
                                 <span class="font-bold text-slate-900">Total Paid</span>
-                                <span class="font-black text-cyan-700 text-lg" id="card2total">$23,500</span>
+                                <span class="font-black text-amber-900 text-lg" id="card2total">$23,500</span>
                             </div>
                         </div>
-                        <div class="bg-cyan-100 border-2 border-cyan-400 rounded-xl p-4">
-                            <p class="text-sm font-black text-cyan-900">
+                        <div class="bg-amber-100 border-2 border-amber-950 rounded-xl p-4">
+                            <p class="text-sm font-black text-amber-950">
                                 💰 You Save: <span id="card2save">$4,500</span>
                             </p>
                         </div>
@@ -258,9 +265,9 @@
         </section>
 
         <!-- Affordability & Expertise Section -->
-        <section class="bg-gradient-to-r from-blue-50 via-cyan-50 to-blue-50 py-20 border-t-4 border-cyan-400">
+        <section class="bg-gradient-to-r from-amber-50 via-amber-50 to-slate-50 py-20 border-t-4 border-amber-950">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="bg-white rounded-2xl shadow-xl p-12 border-2 border-cyan-200">
+                <div class="bg-white rounded-2xl shadow-xl p-12 border-2 border-amber-950">
                     <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-6">
                         Remove the Friction. Make Your Move.
                     </h2>
@@ -282,17 +289,17 @@
                             I know West Longmont inside and out. I've sold 62 homes in our community. And I'm committed to making your move frictionless so you can focus on what matters: living in a home that actually fits your life.
                         </p>
                         
-                        <p class="font-bold text-cyan-700 text-xl">
+                        <p class="font-bold text-amber-950 text-xl">
                             Your next move shouldn't be complicated. Let's make it simple.
                         </p>
                     </div>
                 </div>
             </div>
         </section>
-        <section class="bg-white py-20 border-t-4 border-cyan-400">
+        <section class="bg-white py-20 border-t-4 border-amber-950">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
-                    <div class="inline-block bg-cyan-100 text-cyan-800 px-4 py-2 rounded-full text-sm font-bold mb-4">
+                    <div class="inline-block bg-amber-100 text-amber-950 px-4 py-2 rounded-full text-sm font-bold mb-4">
                         62+ SOLD PROPERTIES
                     </div>
                     <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">
@@ -304,7 +311,7 @@
                     </p>
                 </div>
 
-                <div id="map" class="bg-gradient-to-br from-slate-100 to-cyan-50 rounded-2xl overflow-hidden shadow-2xl h-96 md:h-[500px] border-2 border-cyan-300"></div>
+                <div id="map" class="bg-gradient-to-br from-slate-100 to-slate-50 rounded-2xl overflow-hidden shadow-2xl h-96 md:h-[500px] border-2 border-amber-950"></div>
 
                 <div class="grid md:grid-cols-3 gap-8 mt-16">
                     <div class="bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl p-8 border-2 border-emerald-200">
@@ -312,12 +319,12 @@
                         <p class="text-slate-700 font-semibold mb-4">Total Sales Volume</p>
                         <p class="text-xs text-slate-600 italic">*just in Longmont!</p>
                     </div>
-                    <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-8 border-2 border-cyan-200">
-                        <div class="text-4xl font-black text-cyan-600 mb-2">62</div>
+                    <div class="bg-gradient-to-br from-blue-50 to-slate-50 rounded-2xl p-8 border-2 border-blue-900">
+                        <div class="text-4xl font-black text-blue-900 mb-2">62</div>
                         <p class="text-slate-700 font-semibold">Properties Sold</p>
                     </div>
-                    <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 border-2 border-purple-200">
-                        <div class="text-4xl font-black text-purple-600 mb-2">17+</div>
+                    <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-8 border-2 border-amber-950">
+                        <div class="text-4xl font-black text-amber-950 mb-2">17+</div>
                         <p class="text-slate-700 font-semibold">Years Selling Real Estate</p>
                     </div>
                 </div>
@@ -325,7 +332,7 @@
         </section>
 
         <!-- About Section -->
-        <section class="bg-gradient-to-br from-slate-900 via-blue-900 to-cyan-800 py-20">
+        <section class="bg-gradient-to-br from-amber-950 via-blue-900 to-slate-900 py-20">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid md:grid-cols-2 gap-12 items-center">
                     <div>
@@ -335,30 +342,30 @@
                         <h2 class="text-4xl md:text-5xl font-black text-white mb-6">
                             I'm James Taylor
                         </h2>
-                        <p class="text-lg text-cyan-100 mb-8 leading-relaxed">
+                        <p class="text-lg text-amber-50 mb-8 leading-relaxed">
                             I've been helping Longmont homeowners buy and sell since 2009. I know this market inside and out, and I know how to help you navigate it—without breaking the bank on commission.
                         </p>
 
                         <div class="grid grid-cols-2 gap-4 mb-8">
                             <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/20">
-                                <div class="text-3xl font-black text-cyan-300">$70M+</div>
-                                <p class="text-sm text-cyan-100 mt-1">Total Sales Volume</p>
+                                <div class="text-3xl font-black text-amber-200">$70M+</div>
+                                <p class="text-sm text-amber-100 mt-1">Total Sales Volume</p>
                             </div>
                             <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/20">
-                                <div class="text-3xl font-black text-cyan-300">13+</div>
-                                <p class="text-sm text-cyan-100 mt-1">Years in Longmont</p>
+                                <div class="text-3xl font-black text-amber-200">13+</div>
+                                <p class="text-sm text-amber-100 mt-1">Years in Longmont</p>
                             </div>
                             <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/20">
-                                <div class="text-3xl font-black text-cyan-300">⭐ 5.0</div>
-                                <p class="text-sm text-cyan-100 mt-1">Star Reviews</p>
+                                <div class="text-3xl font-black text-amber-200">⭐ 5.0</div>
+                                <p class="text-sm text-amber-100 mt-1">Star Reviews</p>
                             </div>
                             <div class="bg-white/10 backdrop-blur rounded-xl p-4 border border-white/20">
-                                <div class="text-3xl font-black text-cyan-300">Lic. 2009</div>
-                                <p class="text-sm text-cyan-100 mt-1">Colorado Broker</p>
+                                <div class="text-3xl font-black text-amber-200">Lic. 2009</div>
+                                <p class="text-sm text-amber-100 mt-1">Colorado Broker</p>
                             </div>
                         </div>
 
-                        <p class="text-cyan-100">
+                        <p class="text-amber-100">
                             Whether you're upsizing, downsizing, or just ready for a change, I'll handle the details so you can focus on what matters. My job is to make this process smooth, transparent, and affordable.
                         </p>
                     </div>
@@ -367,7 +374,7 @@
         </section>
 
         <!-- Form Section -->
-        <section id="form" class="bg-gradient-to-br from-slate-50 via-white to-cyan-50 py-20">
+        <section id="form" class="bg-gradient-to-br from-amber-50 via-white to-slate-50 py-20">
             <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12">
                     <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">
@@ -378,7 +385,7 @@
                     </p>
                 </div>
 
-                <form id="contactForm" class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border-2 border-cyan-200">
+                <form id="contactForm" class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border-2 border-amber-950">
                     <!-- Name -->
                     <div class="mb-6">
                         <label class="block text-sm font-bold text-slate-900 mb-3">
@@ -388,7 +395,7 @@
                             type="text"
                             name="fi-sender-firstName"
                             required
-                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
+                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-900 focus:border-transparent text-lg"
                             placeholder="First name"
                         >
                     </div>
@@ -402,7 +409,7 @@
                             type="text"
                             name="fi-sender-lastName"
                             required
-                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
+                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-900 focus:border-transparent text-lg"
                             placeholder="Last name"
                         >
                     </div>
@@ -416,7 +423,7 @@
                             type="email"
                             name="fi-sender-email"
                             required
-                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
+                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-900 focus:border-transparent text-lg"
                             placeholder="you@example.com"
                         >
                     </div>
@@ -430,7 +437,7 @@
                             type="tel"
                             name="fi-sender-phone"
                             required
-                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
+                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-900 focus:border-transparent text-lg"
                             placeholder="(720) 555-0123"
                         >
                     </div>
@@ -444,7 +451,7 @@
                             type="text"
                             name="fi-sender-address"
                             required
-                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
+                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-900 focus:border-transparent text-lg"
                             placeholder="123 Main St, Longmont, CO"
                         >
                     </div>
@@ -457,7 +464,7 @@
                         <select
                             name="fi-select-timeline"
                             required
-                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg"
+                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-900 focus:border-transparent text-lg"
                         >
                             <option value="">Select a timeframe</option>
                             <option value="asap">As soon as possible</option>
@@ -496,7 +503,7 @@
                     <!-- Submit Button -->
                     <button
                         type="submit"
-                        class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-black py-4 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105 text-lg flex items-center justify-center gap-3"
+                        class="w-full bg-gradient-to-r from-blue-900 to-amber-950 hover:from-blue-950 hover:to-amber-900 text-white font-black py-4 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105 text-lg flex items-center justify-center gap-3"
                     >
                         Get Your Free Consultation
                         <svg class="w-6 h-6 rotate-[-90deg]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
@@ -518,13 +525,13 @@
         </section>
 
         <!-- Testimonials Section -->
-        <section class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 py-20">
+        <section class="bg-gradient-to-br from-slate-900 via-blue-900 to-amber-950 py-20">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
                     <h2 class="text-4xl md:text-5xl font-black text-white mb-4">
                         What Clients Say
                     </h2>
-                    <p class="text-xl text-blue-100 max-w-2xl mx-auto">
+                    <p class="text-xl text-amber-100 max-w-2xl mx-auto">
                         Real feedback from real clients
                     </p>
                 </div>
@@ -534,8 +541,8 @@
                     <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
                         <p class="text-white mb-6 leading-relaxed italic">"James is wonderful to work with! We bought our first home this past April and couldn't have done it without him. He was extremely responsive, knowledgeable and compassionate throughout the whole process. We LOVE our new home and we are so glad that we worked with James."</p>
                         <div class="border-t border-white/20 pt-4">
-                            <p class="text-cyan-300 font-bold">Colorado Homebuyer</p>
-                            <p class="text-blue-100 text-sm">First-Time Buyer</p>
+                            <p class="text-amber-200 font-bold">Colorado Homebuyer</p>
+                            <p class="text-amber-100 text-sm">First-Time Buyer</p>
                         </div>
                     </div>
 
@@ -543,8 +550,8 @@
                     <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
                         <p class="text-white mb-6 leading-relaxed italic">"James did a fantastic job guiding my wife and me through the purchase process of our new home. He was easy to work with, knew when to give us space and when to jump in with additional info. He helped us understand different communities and settle on a neighborhood we loved."</p>
                         <div class="border-t border-white/20 pt-4">
-                            <p class="text-cyan-300 font-bold">California to Colorado Move</p>
-                            <p class="text-blue-100 text-sm">Home Buyer</p>
+                            <p class="text-amber-200 font-bold">California to Colorado Move</p>
+                            <p class="text-amber-100 text-sm">Home Buyer</p>
                         </div>
                     </div>
 
@@ -552,8 +559,8 @@
                     <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
                         <p class="text-white mb-6 leading-relaxed italic">"James helped us buy and sell a home in Longmont, Colorado. He's very professional, knowledgeable, honest and patient. I'd use him again in a heartbeat!"</p>
                         <div class="border-t border-white/20 pt-4">
-                            <p class="text-cyan-300 font-bold">Longmont Clients</p>
-                            <p class="text-blue-100 text-sm">Buyer & Seller</p>
+                            <p class="text-amber-200 font-bold">Longmont Clients</p>
+                            <p class="text-amber-100 text-sm">Buyer & Seller</p>
                         </div>
                     </div>
 
@@ -561,8 +568,8 @@
                     <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
                         <p class="text-white mb-6 leading-relaxed italic">"James is great! He helped guide my husband and me through the entire process of buying our first home. He got us in to see our future house the day it went on the market. When we had to relocate, we knew we would go with James to sell our house."</p>
                         <div class="border-t border-white/20 pt-4">
-                            <p class="text-cyan-300 font-bold">Colorado Family</p>
-                            <p class="text-blue-100 text-sm">Buyer & Seller</p>
+                            <p class="text-amber-200 font-bold">Colorado Family</p>
+                            <p class="text-amber-100 text-sm">Buyer & Seller</p>
                         </div>
                     </div>
 
@@ -570,8 +577,8 @@
                     <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
                         <p class="text-white mb-6 leading-relaxed italic">"James was on-point, several times he got us in to see places that were just listed before anyone else had seen them which ultimately allowed us to buy one of the few non zillion-dollar homes for sale in Boulder. He was patient with our vague search and ultimately won us over."</p>
                         <div class="border-t border-white/20 pt-4">
-                            <p class="text-cyan-300 font-bold">Boulder Buyer</p>
-                            <p class="text-blue-100 text-sm">Home Buyer</p>
+                            <p class="text-amber-200 font-bold">Boulder Buyer</p>
+                            <p class="text-amber-100 text-sm">Home Buyer</p>
                         </div>
                     </div>
 
@@ -579,8 +586,8 @@
                     <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
                         <p class="text-white mb-6 leading-relaxed italic">"James helped our daughter and her family find a home and it went very smoothly. It wasn't an easy task with our visits being short and infrequent, but he stuck with us. He took care of everything in a professional and timely manner and made the entire experience seem easy."</p>
                         <div class="border-t border-white/20 pt-4">
-                            <p class="text-cyan-300 font-bold">Family Referral</p>
-                            <p class="text-blue-100 text-sm">Home Buyer</p>
+                            <p class="text-amber-200 font-bold">Family Referral</p>
+                            <p class="text-amber-100 text-sm">Home Buyer</p>
                         </div>
                     </div>
 
@@ -588,8 +595,8 @@
                     <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
                         <p class="text-white mb-6 leading-relaxed italic">"Working with James was so easy, he had an excellent grasp on what we were looking for and was SUPER patient with us through the whole process. As first time home buyers, James was able to clearly answer all questions and help us understand the ins and outs."</p>
                         <div class="border-t border-white/20 pt-4">
-                            <p class="text-cyan-300 font-bold">First-Time Buyers</p>
-                            <p class="text-blue-100 text-sm">Home Buyers</p>
+                            <p class="text-amber-200 font-bold">First-Time Buyers</p>
+                            <p class="text-amber-100 text-sm">Home Buyers</p>
                         </div>
                     </div>
 
@@ -597,8 +604,8 @@
                     <div class="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 hover:bg-white/15 transition-all">
                         <p class="text-white mb-6 leading-relaxed italic">"James did a fantastic job selling our house in Longmont. He is the most responsive agent I've ever worked with and his attention to detail is great."</p>
                         <div class="border-t border-white/20 pt-4">
-                            <p class="text-cyan-300 font-bold">Longmont Seller</p>
-                            <p class="text-blue-100 text-sm">Home Seller</p>
+                            <p class="text-amber-200 font-bold">Longmont Seller</p>
+                            <p class="text-amber-100 text-sm">Home Seller</p>
                         </div>
                     </div>
                 </div>
