@@ -153,7 +153,7 @@
                 <!-- Buyer Agent Rate -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg mb-6 sm:mb-12">
                     <label class="block text-lg font-bold text-slate-900 mb-6">
-                        Buyer's agent commission offered
+                        What percentage do you want to pay a buyer's agent?
                     </label>
                     <div class="flex gap-6 items-center mb-4">
                         <input 
@@ -170,7 +170,7 @@
                             2.8%
                         </div>
                     </div>
-                    <p class="text-sm text-slate-500">Adjust based on your agreement with the buyer's agent</p>
+                    <p class="text-sm text-slate-500">Set your buyer's agent compensation amount</p>
                 </div>
 
                 <!-- Comparison Cards -->
@@ -268,10 +268,28 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Info Bubble -->
+                <div class="mt-8 sm:mt-12">
+                    <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="w-full bg-white hover:bg-slate-50 border-2 border-cyan-300 rounded-2xl p-6 shadow-lg transition-all cursor-pointer">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-cyan-100 rounded-full flex items-center justify-center text-lg font-bold text-cyan-600">
+                                    ?
+                                </div>
+                                <p class="text-lg font-bold text-slate-900 text-left">What does this all mean?</p>
+                            </div>
+                            <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                        </div>
+                    </button>
+                    <div class="hidden mt-4 bg-cyan-50 border-2 border-cyan-200 rounded-2xl p-8">
+                        <p class="text-slate-700 leading-relaxed text-lg">
+                            <span class="font-bold text-slate-900">Commission rates are negotiable.</span> Unlike what many believe, you have control over how much you pay in commissions. When you enter into a listing agreement with your real estate agent, that agreement specifies the <span class="font-semibold">total commission you're willing to pay</span> and <span class="font-semibold">how much of that goes to the buyer's agent.</span> This means you can work with your agent to structure commissions in a way that works for your situation—whether that's offering a competitive buyer's agent percentage or adjusting your listing-side commission. Every transaction is unique, and your agreement should reflect your specific needs.
+                        </p>
+                    </div>
+                </div>
             </div>
         </section>
-
-        <!-- Affordability & Expertise Section -->
         <section class="bg-gradient-to-r from-blue-50 via-cyan-50 to-blue-50 py-20 border-t-4 border-cyan-400">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="bg-white rounded-2xl shadow-xl p-12 border-2 border-cyan-200">
