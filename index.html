@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sell Your Home with Homestead Real Estate - 0.9% Commission</title>
+    <title>Sell Your Home with Homestead Real Estate - Negotiable Commission</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
@@ -60,7 +60,7 @@
                         <img src="logo.png" alt="Homestead Real Estate" class="h-12 sm:h-14">
                     </a>
                     <a href="#form" class="bg-yellow-400 hover:bg-yellow-500 text-slate-900 text-xs sm:text-sm font-bold px-4 sm:px-6 py-2 rounded-lg transition-colors cursor-pointer whitespace-nowrap sm:ml-auto">
-                        0.9% Commission Available
+                        Commission Rates Are Negotiable
                     </a>
                 </div>
                 <nav class="flex md:hidden items-center justify-center gap-6">
@@ -98,15 +98,15 @@
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-6 justify-center mb-12">
-                    <div class="bg-white/95 backdrop-blur px-6 sm:px-8 py-6 sm:py-4 rounded-xl shadow-lg">
-                        <p class="text-gray-600 text-sm font-medium mb-1">Buy & Sell with Me</p>
-                        <p class="text-4xl font-black text-cyan-600">0.9%</p>
-                    </div>
-                    <div class="bg-cyan-50/95 backdrop-blur px-6 sm:px-8 py-6 sm:py-4 rounded-xl shadow-lg">
-                        <p class="text-gray-600 text-sm font-medium mb-1">Sell Only</p>
-                        <p class="text-4xl font-black text-blue-600">1.9%</p>
+                    <div class="bg-white/95 backdrop-blur px-6 sm:px-8 py-6 sm:py-4 rounded-xl shadow-lg max-w-md">
+                        <p class="text-gray-600 text-sm font-medium mb-1">You Decide</p>
+                        <p class="text-2xl sm:text-3xl font-black text-cyan-600">Commission Rates Are Negotiable</p>
                     </div>
                 </div>
+
+                <p class="text-lg text-blue-100 mb-2 max-w-2xl mx-auto">
+                    You have the right to negotiate what you pay your listing agent — and what you offer a buyer's agent. Tell me what works for you.
+                </p>
 
                 <a href="#calculator" class="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold py-4 px-8 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
                     See Your Savings
@@ -120,15 +120,15 @@
             <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-8 sm:mb-16">
                     <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">
-                        See Your Savings
+                        You Set the Rate
                     </h2>
                     <p class="text-xl text-slate-600 max-w-2xl mx-auto">
-                        Use our calculator to see exactly how much you could save by working with Homestead
+                        Commission is negotiable. Use the sliders below to tell me what you'd like to pay — then see how it compares to a typical 5.6% total commission.
                     </p>
                 </div>
 
                 <!-- Price Slider -->
-                <div class="bg-white rounded-2xl p-8 shadow-lg mb-6 sm:mb-12">
+                <div class="bg-white rounded-2xl p-8 shadow-lg mb-6 sm:mb-8">
                     <label class="block text-lg font-bold text-slate-900 mb-6">
                         What's your home worth?
                     </label>
@@ -150,89 +150,81 @@
                     <p class="text-sm text-slate-500">Drag to adjust your home value</p>
                 </div>
 
+                <!-- Listing Agent Rate -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg mb-6 sm:mb-8">
+                    <label class="block text-lg font-bold text-slate-900 mb-6">
+                        How much would you like to pay me, your listing agent?
+                    </label>
+                    <div class="flex gap-6 items-center mb-4">
+                        <input 
+                            type="range" 
+                            id="listingAgentRate" 
+                            min="0" 
+                            max="3.0" 
+                            step="0.1" 
+                            value="2.0"
+                            class="flex-1 h-4 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-lg appearance-none cursor-pointer"
+                            style="accent-color: #facc15;"
+                        >
+                        <div id="listingRateDisplay" class="text-2xl font-black text-cyan-600 whitespace-nowrap">
+                            2.0%
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-500">This is completely up to you — there's no set rate.</p>
+                </div>
+
                 <!-- Buyer Agent Rate -->
                 <div class="bg-white rounded-2xl p-8 shadow-lg mb-6 sm:mb-12">
                     <label class="block text-lg font-bold text-slate-900 mb-6">
-                        What percentage do you want to pay a buyer's agent?
+                        What would you like to pay a buyer's agent?
                     </label>
                     <div class="flex gap-6 items-center mb-4">
                         <input 
                             type="range" 
                             id="buyerAgentRate" 
-                            min="1.5" 
-                            max="4.0" 
+                            min="0" 
+                            max="3.0" 
                             step="0.1" 
-                            value="2.8"
+                            value="2.0"
                             class="flex-1 h-4 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-lg appearance-none cursor-pointer"
                             style="accent-color: #facc15;"
                         >
                         <div id="buyerRateDisplay" class="text-2xl font-black text-cyan-600 whitespace-nowrap">
-                            2.8%
+                            2.0%
                         </div>
                     </div>
-                    <p class="text-sm text-slate-500">Set your buyer's agent compensation amount</p>
+                    <p class="text-sm text-slate-500">Set your buyer's agent compensation amount — this affects how many buyer's agents show your home, so choose thoughtfully.</p>
                 </div>
 
-                <!-- Comparison Cards -->
-                <div class="grid md:grid-cols-3 gap-6 mb-8 sm:mb-16">
-                    <!-- Buy & Sell -->
-                    <div class="bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-300 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
+                <!-- Comparison -->
+                <div class="grid md:grid-cols-2 gap-6 mb-8 sm:mb-12">
+                    <!-- Your Proposal -->
+                    <div class="bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-300 rounded-2xl p-8 shadow-lg">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="w-12 h-12 bg-emerald-200 rounded-xl flex items-center justify-center">
-                                📈
+                                📝
                             </div>
                             <h3 class="text-xl font-bold text-slate-900">
-                                Buy & Sell with Me
+                                Your Proposal
                             </h3>
                         </div>
                         <div class="space-y-3 mb-8 bg-white/60 rounded-xl p-4">
                             <div class="flex justify-between text-sm">
-                                <span class="text-slate-700">My listing commission (0.9%)</span>
-                                <span class="font-bold text-slate-900" id="card1comm">$4,500</span>
+                                <span class="text-slate-700">My listing commission (<span id="yourListRate">2.0</span>%)</span>
+                                <span class="font-bold text-slate-900" id="yourListAmt">$10,000</span>
                             </div>
                             <div class="flex justify-between text-sm">
-                                <span class="text-slate-700">Buyer's agent (<span id="card1rate">2.8</span>%)</span>
-                                <span class="font-bold text-slate-900" id="card1buyer">$14,000</span>
+                                <span class="text-slate-700">Buyer's agent (<span id="yourBuyerRate">2.0</span>%)</span>
+                                <span class="font-bold text-slate-900" id="yourBuyerAmt">$10,000</span>
                             </div>
                             <div class="border-t border-emerald-300 pt-3 flex justify-between">
-                                <span class="font-bold text-slate-900">Total Paid</span>
-                                <span class="font-black text-emerald-700 text-lg" id="card1total">$18,500</span>
+                                <span class="font-bold text-slate-900">Total Commission</span>
+                                <span class="font-black text-emerald-700 text-lg" id="yourTotal">$20,000</span>
                             </div>
                         </div>
                         <div class="bg-emerald-100 border-2 border-emerald-400 rounded-xl p-4">
                             <p class="text-sm font-black text-emerald-900">
-                                💰 You Save: <span id="card1save">$9,500</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Sell Only -->
-                    <div class="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-cyan-300 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="w-12 h-12 bg-cyan-200 rounded-xl flex items-center justify-center">
-                                💵
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-900">
-                                Sell Only
-                            </h3>
-                        </div>
-                        <div class="space-y-3 mb-8 bg-white/60 rounded-xl p-4">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-slate-700">My listing commission (1.9%)</span>
-                                <span class="font-bold text-slate-900" id="card2comm">$9,500</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-slate-700">Buyer's agent (<span id="card2rate">2.8</span>%)</span>
-                                <span class="font-bold text-slate-900" id="card2buyer">$14,000</span>
-                            </div>
-                            <div class="border-t border-cyan-300 pt-3 flex justify-between">
-                                <span class="font-bold text-slate-900">Total Paid</span>
-                                <span class="font-black text-cyan-700 text-lg" id="card2total">$23,500</span>
-                            </div>
-                        </div>
-                        <div class="bg-cyan-100 border-2 border-cyan-400 rounded-xl p-4">
-                            <p class="text-sm font-black text-cyan-900">
-                                💰 You Save: <span id="card2save">$4,500</span>
+                                💰 Estimated Savings vs. Typical: <span id="yourSave">$8,000</span>
                             </p>
                         </div>
                     </div>
@@ -244,29 +236,38 @@
                                 🏆
                             </div>
                             <h3 class="text-xl font-bold text-slate-900">
-                                Typical (5.6%)
+                                Typical Total Commission (5.6%)
                             </h3>
                         </div>
                         <div class="space-y-3 mb-8 bg-white/60 rounded-xl p-4">
                             <div class="flex justify-between text-sm">
                                 <span class="text-slate-700">Listing agent (2.8%)</span>
-                                <span class="font-bold text-slate-900" id="card3list">$14,000</span>
+                                <span class="font-bold text-slate-900" id="typicalList">$14,000</span>
                             </div>
                             <div class="flex justify-between text-sm">
                                 <span class="text-slate-700">Buyer's agent (2.8%)</span>
-                                <span class="font-bold text-slate-900" id="card3buyer">$14,000</span>
+                                <span class="font-bold text-slate-900" id="typicalBuyer">$14,000</span>
                             </div>
                             <div class="border-t border-slate-300 pt-3 flex justify-between">
                                 <span class="font-bold text-slate-900">Total Paid</span>
-                                <span class="font-black text-slate-700 text-lg" id="card3total">$28,000</span>
+                                <span class="font-black text-slate-700 text-lg" id="typicalTotal">$28,000</span>
                             </div>
                         </div>
                         <div class="bg-slate-300/30 border-2 border-slate-400 rounded-xl p-4">
                             <p class="text-sm font-semibold text-slate-600">
-                                What most agents charge
+                                What most agents charge, combined
                             </p>
                         </div>
                     </div>
+                </div>
+
+                <!-- Send Proposal CTA -->
+                <div class="text-center mb-8 sm:mb-12">
+                    <button onclick="openProposalModal()" class="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-black py-5 px-10 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105 text-lg">
+                        Send James This Proposal
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </button>
+                    <p class="text-sm text-slate-500 mt-4">Raise your hand — no pressure, no obligation. I just want to hear what works for you.</p>
                 </div>
 
                 <!-- Info Bubble -->
@@ -290,6 +291,140 @@
                 </div>
             </div>
         </section>
+
+        <!-- Proposal Modal -->
+        <div id="proposalModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-start sm:items-center justify-center p-4 overflow-y-auto">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full my-8 relative">
+                <button onclick="closeProposalModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-2xl font-bold w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
+                    &times;
+                </button>
+                <div class="p-8 md:p-10">
+                    <h2 class="text-3xl font-black text-slate-900 mb-2">Send James Your Proposal</h2>
+                    <p class="text-slate-600 mb-8">Tell me what you'd like to pay, and a bit about your situation. No pressure — this just starts the conversation.</p>
+
+                    <form id="proposalForm">
+                        <input type="hidden" name="fi-proposal-listingRate" id="proposalListingRate">
+                        <input type="hidden" name="fi-proposal-buyerRate" id="proposalBuyerRate">
+                        <input type="hidden" name="fi-proposal-homeValue" id="proposalHomeValue">
+
+                        <div class="grid sm:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-900 mb-2">First Name *</label>
+                                <input type="text" name="fi-sender-firstName" required
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    placeholder="First name">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-900 mb-2">Last Name *</label>
+                                <input type="text" name="fi-sender-lastName" required
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    placeholder="Last name">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold text-slate-900 mb-2">Property Address You're Selling *</label>
+                            <input type="text" name="fi-sender-address" required
+                                class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                placeholder="123 Main St, Longmont, CO">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold text-slate-900 mb-2">Timeline to Sell *</label>
+                            <select name="fi-select-timeline" required
+                                class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+                                <option value="">Select a timeframe</option>
+                                <option value="asap">As soon as possible</option>
+                                <option value="3-6-months">Within 3-6 months</option>
+                                <option value="6-12-months">Within 6-12 months</option>
+                                <option value="next-year">Next year or later</option>
+                                <option value="just-exploring">Just exploring for now</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold text-slate-900 mb-2">How Much Do You Think Your House Is Worth? *</label>
+                            <input type="text" name="fi-sender-estimatedValue" required
+                                class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                placeholder="$500,000">
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-900 mb-2">Email Address *</label>
+                                <input type="email" name="fi-sender-email" required
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    placeholder="you@example.com">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-900 mb-2">Phone Number *</label>
+                                <input type="tel" name="fi-sender-phone" required
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                    placeholder="(720) 555-0123">
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold text-slate-900 mb-2">Preferred Communication *</label>
+                            <select name="fi-select-preferredComm" required
+                                class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
+                                <option value="">Select a method</option>
+                                <option value="call">Phone Call</option>
+                                <option value="text">Text</option>
+                                <option value="email">Email</option>
+                            </select>
+                        </div>
+
+                        <!-- Purchasing another property? -->
+                        <div class="mb-4 bg-slate-50 rounded-xl p-5 border-2 border-slate-200">
+                            <label class="block text-sm font-bold text-slate-900 mb-3">Do You Plan on Purchasing Another Property? *</label>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="fi-radio-purchasing" value="yes" id="purchasingYes" class="w-5 h-5 text-cyan-600">
+                                    <span class="font-semibold text-slate-800">Yes</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="fi-radio-purchasing" value="no" id="purchasingNo" class="w-5 h-5 text-cyan-600">
+                                    <span class="font-semibold text-slate-800">No</span>
+                                </label>
+                            </div>
+
+                            <!-- Conditional fields -->
+                            <div id="purchasingDetails" class="hidden mt-4 space-y-4">
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-900 mb-2">When?</label>
+                                    <input type="text" name="fi-sender-purchaseWhen"
+                                        class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        placeholder="e.g. Within 6 months">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-900 mb-2">Where?</label>
+                                    <input type="text" name="fi-sender-purchaseWhere"
+                                        class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                                        placeholder="e.g. Longmont, CO or another area">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Always-visible reach-out confirmation -->
+                        <label class="flex items-start gap-3 p-4 border-2 border-cyan-300 bg-cyan-50 rounded-xl cursor-pointer mb-6">
+                            <input type="checkbox" name="fi-checkbox-wantsJamesToReachOut" value="yes" id="wantsJamesReachOut" required class="w-5 h-5 text-cyan-600 rounded mt-0.5">
+                            <span class="text-slate-900 font-semibold text-sm">I want James to reach out to me.</span>
+                        </label>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-black py-4 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105 text-lg flex items-center justify-center gap-3 mt-2">
+                            Submit
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                        </button>
+
+                        <div id="proposalSuccessMessage" class="mt-6 bg-emerald-50 border-2 border-emerald-400 text-emerald-800 px-6 py-4 rounded-xl text-center font-semibold hidden">
+                            ✓ Thanks! I'll be in touch soon to talk through your proposal.
+                        </div>
+                        <div id="proposalErrorMessage" class="mt-6 bg-red-50 border-2 border-red-400 text-red-800 px-6 py-4 rounded-xl text-center font-semibold hidden"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <section class="bg-gradient-to-r from-blue-50 via-cyan-50 to-blue-50 py-20 border-t-4 border-cyan-400">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="bg-white rounded-2xl shadow-xl p-12 border-2 border-cyan-200">
@@ -667,6 +802,7 @@
     <script>
         // Calculator functionality
         const salePriceInput = document.getElementById('salePrice');
+        const listingAgentInput = document.getElementById('listingAgentRate');
         const buyerAgentInput = document.getElementById('buyerAgentRate');
         
         function formatCurrency(num) {
@@ -680,64 +816,142 @@
 
         function updateCalculator() {
             const salePrice = parseInt(salePriceInput.value);
+            const listingRate = parseFloat(listingAgentInput.value);
             const buyerRate = parseFloat(buyerAgentInput.value);
 
             // Update displays
             document.getElementById('salePriceDisplay').textContent = formatCurrency(salePrice);
+            document.getElementById('listingRateDisplay').textContent = listingRate.toFixed(1) + '%';
             document.getElementById('buyerRateDisplay').textContent = buyerRate.toFixed(1) + '%';
 
-            // Card 1: Buy & Sell
-            const card1Comm = salePrice * 0.009;
-            const card1Buyer = salePrice * (buyerRate / 100);
-            const card1Total = card1Comm + card1Buyer;
-            const card1Save = (salePrice * 0.056) - card1Total;
+            // Your Proposal card
+            const listAmt = salePrice * (listingRate / 100);
+            const buyerAmt = salePrice * (buyerRate / 100);
+            const total = listAmt + buyerAmt;
+            const typicalTotal = salePrice * 0.056;
+            const save = typicalTotal - total;
 
-            document.getElementById('card1comm').textContent = formatCurrency(card1Comm);
-            document.getElementById('card1rate').textContent = buyerRate.toFixed(1);
-            document.getElementById('card1buyer').textContent = formatCurrency(card1Buyer);
-            document.getElementById('card1total').textContent = formatCurrency(card1Total);
-            document.getElementById('card1save').textContent = formatCurrency(card1Save);
+            document.getElementById('yourListRate').textContent = listingRate.toFixed(1);
+            document.getElementById('yourListAmt').textContent = formatCurrency(listAmt);
+            document.getElementById('yourBuyerRate').textContent = buyerRate.toFixed(1);
+            document.getElementById('yourBuyerAmt').textContent = formatCurrency(buyerAmt);
+            document.getElementById('yourTotal').textContent = formatCurrency(total);
+            document.getElementById('yourSave').textContent = formatCurrency(save);
 
-            // Card 2: Sell Only
-            const card2Comm = salePrice * 0.019;
-            const card2Buyer = salePrice * (buyerRate / 100);
-            const card2Total = card2Comm + card2Buyer;
-            const card2Save = (salePrice * 0.056) - card2Total;
+            // Typical card
+            const typicalList = salePrice * 0.028;
+            const typicalBuyer = salePrice * 0.028;
 
-            document.getElementById('card2comm').textContent = formatCurrency(card2Comm);
-            document.getElementById('card2rate').textContent = buyerRate.toFixed(1);
-            document.getElementById('card2buyer').textContent = formatCurrency(card2Buyer);
-            document.getElementById('card2total').textContent = formatCurrency(card2Total);
-            document.getElementById('card2save').textContent = formatCurrency(card2Save);
+            document.getElementById('typicalList').textContent = formatCurrency(typicalList);
+            document.getElementById('typicalBuyer').textContent = formatCurrency(typicalBuyer);
+            document.getElementById('typicalTotal').textContent = formatCurrency(typicalTotal);
 
-            // Card 3: Typical
-            const card3List = salePrice * 0.028;
-            const card3Buyer = salePrice * 0.028;
-            const card3Total = card3List + card3Buyer;
-
-            document.getElementById('card3list').textContent = formatCurrency(card3List);
-            document.getElementById('card3buyer').textContent = formatCurrency(card3Buyer);
-            document.getElementById('card3total').textContent = formatCurrency(card3Total);
+            // Sync hidden proposal fields
+            document.getElementById('proposalListingRate').value = listingRate.toFixed(1) + '%';
+            document.getElementById('proposalBuyerRate').value = buyerRate.toFixed(1) + '%';
+            document.getElementById('proposalHomeValue').value = formatCurrency(salePrice);
         }
 
         salePriceInput.addEventListener('input', updateCalculator);
+        listingAgentInput.addEventListener('input', updateCalculator);
         buyerAgentInput.addEventListener('input', updateCalculator);
-
-        // Form submission
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const successMessage = document.getElementById('successMessage');
-            successMessage.classList.remove('hidden');
-            this.style.opacity = '0.5';
-            setTimeout(() => {
-                this.reset();
-                this.style.opacity = '1';
-                successMessage.classList.add('hidden');
-            }, 3000);
-        });
 
         // Initialize calculator
         updateCalculator();
+
+        // Proposal modal open/close
+        function openProposalModal() {
+            document.getElementById('proposalModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeProposalModal() {
+            document.getElementById('proposalModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+        document.getElementById('proposalModal').addEventListener('click', function(e) {
+            if (e.target === this) closeProposalModal();
+        });
+
+        // Show/hide "purchasing another property" follow-up fields
+        const purchasingYes = document.getElementById('purchasingYes');
+        const purchasingNo = document.getElementById('purchasingNo');
+        const purchasingDetails = document.getElementById('purchasingDetails');
+        function togglePurchasingDetails() {
+            if (purchasingYes.checked) {
+                purchasingDetails.classList.remove('hidden');
+            } else {
+                purchasingDetails.classList.add('hidden');
+            }
+        }
+        purchasingYes.addEventListener('change', togglePurchasingDetails);
+        purchasingNo.addEventListener('change', togglePurchasingDetails);
+
+        // Proposal form submission with Forminit SDK
+        const proposalForm = document.getElementById('proposalForm');
+        const proposalSuccessMessage = document.getElementById('proposalSuccessMessage');
+        const proposalErrorMessage = document.getElementById('proposalErrorMessage');
+
+        // Normalize phone numbers to E.164 so users can type in whatever format they like
+        function normalizePhoneToE164(rawValue) {
+            const digits = rawValue.replace(/\D/g, '');
+            if (!digits) return rawValue;
+            // Assume US/Canada numbers unless the user already included a country code (11+ digits starting with something other than 1, or explicit +)
+            if (rawValue.trim().startsWith('+')) {
+                return '+' + digits;
+            }
+            if (digits.length === 10) {
+                return '+1' + digits;
+            }
+            if (digits.length === 11 && digits.startsWith('1')) {
+                return '+' + digits;
+            }
+            // Fallback: just prefix with + and hope for the best
+            return '+' + digits;
+        }
+
+        proposalForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            proposalSuccessMessage.classList.add('hidden');
+            proposalErrorMessage.classList.add('hidden');
+
+            const submitBtn = proposalForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.6';
+
+            const phoneInput = proposalForm.querySelector('input[name="fi-sender-phone"]');
+            const originalPhoneValue = phoneInput.value;
+            phoneInput.value = normalizePhoneToE164(originalPhoneValue);
+
+            // NOTE: Replace 'rxqp8tijar0' below with your dedicated Forminit form ID for
+            // this proposal form if you want submissions tracked separately from the
+            // main contact form.
+            const forminit = new Forminit();
+            const { data, error } = await forminit.submit('rxqp8tijar0', new FormData(proposalForm));
+
+            // Restore the user's original typed value in the field for their own reference
+            phoneInput.value = originalPhoneValue;
+
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+
+            if (error) {
+                proposalErrorMessage.textContent = `Error: ${error.message}`;
+                proposalErrorMessage.classList.remove('hidden');
+                return;
+            }
+
+            proposalSuccessMessage.classList.remove('hidden');
+            proposalSuccessMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            setTimeout(() => {
+                proposalForm.reset();
+                purchasingDetails.classList.add('hidden');
+                proposalSuccessMessage.classList.add('hidden');
+                closeProposalModal();
+            }, 2500);
+        });
+
 
         // Initialize Map
         const mapCenter = [40.1674, -105.1019]; // Longmont center
@@ -832,11 +1046,19 @@
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             submitBtn.style.opacity = '0.6';
-            
+
+            // Normalize phone to E.164 so users can type in whatever format they like
+            const phoneInput = contactForm.querySelector('input[name="fi-sender-phone"]');
+            const originalPhoneValue = phoneInput.value;
+            phoneInput.value = normalizePhoneToE164(originalPhoneValue);
+
             // Submit form to Forminit
             const forminit = new Forminit();
             const { data, error } = await forminit.submit('rxqp8tijar0', new FormData(contactForm));
-            
+
+            // Restore the user's original typed value in the field for their own reference
+            phoneInput.value = originalPhoneValue;
+
             // Re-enable button
             submitBtn.disabled = false;
             submitBtn.style.opacity = '1';
