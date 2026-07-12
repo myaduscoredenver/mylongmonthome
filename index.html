@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sell Your Home with Homestead Real Estate - Negotiable Commission</title>
+    <title>Sell Your Home with Homestead Real Estate - Negotiable Compensation</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -90,6 +90,21 @@
         input[type="range"]::-moz-range-thumb:hover {
             background: #886831;
         }
+
+        .equity-number {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body class="bg-white">
@@ -102,7 +117,7 @@
                         <img src="logo.png" alt="Homestead Real Estate" class="h-12 sm:h-14">
                     </a>
                     <a href="#form" class="border border-navy-700 text-navy-800 hover:bg-navy-800 hover:text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2 rounded transition-colors cursor-pointer whitespace-nowrap sm:ml-auto">
-                        Talk Commission
+                        Talk Compensation
                     </a>
                 </div>
                 <nav class="flex md:hidden items-center justify-center gap-6">
@@ -119,30 +134,34 @@
         </header>
 
         <!-- Hero Section -->
-        <section class="relative min-h-screen md:h-screen flex items-center justify-center overflow-hidden bg-navy-900">
+        <section class="relative overflow-hidden bg-navy-900">
             <div class="absolute inset-0 opacity-10" style="background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 800%22><defs><pattern id=%22grid%22 width=%2240%22 height=%2240%22 patternUnits=%22userSpaceOnUse%22><path d=%22M 40 0 L 0 0 0 40%22 fill=%22none%22 stroke=%22white%22 stroke-width=%220.5%22/></pattern></defs><rect width=%221200%22 height=%22800%22 fill=%22url(%23grid)%22/></svg>')"></div>
 
-            <div class="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-16 sm:py-20 md:py-0">
-                <div class="mb-8 inline-block border border-white/25 px-4 py-2 rounded-full">
-                    <p class="text-white/90 font-medium text-sm tracking-wide">Longmont, Colorado &nbsp;&middot;&nbsp; Licensed Broker Since 2009</p>
+            <div class="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-14 sm:py-16 md:py-20">
+                <div class="mb-6 inline-block border border-white/25 px-4 py-2 rounded-full">
+                    <p class="text-white/90 font-medium text-sm tracking-wide">James Taylor, Homestead Real Estate, LLC &nbsp;&middot;&nbsp; Longmont, Colorado</p>
                 </div>
 
-                <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-semibold text-white mb-6 leading-tight">
+                <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-semibold text-white mb-4 leading-tight">
                     Your Local Longmont<br class="hidden sm:block"> Real Estate Expert
                 </h1>
 
                 <p class="text-lg md:text-xl text-navy-100 mb-3 font-light max-w-2xl mx-auto">
-                    Full-service representation from a 17-year Longmont resident, backed by a commission structure we build together.
+                    Full-service Realtor with 17 years of experience.
                 </p>
 
-                <p class="text-base text-navy-200 mb-10 max-w-xl mx-auto">
-                    Commission is fully negotiable under Colorado law. See what that means for your sale below.
+                <p class="text-base text-navy-200 mb-8 max-w-xl mx-auto">
+                    Real estate agent compensation is negotiable. See what that means for your sale below.
                 </p>
 
                 <a href="#calculator" class="inline-flex items-center gap-2 bg-brass-500 hover:bg-brass-600 text-white font-semibold py-3.5 px-8 rounded transition-colors">
                     See Your Numbers
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                 </a>
+
+                <p class="text-sm text-navy-200 mt-8 max-w-xl mx-auto">
+                    Whether you're upsizing, downsizing, or just ready for a change, I'll handle the details so you can focus on what matters. My job is to make this process smooth, transparent, and fair.
+                </p>
             </div>
         </section>
 
@@ -152,10 +171,10 @@
                 <div class="text-center mb-10 sm:mb-16">
                     <p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">The Numbers</p>
                     <h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">
-                        Commission Structured Around You
+                        Compensation Structured Around You
                     </h2>
                     <p class="text-lg text-slate-600 max-w-2xl mx-auto">
-                        Commission is fully negotiable. Adjust the amounts below to reflect what feels right for your sale — this becomes the starting point for our conversation, not a locked-in rate.
+                        Compensation is fully negotiable. Adjust the amounts below to reflect what feels right for your sale — this becomes the starting point for our conversation, not a locked-in rate.
                     </p>
                 </div>
 
@@ -190,8 +209,8 @@
                         <input
                             type="range"
                             id="listingAgentRate"
-                            min="0"
-                            max="3.0"
+                            min="1.7"
+                            max="3.2"
                             step="0.1"
                             value="2.0"
                             class="flex-1 h-2 bg-navy-100 rounded-lg appearance-none cursor-pointer"
@@ -233,15 +252,15 @@
                         </h3>
                         <div class="space-y-3 mb-2">
                             <div class="flex justify-between text-sm">
-                                <span class="text-slate-600">Listing commission (<span id="yourListRate">2.0</span>%)</span>
+                                <span class="text-slate-600">Listing compensation (<span id="yourListRate">2.0</span>%)</span>
                                 <span class="font-semibold text-navy-900" id="yourListAmt">$10,000</span>
                             </div>
                             <div class="flex justify-between text-sm">
-                                <span class="text-slate-600">Buyer's agent commission (<span id="yourBuyerRate">2.0</span>%)</span>
+                                <span class="text-slate-600">Buyer's agent compensation (<span id="yourBuyerRate">2.0</span>%)</span>
                                 <span class="font-semibold text-navy-900" id="yourBuyerAmt">$10,000</span>
                             </div>
                             <div class="border-t border-slate-200 pt-3 flex justify-between">
-                                <span class="font-semibold text-navy-900">Total Commission</span>
+                                <span class="font-semibold text-navy-900">Total Compensation</span>
                                 <span class="font-semibold text-navy-800 text-lg" id="yourTotal">$20,000</span>
                             </div>
                         </div>
@@ -272,7 +291,7 @@
                     </button>
                     <div class="hidden mt-4 bg-white border border-slate-200 rounded-xl p-8">
                         <p class="text-slate-600 leading-relaxed">
-                            <span class="font-semibold text-navy-900">Commission rates are negotiable.</span> Unlike what many believe, you have control over how much you pay in commissions. When you enter into a listing agreement with your real estate agent, that agreement specifies the <span class="font-medium text-navy-800">total commission you're willing to pay</span> and <span class="font-medium text-navy-800">how much of that goes to the buyer's agent.</span> This means you can work with your agent to structure commissions in a way that works for your situation — whether that's offering a competitive buyer's agent percentage or adjusting your listing-side commission. Every transaction is unique, and your agreement should reflect your specific needs.
+                            Compensation rates are negotiable. You have control over how much you pay in real estate compensation. When you enter into a listing agreement with your real estate agent, that agreement specifies the total compensation you're willing to pay and how much of that goes to the buyer's agent. This means you can work with your agent to structure compensations in a way that works for your situation — whether that's offering a competitive buyer's agent percentage or adjusting your listing-side compensation. Every transaction is unique, and your agreement should reflect your specific needs.
                         </p>
                     </div>
                 </div>
@@ -412,32 +431,275 @@
                 </div>
             </div>
         </div>
+
+        <!-- Home Value Calculator Section -->
+        <section id="home-value-calculator" class="bg-white py-16 sm:py-24 border-t border-slate-200">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10 sm:mb-14">
+                    <p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">Home Value Estimator</p>
+                    <h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">What's Your Longmont Home Worth Today?</h2>
+                    <p class="text-lg text-slate-600 max-w-2xl mx-auto">Enter your address to see an estimated value range built from Longmont market data.</p>
+                </div>
+
+                <!-- Address Lookup -->
+                <div class="bg-white rounded-xl border border-slate-200 p-8 mb-8">
+                    <label class="block text-sm font-semibold text-navy-900 mb-3">Your Longmont Address</label>
+                    <div class="flex gap-2 mb-4 relative">
+                        <input
+                            type="text"
+                            id="addressInput"
+                            placeholder="e.g., 744 Bowen St"
+                            autocomplete="off"
+                            class="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent text-navy-900"
+                        >
+                        <div id="addressDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-slate-300 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50"></div>
+                        <button type="button" id="searchButton" class="bg-navy-800 hover:bg-navy-900 text-white px-6 py-3 rounded-lg font-semibold transition-colors whitespace-nowrap cursor-pointer">
+                            Show Me My Value
+                        </button>
+                    </div>
+                    <p id="dbLoadingMsg" class="hidden text-sm text-navy-600 mb-4">Loading Longmont market data…</p>
+
+                    <!-- Manual Entry Form (Hidden by default) -->
+                    <div id="manualEntryForm" class="hidden border-t border-slate-200 pt-6">
+                        <h3 class="font-semibold text-navy-900 mb-4">Tell Us About Your Home</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">When Did You Buy?</label>
+                                <input
+                                    type="number"
+                                    id="manualPurchaseYear"
+                                    min="1980"
+                                    max="2026"
+                                    placeholder="2012"
+                                    class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Purchase Price</label>
+                                <div class="flex items-center">
+                                    <span class="text-slate-600 mr-2">$</span>
+                                    <input
+                                        type="number"
+                                        id="manualPurchasePrice"
+                                        placeholder="250000"
+                                        class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
+                                    >
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Condition When You Bought It</label>
+                                <select id="manualConditionThen" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent">
+                                    <option value="">Select condition</option>
+                                    <option value="fixer">A true fixer upper!</option>
+                                    <option value="outdated">OK, but definitely outdated</option>
+                                    <option value="upgrades">Some upgrades</option>
+                                    <option value="remodeled">Fully remodeled</option>
+                                    <option value="amazing">Fully remodeled with amazing features and finishes</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Condition of Property Today</label>
+                                <select id="manualConditionNow" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent">
+                                    <option value="">Select condition</option>
+                                    <option value="nothing">I didn't do anything</option>
+                                    <option value="improvements">A few improvements</option>
+                                    <option value="remodeled">I completely remodeled it</option>
+                                </select>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Tell Me About the Kitchen</label>
+                                <select id="manualKitchen" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent">
+                                    <option value="">Select kitchen condition</option>
+                                    <option value="barely">Barely functional</option>
+                                    <option value="outdated">Outdated but nice</option>
+                                    <option value="remodeled">Remodeled</option>
+                                    <option value="luxury">Luxury - it's a chef's kitchen!</option>
+                                </select>
+                            </div>
+                            <div id="investmentField" class="hidden md:col-span-2">
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Approximately How Much Did You Invest in Improvements?</label>
+                                <select id="manualInvestment" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent">
+                                    <option value="">Select investment range</option>
+                                    <option value="under50">Under $50,000</option>
+                                    <option value="50to100">$50,000 - $100,000</option>
+                                    <option value="100to200">$100,000 - $200,000</option>
+                                    <option value="over200">$200,000+</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button onclick="calculateManual()" class="w-full bg-navy-800 hover:bg-navy-900 text-white font-semibold py-3 rounded-lg transition-colors mb-4">
+                            Calculate My Home Value
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Display -->
+                <div id="resultsSection" class="hidden">
+                    <!-- Main Value Card with Range -->
+                    <div class="bg-emerald-50 rounded-xl p-8 mb-8 border border-emerald-200">
+                        <p class="text-slate-600 text-sm font-medium mb-4">Your Estimated Home Value Range (July 2026)</p>
+
+                        <!-- Range Display -->
+                        <div class="space-y-3 mb-8">
+                            <div class="bg-white rounded-lg p-4 border border-slate-200">
+                                <p class="text-slate-500 text-xs font-semibold mb-1">Conservative</p>
+                                <p class="text-2xl sm:text-3xl font-semibold text-navy-900 truncate" id="conservativeDisplay">$0</p>
+                            </div>
+                            <div class="bg-emerald-600 text-white rounded-lg p-4">
+                                <p class="text-emerald-100 text-xs font-semibold mb-1">Mid-Range (Most Likely)</p>
+                                <p class="text-2xl sm:text-3xl font-semibold truncate" id="midRangeDisplay">$0</p>
+                            </div>
+                            <div class="bg-white rounded-lg p-4 border border-slate-200">
+                                <p class="text-slate-500 text-xs font-semibold mb-1">Optimistic</p>
+                                <p class="text-2xl sm:text-3xl font-semibold text-navy-900 truncate" id="optimisticDisplay">$0</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-white/70 rounded-lg p-4">
+                                <p class="text-slate-600 text-sm mb-1">You Paid</p>
+                                <p class="text-xl font-semibold text-navy-900" id="purchasePriceDisplay">$0</p>
+                            </div>
+                            <div class="bg-white/70 rounded-lg p-4">
+                                <p class="text-slate-600 text-sm mb-1">Years Owned</p>
+                                <p class="text-xl font-semibold text-navy-900" id="yearsOwnedDisplay">0</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-emerald-600 text-white rounded-xl p-6">
+                            <p class="text-emerald-100 text-sm font-medium mb-1">Equity Built (Mid-Range)</p>
+                            <p class="text-4xl font-semibold equity-number" id="equityDisplay">$0</p>
+                        </div>
+                    </div>
+
+                    <!-- Renovation Boost (if applicable) -->
+                    <div id="renovationBoostCard" class="hidden bg-brass-50 rounded-xl p-6 mb-8 border border-brass-200">
+                        <p class="text-slate-700 font-medium mb-2">Renovation Premium Added</p>
+                        <p class="text-3xl font-semibold text-brass-700" id="renovationBoostDisplay">+$0</p>
+                    </div>
+
+                    <!-- Info Text -->
+                    <div class="bg-navy-50 border-l-4 border-navy-700 rounded-lg p-6 mb-8">
+                        <p class="text-navy-900 font-semibold mb-2">Understanding Your Range</p>
+                        <p class="text-slate-700 text-sm mb-3">We show three scenarios because real estate valuation includes uncertainty:</p>
+                        <ul class="text-slate-700 text-sm space-y-2 ml-4 list-disc">
+                            <li><strong>Conservative:</strong> Market cools faster than expected, or your home's condition is stronger than we assessed</li>
+                            <li><strong>Mid-Range:</strong> Our best estimate based on 14,878 Longmont comps and current market trends</li>
+                            <li><strong>Optimistic:</strong> Market stabilizes faster, or buyer demand strengthens in your neighborhood</li>
+                        </ul>
+                        <p class="text-slate-700 text-sm mt-3">Most homes sell within this range. Next steps? Let's connect to discuss your specific situation.</p>
+                    </div>
+
+                    <!-- This Doesn't Look Right Button -->
+                    <div class="text-center mb-8">
+                        <button onclick="showFeedbackForm()" class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-navy-900 font-semibold py-3 px-6 rounded-lg border border-slate-200 transition-colors">
+                            This Doesn't Look Right
+                        </button>
+                    </div>
+
+                    <!-- Feedback Form (Hidden by default) -->
+                    <div id="feedbackFormSection" class="hidden bg-white rounded-xl border border-slate-200 p-8">
+                        <h3 class="font-serif text-2xl font-semibold text-navy-900 mb-2">Help Us Get It Right</h3>
+                        <p class="text-slate-600 mb-6">Tell us more about your property so we can provide a more accurate estimate.</p>
+
+                        <form id="feedbackForm" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-navy-900 mb-2">Name *</label>
+                                    <input
+                                        type="text"
+                                        id="feedbackName"
+                                        required
+                                        class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
+                                    >
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-navy-900 mb-2">Email *</label>
+                                    <input
+                                        type="email"
+                                        id="feedbackEmail"
+                                        required
+                                        class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-navy-900 mb-2">Phone</label>
+                                    <input
+                                        type="tel"
+                                        id="feedbackPhone"
+                                        class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
+                                    >
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-navy-900 mb-2">Address *</label>
+                                    <input
+                                        type="text"
+                                        id="feedbackAddress"
+                                        required
+                                        class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
+                                    >
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-navy-900 mb-2">Tell Me About the Improvements You Have Made to the Property During Your Ownership *</label>
+                                <textarea
+                                    id="feedbackImprovements"
+                                    required
+                                    rows="6"
+                                    placeholder="Describe any renovations, upgrades, or improvements you've made (e.g., kitchen remodel in 2018, new roof in 2020, etc.)"
+                                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent resize-none"
+                                ></textarea>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <button
+                                    type="submit"
+                                    class="flex-1 bg-navy-800 hover:bg-navy-900 text-white font-semibold py-3 rounded-lg transition-colors"
+                                >
+                                    Submit Feedback
+                                </button>
+                                <button
+                                    type="button"
+                                    onclick="hideFeedbackForm()"
+                                    class="flex-1 bg-slate-200 hover:bg-slate-300 text-navy-900 font-semibold py-3 rounded-lg transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="bg-[#faf9f6] py-20 border-t border-slate-200">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="bg-white rounded-xl p-10 md:p-12 border border-slate-200">
                     <h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-6">
-                        Remove the Friction. Make Your Move.
+                        Move When the Time Is Right for You
                     </h2>
 
                     <div class="space-y-6 text-lg text-slate-600 leading-relaxed">
                         <p>
-                            As your local Longmont expert with 17 years of experience, I believe everyone deserves the freedom to move when they want. Whether you're moving out of need or want, that's your choice to make.
+                            As your local Longmont real estate expert, I believe moving should be about opportunity, not obstacles. Whether you're ready for more space, less maintenance, or simply a change of scenery, your next move should be on your terms.
                         </p>
 
                         <p>
-                            Too many people are stuck in homes that don't fit their lives anymore. You shouldn't have to stay because a real estate agent's commission makes the move financially painful.
+                            That's why I offer flexible compensation options. I've built an efficient, full-service business that delivers the guidance, marketing, and negotiation you expect—while giving you more flexibility over what it costs to sell your home.
                         </p>
 
                         <p>
-                            That's why I offer flexible commission terms. I've streamlined my business to be efficient and all-encompassing. I handle everything — no hidden fees, no unnecessary friction. A lower rate doesn't mean less service. It means removing barriers between you and your next chapter.
-                        </p>
-
-                        <p>
-                            I know West Longmont inside and out. I've sold 62 homes in our community, and I'm committed to making your move as smooth as possible so you can focus on what matters: living in a home that actually fits your life.
+                            I've helped dozens of Longmont homeowners make successful moves, and I know this market inside and out. My goal is simple: make selling your home straightforward, transparent, and tailored to your needs.
                         </p>
 
                         <p class="font-semibold text-navy-800 text-xl">
-                            Your next move shouldn't be complicated. Let's make it simple.
+                            Your next chapter starts with understanding your options. Let's explore them together.
                         </p>
                     </div>
                 </div>
@@ -447,13 +709,13 @@
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
                     <p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">
-                        62+ Sold Properties
+                        60+ Happy Clients
                     </p>
                     <h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">
                         My Track Record in Longmont
                     </h2>
                     <p class="text-lg text-slate-600 max-w-2xl mx-auto">
-                        Every pin on this map represents a home I've helped sell — from $178K to $916K.
+                        Every pin on this map represents a home that I've helped my clients buy or sell.
                         This is where I've built my reputation.
                     </p>
                 </div>
@@ -467,8 +729,8 @@
                         <p class="text-xs text-slate-400 italic">*just in Longmont</p>
                     </div>
                     <div class="bg-white rounded-xl p-8 border border-slate-200 text-center">
-                        <div class="text-3xl font-semibold text-navy-800 mb-2">62</div>
-                        <p class="text-slate-600 font-medium">Properties Sold</p>
+                        <div class="text-3xl font-semibold text-navy-800 mb-2">60+</div>
+                        <p class="text-slate-600 font-medium">Longmont Transactions</p>
                     </div>
                     <div class="bg-white rounded-xl p-8 border border-slate-200 text-center">
                         <div class="text-3xl font-semibold text-navy-800 mb-2">17+</div>
@@ -490,31 +752,23 @@
                             I'm James Taylor
                         </h2>
                         <p class="text-lg text-navy-100 mb-8 leading-relaxed">
-                            I've been helping Longmont homeowners buy and sell since 2009. I know this market inside and out, and I know how to help you navigate it — with a commission structure that reflects your situation.
+                            I've been helping Longmont homeowners buy and sell since 2009. I know this market inside and out, and I know how to help you navigate it — with a compensation structure that reflects your situation.
                         </p>
 
-                        <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="grid grid-cols-3 gap-4 mb-8">
                             <div class="bg-white/5 rounded-lg p-4 border border-white/10">
                                 <div class="text-2xl font-semibold text-brass-300">$70M+</div>
                                 <p class="text-sm text-navy-200 mt-1">Total Sales Volume</p>
                             </div>
                             <div class="bg-white/5 rounded-lg p-4 border border-white/10">
-                                <div class="text-2xl font-semibold text-brass-300">13+</div>
-                                <p class="text-sm text-navy-200 mt-1">Years in Longmont</p>
+                                <div class="text-2xl font-semibold text-brass-300">2013</div>
+                                <p class="text-sm text-navy-200 mt-1">Longmont Resident Since</p>
                             </div>
                             <div class="bg-white/5 rounded-lg p-4 border border-white/10">
                                 <div class="text-2xl font-semibold text-brass-300">5.0</div>
                                 <p class="text-sm text-navy-200 mt-1">Star Reviews</p>
                             </div>
-                            <div class="bg-white/5 rounded-lg p-4 border border-white/10">
-                                <div class="text-2xl font-semibold text-brass-300">Lic. 2009</div>
-                                <p class="text-sm text-navy-200 mt-1">Colorado Broker</p>
-                            </div>
                         </div>
-
-                        <p class="text-navy-100">
-                            Whether you're upsizing, downsizing, or just ready for a change, I'll handle the details so you can focus on what matters. My job is to make this process smooth, transparent, and fair.
-                        </p>
                     </div>
                 </div>
             </div>
@@ -765,7 +1019,7 @@
                 <div class="grid md:grid-cols-3 gap-8 mb-8">
                     <div>
                         <p class="font-semibold text-white text-lg mb-4">Homestead Real Estate</p>
-                        <p class="text-sm">Honest real estate. Fair commissions. Better results.</p>
+                        <p class="text-sm">Honest real estate. Fair compensation. Better results.</p>
                     </div>
                     <div>
                         <p class="font-semibold text-white mb-3 text-lg">Contact</p>
@@ -1056,6 +1310,471 @@
             }, 3000);
         });
 
+    </script>
+
+    <!-- Home Value Calculator: valuation engine -->
+    <script>
+        let currentCalculation = null;
+        let currentSubdivision = null;
+        let currentMultipleOffers = false;
+        let selectedRenovations = [];
+
+        // --- Market value model, calibrated 2026-07 against 152 real Longmont ---
+        // --- active listings matched to their prior sold history.           ---
+        //
+        // Uses the actual observed ratio of (current list price / original
+        // purchase price) for real Longmont properties, grouped by purchase
+        // year, using a conservative percentile (15th for 2020+ purchases,
+        // where the data is noisiest and most consequential; 25th for
+        // earlier years) so the model sits below the low end of real
+        // outcomes rather than the middle. A flat 8% safety margin is
+        // layered on top so estimates stay below real list prices in the
+        // vast majority of cases.
+        function getMarketMultiplier(purchaseYear) {
+            const table = {
+                2006: 2.0315, 2007: 2.3738, 2008: 2.4545, 2009: 2.7786, 2010: 3.2280,
+                2011: 2.5566, 2012: 2.3390, 2013: 2.0148, 2014: 1.9222, 2015: 1.7622,
+                2016: 1.5354, 2017: 1.4496, 2018: 1.4215, 2019: 1.2278, 2020: 1.2814,
+                2021: 1.0138, 2022: 0.9396, 2023: 0.9650, 2024: 0.9769, 2025: 0.9800
+            };
+            const SAFETY_MARGIN = 0.08;
+
+            // The safety margin exists to cover uncertainty that builds up over
+            // years of citywide drift. A purchase from the last ~year doesn't
+            // carry that uncertainty — the sale price itself IS current market
+            // evidence, not something to be second-guessed on top of. So the
+            // most recent purchase year (and this year) skip the margin and
+            // use the table value directly.
+            const RECENT_CUTOFF = 2025;
+
+            if (purchaseYear in table) {
+                const margin = (purchaseYear >= RECENT_CUTOFF) ? 0 : SAFETY_MARGIN;
+                return table[purchaseYear] * (1 - margin);
+            }
+            if (purchaseYear > 2025) {
+                // Purchased this year — not enough market history yet; treat as flat, no margin.
+                return 1.0;
+            }
+            // Before 2006 (outside the real reality-check data): chain the old
+            // flat +4%/year assumption from the purchase year up to 2006, then
+            // apply the real 2006 multiplier from there.
+            const yearsBefore2006 = 2006 - purchaseYear;
+            const preTableGrowth = Math.pow(1.04, yearsBefore2006);
+            return preTableGrowth * table[2006] * (1 - SAFETY_MARGIN);
+        }
+
+        // One-time adjustment for documented premium subdivisions that have
+        // cooled faster than the citywide average since the boom — matched by
+        // exact subdivision name so nearby/compound MLS tags (e.g. "Longs
+        // Peak, Old Town") aren't accidentally swept in.
+        function getZoneAdjustment(subdivision) {
+            if (!subdivision) return 0;
+            const zoneAdjustments = {
+                'old town': -0.05,
+                "brown's replat": -0.04,
+                'browns replat': -0.04,
+                'mountain view west': -0.02,
+                'longmont land co 2': -0.02
+            };
+            const key = subdivision.trim().toLowerCase();
+            return zoneAdjustments.hasOwnProperty(key) ? zoneAdjustments[key] : 0;
+        }
+
+        function getConditionMultiplier(conditionThen, conditionNow, kitchen, investmentAmount = null) {
+            let multiplier = 1.0;
+
+            const conditionKey = `${conditionThen}-${conditionNow}`;
+            const conditionMultipliers = {
+                'fixer-nothing': 0.92,
+                'fixer-improvements': 1.08,
+                'fixer-remodeled': 1.14,
+                'outdated-nothing': 0.96,
+                'outdated-improvements': 1.09,
+                'outdated-remodeled': 1.15,
+                'upgrades-nothing': 1.02,
+                'upgrades-improvements': 1.07,
+                'upgrades-remodeled': 1.12,
+                'remodeled-nothing': 1.04,
+                'remodeled-remodeled': 1.08,
+                'amazing-nothing': 1.05,
+                'amazing-remodeled': 1.07
+            };
+
+            multiplier *= conditionMultipliers[conditionKey] || 1.0;
+
+            const kitchenMultipliers = {
+                'barely': 0.94,
+                'outdated': 1.03,
+                'remodeled': 1.05,
+                'luxury': 1.08
+            };
+
+            multiplier *= kitchenMultipliers[kitchen] || 1.0;
+
+            if (conditionNow === 'improvements' || conditionNow === 'remodeled') {
+                const investmentMultipliers = {
+                    'under50': 0.6,
+                    '50to100': 0.85,
+                    '100to200': 1.0,
+                    'over200': 1.2
+                };
+
+                if (investmentAmount && investmentMultipliers[investmentAmount]) {
+                    const investmentFactor = investmentMultipliers[investmentAmount];
+                    multiplier = 1 + ((multiplier - 1) * investmentFactor);
+                }
+            }
+
+            return multiplier;
+        }
+
+        function calculateEquity(purchasePrice, purchaseDate, renovations = [], conditionThen = null, conditionNow = null, kitchen = null, investmentAmount = null, subdivision = null, multipleOffers = false) {
+            const year = parseInt(purchaseDate);
+            const currentYear = 2026;
+            const yearsOwned = currentYear - year;
+
+            const marketMultiplier = getMarketMultiplier(year);
+            const zoneAdjustment = getZoneAdjustment(subdivision);
+            let currentValue = purchasePrice * marketMultiplier * (1 + zoneAdjustment);
+
+            if (conditionThen && conditionNow && kitchen) {
+                const conditionMultiplier = getConditionMultiplier(conditionThen, conditionNow, kitchen, investmentAmount);
+                currentValue *= conditionMultiplier;
+            }
+
+            let renovationBoost = 0;
+            renovations.forEach(reno => {
+                if (reno === 'kitchen') renovationBoost += currentValue * 0.045;
+                if (reno === 'roof') renovationBoost += currentValue * 0.025;
+                if (reno === 'hvac') renovationBoost += currentValue * 0.02;
+                if (reno === 'masterbath') renovationBoost += currentValue * 0.03;
+                if (reno === 'bathroom') renovationBoost += currentValue * 0.025;
+                if (reno === 'flooring') renovationBoost += currentValue * 0.035;
+                if (reno === 'windows') renovationBoost += currentValue * 0.02;
+            });
+
+            currentValue += renovationBoost;
+            const equity = currentValue - purchasePrice;
+
+            return {
+                originalPrice: purchasePrice,
+                currentValue: Math.round(currentValue),
+                equity: Math.round(equity),
+                yearsOwned: yearsOwned,
+                renovationBoost: Math.round(renovationBoost)
+            };
+        }
+
+        // Manual entry handler
+        function calculateManual() {
+            const year = document.getElementById('manualPurchaseYear').value;
+            const price = parseFloat(document.getElementById('manualPurchasePrice').value);
+            const conditionThen = document.getElementById('manualConditionThen').value;
+            const conditionNow = document.getElementById('manualConditionNow').value;
+            const kitchen = document.getElementById('manualKitchen').value;
+            const investment = document.getElementById('manualInvestment').value;
+
+            if (!year || !price || !conditionThen || !conditionNow || !kitchen) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            currentCalculation = calculateEquity(price, year, selectedRenovations, conditionThen, conditionNow, kitchen, investment || null, currentSubdivision, currentMultipleOffers);
+            displayResults(null, { purchasePrice: price, purchaseDate: year });
+        }
+
+        function displayResults(property, manual = null) {
+            const data = currentCalculation;
+
+            // Calculate range: Conservative (-8%), Mid-Range (base), Optimistic (+8%)
+            const conservative = Math.round(data.currentValue * 0.92);
+            const midRange = Math.round(data.currentValue);
+            const optimistic = Math.round(data.currentValue * 1.08);
+
+            const midRangeEquity = data.equity;
+
+            document.getElementById('purchasePriceDisplay').textContent = formatCurrency(data.originalPrice);
+            document.getElementById('yearsOwnedDisplay').textContent = data.yearsOwned + ' years';
+
+            document.getElementById('conservativeDisplay').textContent = formatCurrency(conservative);
+            document.getElementById('midRangeDisplay').textContent = formatCurrency(midRange);
+            document.getElementById('optimisticDisplay').textContent = formatCurrency(optimistic);
+
+            document.getElementById('equityDisplay').textContent = formatCurrency(midRangeEquity);
+
+            if (data.renovationBoost > 0) {
+                document.getElementById('renovationBoostDisplay').textContent = '+' + formatCurrency(data.renovationBoost);
+                document.getElementById('renovationBoostCard').classList.remove('hidden');
+            } else {
+                document.getElementById('renovationBoostCard').classList.add('hidden');
+            }
+
+            document.getElementById('manualEntryForm').classList.add('hidden');
+            document.getElementById('resultsSection').classList.remove('hidden');
+
+            setTimeout(() => {
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+            }, 200);
+        }
+
+        function toggleRenovation(type) {
+            const button = event.target.closest('button');
+            const index = selectedRenovations.indexOf(type);
+
+            if (index > -1) {
+                selectedRenovations.splice(index, 1);
+                button.classList.remove('active');
+            } else {
+                selectedRenovations.push(type);
+                button.classList.add('active');
+            }
+        }
+
+        function recalculateWithRenovations() {
+            if (currentCalculation) {
+                const conditionThen = document.getElementById('manualConditionThen').value;
+                const conditionNow = document.getElementById('manualConditionNow').value;
+                const kitchen = document.getElementById('manualKitchen').value;
+                const investment = document.getElementById('manualInvestment').value;
+
+                currentCalculation = calculateEquity(
+                    currentCalculation.originalPrice,
+                    (2026 - currentCalculation.yearsOwned).toString(),
+                    selectedRenovations,
+                    conditionThen || null,
+                    conditionNow || null,
+                    kitchen || null,
+                    investment || null,
+                    currentSubdivision,
+                    currentMultipleOffers
+                );
+
+                document.getElementById('currentValueDisplay').textContent = formatCurrency(currentCalculation.currentValue);
+                document.getElementById('equityDisplay').textContent = formatCurrency(currentCalculation.equity);
+
+                if (currentCalculation.renovationBoost > 0) {
+                    document.getElementById('renovationBoostDisplay').textContent = '+' + formatCurrency(currentCalculation.renovationBoost);
+                    document.getElementById('renovationBoostCard').classList.remove('hidden');
+                } else {
+                    document.getElementById('renovationBoostCard').classList.add('hidden');
+                }
+            }
+        }
+
+        function showFeedbackForm() {
+            document.getElementById('feedbackFormSection').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('feedbackFormSection').scrollIntoView({ behavior: 'smooth' });
+            }, 200);
+        }
+
+        function hideFeedbackForm() {
+            document.getElementById('feedbackFormSection').classList.add('hidden');
+        }
+
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const feedbackData = {
+                name: document.getElementById('feedbackName').value,
+                email: document.getElementById('feedbackEmail').value,
+                phone: document.getElementById('feedbackPhone').value,
+                address: document.getElementById('feedbackAddress').value,
+                improvements: document.getElementById('feedbackImprovements').value,
+                estimatedValue: currentCalculation ? currentCalculation.currentValue : null,
+                originalEstimate: currentCalculation ? currentCalculation.originalPrice : null,
+                timestamp: new Date().toISOString()
+            };
+
+            // Log to console for now — wire this up to Forminit or your CRM when ready.
+            console.log('Feedback submitted:', feedbackData);
+
+            alert('Thanks for the feedback! I will review this and follow up with you soon.');
+
+            document.getElementById('feedbackForm').reset();
+            document.getElementById('feedbackFormSection').classList.add('hidden');
+        });
+
+        // Show investment field if improvements were made
+        document.getElementById('manualConditionNow').addEventListener('change', function(e) {
+            const investmentField = document.getElementById('investmentField');
+            if (this.value === 'improvements' || this.value === 'remodeled') {
+                investmentField.classList.remove('hidden');
+            } else {
+                investmentField.classList.add('hidden');
+                document.getElementById('manualInvestment').value = '';
+            }
+        });
+
+        // Allow Enter key to trigger the same real search flow as the button
+        document.getElementById('addressInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('searchButton').click();
+            }
+        });
+    </script>
+
+    <!-- Home Value Calculator: comps database, lazy-loaded so it doesn't block initial page render -->
+    <script>
+        let compsDbLoading = false;
+        let compsDbLoaded = false;
+
+        function loadCompsDatabase() {
+            if (compsDbLoading || compsDbLoaded) return;
+            compsDbLoading = true;
+
+            const msg = document.getElementById('dbLoadingMsg');
+            if (msg) msg.classList.remove('hidden');
+
+            const script = document.createElement('script');
+            script.src = './comps_database.js';
+            script.onload = function () {
+                compsDbLoaded = true;
+                compsDbLoading = false;
+                if (msg) msg.classList.add('hidden');
+            };
+            script.onerror = function () {
+                compsDbLoading = false;
+                if (msg) msg.classList.add('hidden');
+            };
+            document.head.appendChild(script);
+        }
+
+        // Trigger 1: start loading as soon as the calculator section scrolls into view,
+        // so the data is usually ready before the visitor finishes reading and clicks in.
+        const homeValueCalculatorSection = document.getElementById('home-value-calculator');
+        if (homeValueCalculatorSection && 'IntersectionObserver' in window) {
+            const dbObserver = new IntersectionObserver(function (entries, observer) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        loadCompsDatabase();
+                        observer.disconnect();
+                    }
+                });
+            }, { rootMargin: '200px' });
+            dbObserver.observe(homeValueCalculatorSection);
+        } else {
+            // Fallback for older browsers: just load it on page load.
+            loadCompsDatabase();
+        }
+
+        // Trigger 2: fallback in case the visitor jumps straight to the field
+        // (e.g. an anchor link) before the observer fires.
+        document.getElementById('addressInput').addEventListener('focus', loadCompsDatabase, { once: true });
+    </script>
+
+    <!-- Home Value Calculator: address autocomplete -->
+    <script>
+        const addressInput = document.getElementById('addressInput');
+        const addressDropdown = document.getElementById('addressDropdown');
+        const searchButton = document.getElementById('searchButton');
+        const manualForm = document.getElementById('manualEntryForm');
+
+        addressInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+
+            if (query.length < 2) {
+                addressDropdown.classList.add('hidden');
+                return;
+            }
+
+            if (!window.COMPS_DATABASE) {
+                loadCompsDatabase();
+                return;
+            }
+
+            const matches = Object.keys(window.COMPS_DATABASE)
+                .filter(addr => addr.includes(query))
+                .slice(0, 8);
+
+            if (matches.length === 0) {
+                addressDropdown.classList.add('hidden');
+                return;
+            }
+
+            addressDropdown.innerHTML = '';
+            matches.forEach(addr => {
+                const div = document.createElement('div');
+                div.className = 'px-4 py-3 border-b border-slate-200 cursor-pointer text-navy-900 hover:bg-navy-50 transition-colors';
+                div.textContent = window.COMPS_DATABASE[addr].address;
+                div.onclick = (e) => {
+                    e.preventDefault();
+                    selectAddress(addr);
+                };
+                addressDropdown.appendChild(div);
+            });
+
+            addressDropdown.classList.remove('hidden');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target !== addressInput) {
+                addressDropdown.classList.add('hidden');
+            }
+        });
+
+        function selectAddress(addr) {
+            const lookup = window.COMPS_DATABASE[addr];
+            addressInput.value = lookup.address;
+            addressDropdown.classList.add('hidden');
+
+            document.getElementById('manualPurchaseYear').value = lookup.purchase_year;
+            document.getElementById('manualPurchasePrice').value = lookup.purchase_price;
+            document.getElementById('manualConditionThen').value = 'upgrades';
+            document.getElementById('manualConditionNow').value = 'nothing';
+            document.getElementById('manualKitchen').value = 'outdated';
+
+            // Stash subdivision + multiple-offers so calculateManual() can factor
+            // in zone-specific cooling and the boom-period fair-value adjustment.
+            currentSubdivision = lookup.subdivision || null;
+            currentMultipleOffers = !!lookup.multiple_offers;
+
+            manualForm.classList.remove('hidden');
+            setTimeout(() => {
+                manualForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        searchButton.addEventListener('click', function() {
+            const query = addressInput.value.toLowerCase().trim();
+            if (!query) return;
+
+            addressDropdown.classList.add('hidden');
+
+            // If the database hasn't finished loading yet (e.g. clicked very fast
+            // on a slow connection), wait for it instead of wrongly falling back
+            // to manual entry.
+            if (!window.COMPS_DATABASE) {
+                loadCompsDatabase();
+                const msg = document.getElementById('dbLoadingMsg');
+                if (msg) msg.classList.remove('hidden');
+                let attempts = 0;
+                const waitForDb = setInterval(function () {
+                    attempts++;
+                    if (window.COMPS_DATABASE) {
+                        clearInterval(waitForDb);
+                        searchButton.click();
+                    } else if (attempts > 40) { // ~10s timeout
+                        clearInterval(waitForDb);
+                        if (msg) msg.textContent = 'Still loading market data — please try again in a moment.';
+                    }
+                }, 250);
+                return;
+            }
+
+            if (window.COMPS_DATABASE[query]) {
+                selectAddress(query);
+            } else {
+                // Address not found - show manual entry.
+                currentSubdivision = null;
+                currentMultipleOffers = false;
+                manualForm.classList.remove('hidden');
+                setTimeout(() => {
+                    manualForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        });
     </script>
 </body>
 </html>
