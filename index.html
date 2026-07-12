@@ -444,17 +444,19 @@
                 <!-- Address Lookup -->
                 <div class="bg-white rounded-xl border border-slate-200 p-8 mb-8">
                     <label class="block text-sm font-semibold text-navy-900 mb-3">Your Longmont Address</label>
-                    <div class="flex gap-2 mb-4 relative">
-                        <input
-                            type="text"
-                            id="addressInput"
-                            placeholder="e.g., 744 Bowen St"
-                            autocomplete="off"
-                            class="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent text-navy-900"
-                        >
-                        <div id="addressDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-slate-300 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50"></div>
-                        <button type="button" id="searchButton" class="bg-navy-800 hover:bg-navy-900 text-white px-6 py-3 rounded-lg font-semibold transition-colors whitespace-nowrap cursor-pointer">
-                            Show Me My Value
+                    <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                        <div class="relative flex-1">
+                            <input
+                                type="text"
+                                id="addressInput"
+                                placeholder="e.g., 744 Bowen St"
+                                autocomplete="off"
+                                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent text-navy-900"
+                            >
+                            <div id="addressDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-slate-300 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50"></div>
+                        </div>
+                        <button type="button" id="searchButton" class="w-full sm:w-auto bg-navy-800 hover:bg-navy-900 text-white px-6 py-3.5 sm:py-3 rounded-lg font-semibold transition-colors whitespace-nowrap cursor-pointer">
+                            Show My Value
                         </button>
                     </div>
                     <p id="dbLoadingMsg" class="hidden text-sm text-navy-600 mb-4">Loading Longmont market data…</p>
