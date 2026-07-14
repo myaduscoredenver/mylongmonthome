@@ -309,8 +309,10 @@
 
                     <form id="proposalForm" action="https://formspree.io/f/mwvgpbqd" method="POST">
                         <input type="hidden" name="_subject" value="New Compensation Proposal - MyLongmontHome.com">
+                        <input type="hidden" name="Form" value="Send James This Proposal">
                         <input type="hidden" name="Listing Agent Compensation Rate" id="proposalListingRate">
                         <input type="hidden" name="Buyer Agent Compensation Rate" id="proposalBuyerRate">
+                        <input type="hidden" name="Total Compensation Rate" id="proposalTotalRate">
                         <input type="hidden" name="Slider Home Value" id="proposalHomeValue">
 
                         <div class="grid sm:grid-cols-2 gap-4 mb-4">
@@ -1086,6 +1088,7 @@
             // Sync hidden proposal fields
             document.getElementById('proposalListingRate').value = listingRate.toFixed(1) + '%';
             document.getElementById('proposalBuyerRate').value = buyerRate.toFixed(1) + '%';
+            document.getElementById('proposalTotalRate').value = (listingRate + buyerRate).toFixed(1) + '%';
             document.getElementById('proposalHomeValue').value = formatCurrency(salePrice);
         }
 
@@ -1098,6 +1101,9 @@
 
         // Proposal modal open/close
         function openProposalModal() {
+            // Re-sync the current calculator terms every time the modal opens.
+            // This matters after form.reset(), which clears hidden inputs too.
+            updateCalculator();
             document.getElementById('proposalModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
@@ -1148,6 +1154,9 @@
 
         proposalForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            // Capture the exact proposal terms shown on the calculator at submit time.
+            updateCalculator();
 
             proposalSuccessMessage.classList.add('hidden');
             proposalErrorMessage.classList.add('hidden');
@@ -1569,8 +1578,9 @@
 
             const estimatorPayload = new FormData();
             estimatorPayload.append('_subject', 'Home Value Check - MyLongmontHome.com');
+            estimatorPayload.append('Form', 'Home Value Check');
             estimatorPayload.append('Address', document.getElementById('addressInput').value || 'Manual entry');
-            estimatorPayload.append('Purchase Price (You Paid)', formatCurrency(data.originalPrice));
+            estimatorPayload.append('You Paid', formatCurrency(data.originalPrice));
             estimatorPayload.append('Years Owned', data.yearsOwned + ' years');
             estimatorPayload.append('Conservative Value', formatCurrency(conservative));
             estimatorPayload.append('Mid-Range Value', formatCurrency(midRange));
@@ -1578,7 +1588,7 @@
             estimatorPayload.append('Equity Built (Mid-Range)', formatCurrency(midRangeEquity));
             estimatorPayload.append('Condition When Bought', conditionLabels[conditionThenEl.value] || conditionThenEl.value || 'Not specified');
             estimatorPayload.append('Condition Today', conditionNowLabels[conditionNowEl.value] || conditionNowEl.value || 'Not specified');
-            estimatorPayload.append('Kitchen Condition', kitchenLabels[kitchenEl.value] || kitchenEl.value || 'Not specified');
+            estimatorPayload.append('Tell Me About the Kitchen', kitchenLabels[kitchenEl.value] || kitchenEl.value || 'Not specified');
 
             fetch('https://formspree.io/f/mlgqdnan', {
                 method: 'POST',
