@@ -1,18 +1,19 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sell Your Home with Homestead Real Estate - Negotiable Compensation</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.min.js"></script>
-    <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sell Your Home with Homestead Real Estate - Negotiable Compensation</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.min.js"></script>
+<script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -49,7 +50,7 @@
             }
         }
     </script>
-    <style>
+<style>
         body { font-family: 'Inter', system-ui, sans-serif; }
 
         /* Range slider styling for better mobile interaction */
@@ -105,952 +106,752 @@
             }
         }
     </style>
-</head>
+</link></head>
 <body class="bg-white">
-    <iframe name="formspreeSilentTarget" id="formspreeSilentTarget" class="hidden" title="Form submission"></iframe>
-    <div id="app">
-        <!-- Header -->
-        <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-                <div class="flex justify-between items-center gap-4 mb-2 sm:mb-0">
-                    <a href="index.html" class="flex items-center">
-                        <img src="logo.png" alt="Homestead Real Estate" class="h-12 sm:h-14">
-                    </a>
-                    <a href="#form" class="border border-navy-700 text-navy-800 hover:bg-navy-800 hover:text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2 rounded transition-colors cursor-pointer whitespace-nowrap sm:ml-auto">
+<iframe class="hidden" id="formspreeSilentTarget" name="formspreeSilentTarget" title="Form submission"></iframe>
+<div id="app">
+<!-- Header -->
+<header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+<div class="flex justify-between items-center gap-4 mb-2 sm:mb-0">
+<a class="flex items-center" href="index.html">
+<img alt="Homestead Real Estate" class="h-12 sm:h-14" src="logo.png"/>
+</a>
+<a class="border border-navy-700 text-navy-800 hover:bg-navy-800 hover:text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2 rounded transition-colors cursor-pointer whitespace-nowrap sm:ml-auto" href="#form">
                         Talk Compensation
                     </a>
-                </div>
-                <nav class="flex md:hidden items-center justify-center gap-6">
-                    <a href="index.html" class="text-slate-700 hover:text-navy-800 font-medium text-sm">Home</a>
-                    <a href="sellers-guide.html" class="text-slate-700 hover:text-navy-800 font-medium text-sm">Seller's Guide</a>
-                    <a href="#form" class="text-slate-700 hover:text-navy-800 font-medium text-sm">Contact</a>
-                </nav>
-                <nav class="hidden md:flex items-center gap-8">
-                    <a href="index.html" class="text-slate-700 hover:text-navy-800 font-medium">Home</a>
-                    <a href="sellers-guide.html" class="text-slate-700 hover:text-navy-800 font-medium">Seller's Guide</a>
-                    <a href="#form" class="text-slate-700 hover:text-navy-800 font-medium">Contact</a>
-                </nav>
-            </div>
-        </header>
-
-        <!-- Hero Section -->
-        <section class="relative overflow-hidden bg-navy-900">
-            <div class="absolute inset-0 opacity-10" style="background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 800%22><defs><pattern id=%22grid%22 width=%2240%22 height=%2240%22 patternUnits=%22userSpaceOnUse%22><path d=%22M 40 0 L 0 0 0 40%22 fill=%22none%22 stroke=%22white%22 stroke-width=%220.5%22/></pattern></defs><rect width=%221200%22 height=%22800%22 fill=%22url(%23grid)%22/></svg>')"></div>
-
-            <div class="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-14 sm:py-16 md:py-20">
-                <div class="mb-6 inline-block border border-white/25 px-4 py-2 rounded-full">
-                    <p class="text-white/90 font-medium text-sm tracking-wide">James Taylor, Homestead Real Estate, LLC &nbsp;&middot;&nbsp; Longmont, Colorado</p>
-                </div>
-
-                <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-semibold text-white mb-4 leading-tight">
-                    Your Local Longmont<br class="hidden sm:block"> Real Estate Expert
+</div>
+<nav class="flex md:hidden items-center justify-center gap-6">
+<a class="text-slate-700 hover:text-navy-800 font-medium text-sm" href="index.html">Home</a>
+<a class="text-slate-700 hover:text-navy-800 font-medium text-sm" href="sellers-guide.html">Seller's Guide</a>
+<a class="text-slate-700 hover:text-navy-800 font-medium text-sm" href="#form">Contact</a>
+</nav>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-700 hover:text-navy-800 font-medium" href="index.html">Home</a>
+<a class="text-slate-700 hover:text-navy-800 font-medium" href="sellers-guide.html">Seller's Guide</a>
+<a class="text-slate-700 hover:text-navy-800 font-medium" href="#form">Contact</a>
+</nav>
+</div>
+</header>
+<!-- Hero Section -->
+<section class="relative overflow-hidden bg-navy-900">
+<div class="absolute inset-0 opacity-10" style="background: url('data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 800%22&gt;&lt;defs&gt;&lt;pattern id=%22grid%22 width=%2240%22 height=%2240%22 patternUnits=%22userSpaceOnUse%22&gt;&lt;path d=%22M 40 0 L 0 0 0 40%22 fill=%22none%22 stroke=%22white%22 stroke-width=%220.5%22/&gt;&lt;/pattern&gt;&lt;/defs&gt;&lt;rect width=%221200%22 height=%22800%22 fill=%22url(%23grid)%22/&gt;&lt;/svg&gt;')"></div>
+<div class="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-14 sm:py-16 md:py-20">
+<div class="mb-6 inline-block border border-white/25 px-4 py-2 rounded-full">
+<p class="text-white/90 font-medium text-sm tracking-wide">James Taylor, Homestead Real Estate, LLC  ·  Longmont, Colorado</p>
+</div>
+<h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-semibold text-white mb-4 leading-tight">
+                    Your Local Longmont<br class="hidden sm:block"/> Real Estate Expert
                 </h1>
-
-                <p class="text-lg md:text-xl text-navy-100 mb-3 font-light max-w-2xl mx-auto">
+<p class="text-lg md:text-xl text-navy-100 mb-3 font-light max-w-2xl mx-auto">
                     Full-service Realtor with 17 years of experience.
                 </p>
-
-                <p class="text-base text-navy-200 mb-8 max-w-xl mx-auto">
+<p class="text-base text-navy-200 mb-8 max-w-xl mx-auto">
                     Real estate agent compensation is negotiable. See what that means for your sale below.
                 </p>
-
-                <a href="#calculator" class="inline-flex items-center gap-2 bg-brass-500 hover:bg-brass-600 text-white font-semibold py-3.5 px-8 rounded transition-colors">
+<a class="inline-flex items-center gap-2 bg-brass-500 hover:bg-brass-600 text-white font-semibold py-3.5 px-8 rounded transition-colors" href="#calculator">
                     See Your Numbers
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-                </a>
-
-                <p class="text-sm text-navy-200 mt-8 max-w-xl mx-auto">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+<p class="text-sm text-navy-200 mt-8 max-w-xl mx-auto">
                     Whether you're upsizing, downsizing, or just ready for a change, I'll handle the details so you can focus on what matters. My job is to make this process smooth, transparent, and fair.
                 </p>
-            </div>
-        </section>
-
-        <!-- Calculator Section -->
-        <section id="calculator" class="bg-[#faf9f6] py-16 sm:py-24">
-            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-10 sm:mb-16">
-                    <p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">The Numbers</p>
-                    <h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">
+</div>
+</section>
+<!-- Calculator Section -->
+<section class="bg-[#faf9f6] py-16 sm:py-24" id="calculator">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-10 sm:mb-16">
+<p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">The Numbers</p>
+<h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">
                         Compensation Structured Around You
                     </h2>
-                    <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+<p class="text-lg text-slate-600 max-w-2xl mx-auto">
                         Compensation is fully negotiable. Adjust the amounts below to reflect what feels right for your sale — this becomes the starting point for our conversation, not a locked-in rate.
                     </p>
-                </div>
-
-                <!-- Price Slider -->
-                <div class="bg-white rounded-xl p-8 border border-slate-200 mb-5 sm:mb-6">
-                    <label class="block text-base font-semibold text-navy-900 mb-6">
+</div>
+<!-- Price Slider -->
+<div class="bg-white rounded-xl p-8 border border-slate-200 mb-5 sm:mb-6">
+<label class="block text-base font-semibold text-navy-900 mb-6">
                         What's your home worth?
                     </label>
-                    <div class="flex gap-6 items-center mb-4">
-                        <input
-                            type="range"
-                            id="salePrice"
-                            min="100000"
-                            max="2000000"
-                            step="25000"
-                            value="500000"
-                            class="flex-1 h-2 bg-navy-100 rounded-lg appearance-none cursor-pointer"
-                        >
-                        <div id="salePriceDisplay" class="text-2xl sm:text-3xl font-semibold text-navy-800 whitespace-nowrap min-w-fit">
+<div class="flex gap-6 items-center mb-4">
+<input class="flex-1 h-2 bg-navy-100 rounded-lg appearance-none cursor-pointer" id="salePrice" max="2000000" min="100000" step="25000" type="range" value="500000"/>
+<div class="text-2xl sm:text-3xl font-semibold text-navy-800 whitespace-nowrap min-w-fit" id="salePriceDisplay">
                             $500,000
                         </div>
-                    </div>
-                    <p class="text-sm text-slate-500">Drag to adjust your home value</p>
-                </div>
-
-                <!-- Listing Agent Rate -->
-                <div class="bg-white rounded-xl p-8 border border-slate-200 mb-5 sm:mb-6">
-                    <label class="block text-base font-semibold text-navy-900 mb-6">
+</div>
+<p class="text-sm text-slate-500">Drag to adjust your home value</p>
+</div>
+<!-- Listing Agent Rate -->
+<div class="bg-white rounded-xl p-8 border border-slate-200 mb-5 sm:mb-6">
+<label class="block text-base font-semibold text-navy-900 mb-6">
                         How much would you like to pay me, your listing agent?
                     </label>
-                    <div class="flex gap-6 items-center mb-4">
-                        <input
-                            type="range"
-                            id="listingAgentRate"
-                            min="1.7"
-                            max="3.2"
-                            step="0.1"
-                            value="2.0"
-                            class="flex-1 h-2 bg-navy-100 rounded-lg appearance-none cursor-pointer"
-                        >
-                        <div id="listingRateDisplay" class="text-xl sm:text-2xl font-semibold text-navy-800 whitespace-nowrap">
+<div class="flex gap-6 items-center mb-4">
+<input class="flex-1 h-2 bg-navy-100 rounded-lg appearance-none cursor-pointer" id="listingAgentRate" max="3.2" min="1.7" step="0.1" type="range" value="2.0"/>
+<div class="text-xl sm:text-2xl font-semibold text-navy-800 whitespace-nowrap" id="listingRateDisplay">
                             2.0%
                         </div>
-                    </div>
-                    <p class="text-sm text-slate-500">This is completely up to you — there's no set rate.</p>
-                </div>
-
-                <!-- Buyer Agent Rate -->
-                <div class="bg-white rounded-xl p-8 border border-slate-200 mb-8 sm:mb-10">
-                    <label class="block text-base font-semibold text-navy-900 mb-6">
+</div>
+<p class="text-sm text-slate-500">This is completely up to you — there's no set rate.</p>
+</div>
+<!-- Buyer Agent Rate -->
+<div class="bg-white rounded-xl p-8 border border-slate-200 mb-8 sm:mb-10">
+<label class="block text-base font-semibold text-navy-900 mb-6">
                         What would you like to pay a buyer's agent?
                     </label>
-                    <div class="flex gap-6 items-center mb-4">
-                        <input
-                            type="range"
-                            id="buyerAgentRate"
-                            min="0"
-                            max="3.0"
-                            step="0.1"
-                            value="2.0"
-                            class="flex-1 h-2 bg-navy-100 rounded-lg appearance-none cursor-pointer"
-                        >
-                        <div id="buyerRateDisplay" class="text-xl sm:text-2xl font-semibold text-navy-800 whitespace-nowrap">
+<div class="flex gap-6 items-center mb-4">
+<input class="flex-1 h-2 bg-navy-100 rounded-lg appearance-none cursor-pointer" id="buyerAgentRate" max="3.0" min="0" step="0.1" type="range" value="2.0"/>
+<div class="text-xl sm:text-2xl font-semibold text-navy-800 whitespace-nowrap" id="buyerRateDisplay">
                             2.0%
                         </div>
-                    </div>
-                    <p class="text-sm text-slate-500">Set your buyer's agent compensation amount — this affects how many buyer's agents show your home, so choose thoughtfully.</p>
-                </div>
-
-                <!-- Your Proposal Summary -->
-                <div class="max-w-xl mx-auto mb-10 sm:mb-14">
-                    <div class="bg-white border border-slate-200 rounded-xl p-8">
-                        <h3 class="text-lg font-semibold text-navy-900 mb-6 text-center">
+</div>
+<p class="text-sm text-slate-500">Set your buyer's agent compensation amount — this affects how many buyer's agents show your home, so choose thoughtfully.</p>
+</div>
+<!-- Your Proposal Summary -->
+<div class="max-w-xl mx-auto mb-10 sm:mb-14">
+<div class="bg-white border border-slate-200 rounded-xl p-8">
+<h3 class="text-lg font-semibold text-navy-900 mb-6 text-center">
                             Your Proposal
                         </h3>
-                        <div class="space-y-3 mb-2">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-slate-600">Listing compensation (<span id="yourListRate">2.0</span>%)</span>
-                                <span class="font-semibold text-navy-900" id="yourListAmt">$10,000</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-slate-600">Buyer's agent compensation (<span id="yourBuyerRate">2.0</span>%)</span>
-                                <span class="font-semibold text-navy-900" id="yourBuyerAmt">$10,000</span>
-                            </div>
-                            <div class="border-t border-slate-200 pt-3 flex justify-between">
-                                <span class="font-semibold text-navy-900">Total Compensation</span>
-                                <span class="font-semibold text-navy-800 text-lg" id="yourTotal">$20,000</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Send Proposal CTA -->
-                <div class="text-center mb-8 sm:mb-12">
-                    <button onclick="openProposalModal()" class="inline-flex items-center gap-2 bg-navy-800 hover:bg-navy-900 text-white font-semibold py-4 px-9 rounded transition-colors text-base">
+<div class="space-y-3 mb-2">
+<div class="flex justify-between text-sm">
+<span class="text-slate-600">Listing compensation (<span id="yourListRate">2.0</span>%)</span>
+<span class="font-semibold text-navy-900" id="yourListAmt">$10,000</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-600">Buyer's agent compensation (<span id="yourBuyerRate">2.0</span>%)</span>
+<span class="font-semibold text-navy-900" id="yourBuyerAmt">$10,000</span>
+</div>
+<div class="border-t border-slate-200 pt-3 flex justify-between">
+<span class="font-semibold text-navy-900">Total Compensation</span>
+<span class="font-semibold text-navy-800 text-lg" id="yourTotal">$20,000</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Send Proposal CTA -->
+<div class="text-center mb-8 sm:mb-12">
+<button class="inline-flex items-center gap-2 bg-navy-800 hover:bg-navy-900 text-white font-semibold py-4 px-9 rounded transition-colors text-base" onclick="openProposalModal()">
                         Send James This Proposal
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
-                    </button>
-                    <p class="text-sm text-slate-500 mt-4 max-w-md mx-auto">James isn't committing to sell your home for this amount — this simply starts a conversation about what works for both of you. No pressure, no obligation.</p>
-                </div>
-
-                <!-- Info Bubble -->
-                <div class="mt-8 sm:mt-12">
-                    <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="w-full bg-white hover:bg-slate-50 border border-slate-200 rounded-xl p-6 transition-colors cursor-pointer">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 bg-navy-50 rounded-full flex items-center justify-center text-base font-semibold text-navy-700">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<p class="text-sm text-slate-500 mt-4 max-w-md mx-auto">James isn't committing to sell your home for this amount — this simply starts a conversation about what works for both of you. No pressure, no obligation.</p>
+</div>
+<!-- Info Bubble -->
+<div class="mt-8 sm:mt-12">
+<button class="w-full bg-white hover:bg-slate-50 border border-slate-200 rounded-xl p-6 transition-colors cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 bg-navy-50 rounded-full flex items-center justify-center text-base font-semibold text-navy-700">
                                     ?
                                 </div>
-                                <p class="text-base font-semibold text-navy-900 text-left">What does this all mean?</p>
-                            </div>
-                            <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-                        </div>
-                    </button>
-                    <div class="hidden mt-4 bg-white border border-slate-200 rounded-xl p-8">
-                        <p class="text-slate-600 leading-relaxed">
+<p class="text-base font-semibold text-navy-900 text-left">What does this all mean?</p>
+</div>
+<svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+</button>
+<div class="hidden mt-4 bg-white border border-slate-200 rounded-xl p-8">
+<p class="text-slate-600 leading-relaxed">
                             Compensation rates are negotiable. You have control over how much you pay in real estate compensation. When you enter into a listing agreement with your real estate agent, that agreement specifies the total compensation you're willing to pay and how much of that goes to the buyer's agent. This means you can work with your agent to structure compensations in a way that works for your situation — whether that's offering a competitive buyer's agent percentage or adjusting your listing-side compensation. Every transaction is unique, and your agreement should reflect your specific needs.
                         </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Proposal Modal -->
-        <div id="proposalModal" class="hidden fixed inset-0 bg-navy-950/60 backdrop-blur-sm z-[100] flex items-start sm:items-center justify-center p-4 overflow-y-auto">
-            <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full my-8 relative">
-                <button onclick="closeProposalModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-2xl font-semibold w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
-                    &times;
+</div>
+</div>
+</div>
+</section>
+<!-- Proposal Modal -->
+<div class="hidden fixed inset-0 bg-navy-950/60 backdrop-blur-sm z-[100] flex items-start sm:items-center justify-center p-4 overflow-y-auto" id="proposalModal">
+<div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full my-8 relative">
+<button class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-2xl font-semibold w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors" onclick="closeProposalModal()">
+                    ×
                 </button>
-                <div class="p-8 md:p-10">
-                    <h2 class="font-serif text-2xl md:text-3xl font-semibold text-navy-900 mb-2">Send James Your Proposal</h2>
-                    <p class="text-slate-600 mb-8">Tell me what you'd like to pay, and a bit about your situation. James isn't committing to sell your home for this amount — this simply starts the conversation.</p>
-
-                    <form id="proposalForm" action="https://formspree.io/f/mwvgpbqd" method="POST">
-                        <input type="hidden" name="_subject" value="New Compensation Proposal - MyLongmontHome.com">
-                        <input type="hidden" name="Form" value="Send James This Proposal">
-                        <input type="hidden" name="Listing Agent Compensation Rate" id="proposalListingRate">
-                        <input type="hidden" name="Buyer Agent Compensation Rate" id="proposalBuyerRate">
-                        <input type="hidden" name="Total Compensation Rate" id="proposalTotalRate">
-                        <input type="hidden" name="Slider Home Value" id="proposalHomeValue">
-
-                        <div class="grid sm:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-navy-900 mb-2">First Name *</label>
-                                <input type="text" name="First Name" required
-                                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                                    placeholder="First name">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-navy-900 mb-2">Last Name *</label>
-                                <input type="text" name="Last Name" required
-                                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                                    placeholder="Last name">
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-sm font-semibold text-navy-900 mb-2">Property Address You're Selling *</label>
-                            <input type="text" name="Property Address" required
-                                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                                placeholder="123 Main St, Longmont, CO">
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-sm font-semibold text-navy-900 mb-2">Timeline to Sell *</label>
-                            <select name="Timeline to Sell" required
-                                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent">
-                                <option value="">Select a timeframe</option>
-                                <option value="As soon as possible">As soon as possible</option>
-                                <option value="Within 3-6 months">Within 3-6 months</option>
-                                <option value="Within 6-12 months">Within 6-12 months</option>
-                                <option value="Next year or later">Next year or later</option>
-                                <option value="Just exploring for now">Just exploring for now</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-sm font-semibold text-navy-900 mb-2">How Much Do You Think Your House Is Worth? *</label>
-                            <input type="text" name="Estimated Home Value" required
-                                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                                placeholder="$500,000">
-                        </div>
-
-                        <div class="grid sm:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-navy-900 mb-2">Email Address *</label>
-                                <input type="email" name="Email" required
-                                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                                    placeholder="you@example.com">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-navy-900 mb-2">Phone Number *</label>
-                                <input type="tel" name="Phone" required
-                                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                                    placeholder="(720) 555-0123">
-                            </div>
-                        </div>
-
-                        <div class="mb-6">
-                            <label class="block text-sm font-semibold text-navy-900 mb-2">Preferred Communication *</label>
-                            <select name="Preferred Communication" required
-                                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent">
-                                <option value="">Select a method</option>
-                                <option value="Phone Call">Phone Call</option>
-                                <option value="Text">Text</option>
-                                <option value="Email">Email</option>
-                            </select>
-                        </div>
-
-                        <!-- Purchasing another property? -->
-                        <div class="mb-4 bg-slate-50 rounded-lg p-5 border border-slate-200">
-                            <label class="block text-sm font-semibold text-navy-900 mb-3">Do You Plan on Purchasing Another Property? *</label>
-                            <div class="flex gap-4">
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="radio" name="Purchasing Another Property" value="Yes" id="purchasingYes" class="w-5 h-5 text-navy-700">
-                                    <span class="font-medium text-slate-800">Yes</span>
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="radio" name="Purchasing Another Property" value="No" id="purchasingNo" class="w-5 h-5 text-navy-700">
-                                    <span class="font-medium text-slate-800">No</span>
-                                </label>
-                            </div>
-
-                            <!-- Conditional fields -->
-                            <div id="purchasingDetails" class="hidden mt-4 space-y-4">
-                                <div>
-                                    <label class="block text-sm font-semibold text-navy-900 mb-2">When?</label>
-                                    <input type="text" name="Purchase When"
-                                        class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                                        placeholder="e.g. Within 6 months">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-navy-900 mb-2">Where?</label>
-                                    <input type="text" name="Purchase Where"
-                                        class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                                        placeholder="e.g. Longmont, CO or another area">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Always-visible reach-out confirmation -->
-                        <label class="flex items-start gap-3 p-4 border border-navy-200 bg-navy-50 rounded-lg cursor-pointer mb-6">
-                            <input type="checkbox" name="Wants James to Reach Out" value="Yes" id="wantsJamesReachOut" required class="w-5 h-5 text-navy-700 rounded mt-0.5">
-                            <span class="text-navy-900 font-medium text-sm">I want James to reach out to me.</span>
-                        </label>
-
-                        <button type="submit" class="w-full bg-navy-800 hover:bg-navy-900 text-white font-semibold py-4 px-6 rounded-lg transition-colors text-base flex items-center justify-center gap-3 mt-2">
+<div class="p-8 md:p-10">
+<h2 class="font-serif text-2xl md:text-3xl font-semibold text-navy-900 mb-2">Send James Your Proposal</h2>
+<p class="text-slate-600 mb-8">Tell me what you'd like to pay, and a bit about your situation. James isn't committing to sell your home for this amount — this simply starts the conversation.</p>
+<form action="https://formspree.io/f/mwvgpbqd" id="proposalForm" method="POST">
+<input name="_subject" type="hidden" value="New Compensation Proposal - MyLongmontHome.com"/>
+<input name="Form" type="hidden" value="Send James This Proposal"/>
+<input id="proposalListingRate" name="Listing Agent Compensation Rate" type="hidden"/>
+<input id="proposalBuyerRate" name="Buyer Agent Compensation Rate" type="hidden"/>
+<input id="proposalTotalRate" name="Total Compensation Rate" type="hidden"/>
+<input id="proposalHomeValue" name="Slider Home Value" type="hidden"/>
+<div class="grid sm:grid-cols-2 gap-4 mb-4">
+<div>
+<label class="block text-sm font-semibold text-navy-900 mb-2">First Name *</label>
+<input class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent" name="First Name" placeholder="First name" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-navy-900 mb-2">Last Name *</label>
+<input class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent" name="Last Name" placeholder="Last name" required="" type="text"/>
+</div>
+</div>
+<div class="mb-4">
+<label class="block text-sm font-semibold text-navy-900 mb-2">Property Address You're Selling *</label>
+<input class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent" name="Property Address" placeholder="123 Main St, Longmont, CO" required="" type="text"/>
+</div>
+<div class="mb-4">
+<label class="block text-sm font-semibold text-navy-900 mb-2">Timeline to Sell *</label>
+<select class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent" name="Timeline to Sell" required="">
+<option value="">Select a timeframe</option>
+<option value="As soon as possible">As soon as possible</option>
+<option value="Within 3-6 months">Within 3-6 months</option>
+<option value="Within 6-12 months">Within 6-12 months</option>
+<option value="Next year or later">Next year or later</option>
+<option value="Just exploring for now">Just exploring for now</option>
+</select>
+</div>
+<div class="mb-4">
+<label class="block text-sm font-semibold text-navy-900 mb-2">How Much Do You Think Your House Is Worth? *</label>
+<input class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent" name="Estimated Home Value" placeholder="$500,000" required="" type="text"/>
+</div>
+<div class="grid sm:grid-cols-2 gap-4 mb-4">
+<div>
+<label class="block text-sm font-semibold text-navy-900 mb-2">Email Address *</label>
+<input class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent" name="Email" placeholder="you@example.com" required="" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-navy-900 mb-2">Phone Number *</label>
+<input class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent" name="Phone" placeholder="(720) 555-0123" required="" type="tel"/>
+</div>
+</div>
+<div class="mb-6">
+<label class="block text-sm font-semibold text-navy-900 mb-2">Preferred Communication *</label>
+<select class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent" name="Preferred Communication" required="">
+<option value="">Select a method</option>
+<option value="Phone Call">Phone Call</option>
+<option value="Text">Text</option>
+<option value="Email">Email</option>
+</select>
+</div>
+<!-- Purchasing another property? -->
+<div class="mb-4 bg-slate-50 rounded-lg p-5 border border-slate-200">
+<label class="block text-sm font-semibold text-navy-900 mb-3">Do You Plan on Purchasing Another Property? *</label>
+<div class="flex gap-4">
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="w-5 h-5 text-navy-700" id="purchasingYes" name="Purchasing Another Property" type="radio" value="Yes"/>
+<span class="font-medium text-slate-800">Yes</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="w-5 h-5 text-navy-700" id="purchasingNo" name="Purchasing Another Property" type="radio" value="No"/>
+<span class="font-medium text-slate-800">No</span>
+</label>
+</div>
+<!-- Conditional fields -->
+<div class="hidden mt-4 space-y-4" id="purchasingDetails">
+<div>
+<label class="block text-sm font-semibold text-navy-900 mb-2">When?</label>
+<input class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent" name="Purchase When" placeholder="e.g. Within 6 months" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-navy-900 mb-2">Where?</label>
+<input class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent" name="Purchase Where" placeholder="e.g. Longmont, CO or another area" type="text"/>
+</div>
+</div>
+</div>
+<!-- Always-visible reach-out confirmation -->
+<label class="flex items-start gap-3 p-4 border border-navy-200 bg-navy-50 rounded-lg cursor-pointer mb-6">
+<input class="w-5 h-5 text-navy-700 rounded mt-0.5" id="wantsJamesReachOut" name="Wants James to Reach Out" required="" type="checkbox" value="Yes"/>
+<span class="text-navy-900 font-medium text-sm">I want James to reach out to me.</span>
+</label>
+<button class="w-full bg-navy-800 hover:bg-navy-900 text-white font-semibold py-4 px-6 rounded-lg transition-colors text-base flex items-center justify-center gap-3 mt-2" type="submit">
                             Submit
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
-                        </button>
-
-                        <div id="proposalSuccessMessage" class="mt-6 bg-emerald-50 border border-emerald-300 text-emerald-800 px-6 py-4 rounded-lg text-center font-medium hidden">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<div class="mt-6 bg-emerald-50 border border-emerald-300 text-emerald-800 px-6 py-4 rounded-lg text-center font-medium hidden" id="proposalSuccessMessage">
                             Thanks! I'll be in touch soon to talk through your proposal.
                         </div>
-                        <div id="proposalErrorMessage" class="mt-6 bg-red-50 border border-red-300 text-red-800 px-6 py-4 rounded-lg text-center font-medium hidden"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Home Value Calculator Section -->
-        <section id="home-value-calculator" class="bg-white py-16 sm:py-24 border-t border-slate-200">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-10 sm:mb-14">
-                    <p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">Home Value Estimator</p>
-                    <h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">What's Your Longmont Home Worth Today?</h2>
-                    <p class="text-lg text-slate-600 max-w-2xl mx-auto">Enter your address to see an estimated value range built from Longmont market data.</p>
-                </div>
-
-                <!-- Address Lookup -->
-                <div class="bg-white rounded-xl border border-slate-200 p-8 mb-8">
-                    <label class="block text-sm font-semibold text-navy-900 mb-3">Your Longmont Address</label>
-                    <div class="flex flex-col sm:flex-row gap-3 mb-4">
-                        <div class="relative flex-1">
-                            <input
-                                type="text"
-                                id="addressInput"
-                                placeholder="e.g., 744 Bowen St"
-                                autocomplete="off"
-                                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent text-navy-900"
-                            >
-                            <div id="addressDropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-slate-300 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50"></div>
-                        </div>
-                        <button type="button" id="searchButton" class="w-full sm:w-auto bg-navy-800 hover:bg-navy-900 text-white px-6 py-3.5 sm:py-3 rounded-lg font-semibold transition-colors whitespace-nowrap cursor-pointer">
+<div class="mt-6 bg-red-50 border border-red-300 text-red-800 px-6 py-4 rounded-lg text-center font-medium hidden" id="proposalErrorMessage"></div>
+</form>
+</div>
+</div>
+</div>
+<!-- Home Value Calculator Section -->
+<section class="bg-white py-16 sm:py-24 border-t border-slate-200" id="home-value-calculator">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-10 sm:mb-14">
+<p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">Home Value Estimator</p>
+<h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">What's Your Longmont Home Worth Today?</h2>
+<p class="text-lg text-slate-600 max-w-2xl mx-auto">Enter your address to see an estimated value range built from Longmont market data.</p>
+</div>
+<!-- Address Lookup -->
+<div class="bg-white rounded-xl border border-slate-200 p-8 mb-8">
+<label class="block text-sm font-semibold text-navy-900 mb-3">Your Longmont Address</label>
+<div class="flex flex-col sm:flex-row gap-3 mb-4">
+<div class="relative flex-1">
+<input autocomplete="off" class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent text-navy-900" id="addressInput" placeholder="e.g., 744 Bowen St" type="text"/>
+<div class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-slate-300 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50" id="addressDropdown"></div>
+</div>
+<button class="w-full sm:w-auto bg-navy-800 hover:bg-navy-900 text-white px-6 py-3.5 sm:py-3 rounded-lg font-semibold transition-colors whitespace-nowrap cursor-pointer" id="searchButton" type="button">
                             Show My Value
                         </button>
-                    </div>
-                    <p id="dbLoadingMsg" class="hidden text-sm text-navy-600 mb-4">Loading Longmont market data…</p>
-
-                    <!-- Manual Entry Form (Hidden by default) -->
-                    <div id="manualEntryForm" class="hidden border-t border-slate-200 pt-6">
-                        <h3 class="font-semibold text-navy-900 mb-4">Tell Us About Your Home</h3>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-2">When Did You Buy?</label>
-                                <input
-                                    type="number"
-                                    id="manualPurchaseYear"
-                                    min="1980"
-                                    max="2026"
-                                    placeholder="2012"
-                                    class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                                >
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-2">Purchase Price</label>
-                                <div class="flex items-center">
-                                    <span class="text-slate-600 mr-2">$</span>
-                                    <input
-                                        type="number"
-                                        id="manualPurchasePrice"
-                                        placeholder="250000"
-                                        class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                                    >
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-2">Condition When You Bought It</label>
-                                <select id="manualConditionThen" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent">
-                                    <option value="">Select condition</option>
-                                    <option value="fixer">A true fixer upper!</option>
-                                    <option value="outdated">OK, but definitely outdated</option>
-                                    <option value="upgrades">Some upgrades</option>
-                                    <option value="remodeled">Fully remodeled</option>
-                                    <option value="amazing">Fully remodeled with amazing features and finishes</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-2">Condition of Property Today</label>
-                                <select id="manualConditionNow" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent">
-                                    <option value="">Select condition</option>
-                                    <option value="nothing">I didn't do anything</option>
-                                    <option value="improvements">A few improvements</option>
-                                    <option value="remodeled">I completely remodeled it</option>
-                                </select>
-                            </div>
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-slate-700 mb-2">Tell Me About the Kitchen</label>
-                                <select id="manualKitchen" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent">
-                                    <option value="">Select kitchen condition</option>
-                                    <option value="barely">Barely functional</option>
-                                    <option value="outdated">Outdated but nice</option>
-                                    <option value="remodeled">Remodeled</option>
-                                    <option value="luxury">Luxury - it's a chef's kitchen!</option>
-                                </select>
-                            </div>
-                            <div id="investmentField" class="hidden md:col-span-2">
-                                <label class="block text-sm font-medium text-slate-700 mb-2">Approximately How Much Did You Invest in Improvements?</label>
-                                <select id="manualInvestment" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent">
-                                    <option value="">Select investment range</option>
-                                    <option value="0to10">$0 - $10,000</option>
-                                    <option value="10to25">$10,000 - $25,000</option>
-                                    <option value="25to50">$25,000 - $50,000</option>
-                                    <option value="50to75">$50,000 - $75,000</option>
-                                    <option value="75to100">$75,000 - $100,000</option>
-                                    <option value="100to150">$100,000 - $150,000</option>
-                                    <option value="over150">More than $150,000</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <button onclick="calculateManual()" class="w-full bg-navy-800 hover:bg-navy-900 text-white font-semibold py-3 rounded-lg transition-colors mb-4">
+</div>
+<p class="hidden text-sm text-navy-600 mb-4" id="dbLoadingMsg">Loading Longmont market data…</p>
+<!-- Manual Entry Form (Hidden by default) -->
+<div class="hidden border-t border-slate-200 pt-6" id="manualEntryForm">
+<h3 class="font-semibold text-navy-900 mb-4">Tell Us About Your Home</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-2">When Did You Buy?</label>
+<input class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualPurchaseYear" max="2026" min="1980" placeholder="2012" type="number"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-2">Purchase Price</label>
+<div class="flex items-center">
+<span class="text-slate-600 mr-2">$</span>
+<input class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualPurchasePrice" placeholder="250000" type="number"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-2">Condition When You Bought It</label>
+<select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualConditionThen">
+<option value="">Select condition</option>
+<option value="fixer">A true fixer upper!</option>
+<option value="outdated">OK, but definitely outdated</option>
+<option value="upgrades">Some upgrades</option>
+<option value="remodeled">Fully remodeled</option>
+<option value="amazing">Fully remodeled with amazing features and finishes</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-2">Condition of Property Today</label>
+<select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualConditionNow">
+<option value="">Select condition</option>
+<option value="nothing">I didn't do anything</option>
+<option value="improvements">A few improvements</option>
+<option value="remodeled">I completely remodeled it</option>
+</select>
+</div>
+<div class="md:col-span-2">
+<label class="block text-sm font-medium text-slate-700 mb-2">Tell Me About the Kitchen</label>
+<select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualKitchen">
+<option value="">Select kitchen condition</option>
+<option value="barely">Barely functional</option>
+<option value="outdated">Outdated but nice</option>
+<option value="remodeled">Remodeled</option>
+<option value="luxury">Luxury - it's a chef's kitchen!</option>
+</select>
+</div>
+<div class="hidden md:col-span-2" id="investmentField">
+<label class="block text-sm font-medium text-slate-700 mb-2">Approximately How Much Did You Invest in Improvements?</label>
+<select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualInvestment">
+<option value="">Select investment range</option>
+<option value="0to10">$0 - $10,000</option>
+<option value="10to25">$10,000 - $25,000</option>
+<option value="25to50">$25,000 - $50,000</option>
+<option value="50to75">$50,000 - $75,000</option>
+<option value="75to100">$75,000 - $100,000</option>
+<option value="100to150">$100,000 - $150,000</option>
+<option value="over150">More than $150,000</option>
+</select>
+</div>
+</div>
+<button class="w-full bg-navy-800 hover:bg-navy-900 text-white font-semibold py-3 rounded-lg transition-colors mb-4" onclick="calculateManual()">
                             Calculate My Home Value
                         </button>
-                    </div>
-                </div>
-
-                <!-- Results Display -->
-                <div id="resultsSection" class="hidden">
-                    <!-- Main Value Card with Range -->
-                    <div class="bg-emerald-50 rounded-xl p-8 mb-8 border border-emerald-200">
-                        <p class="text-slate-600 text-sm font-medium mb-4">Your Estimated Home Value Range (July 2026)</p>
-
-                        <!-- Range Display -->
-                        <div class="space-y-3 mb-8">
-                            <div class="bg-white rounded-lg p-4 border border-slate-200">
-                                <p class="text-slate-500 text-xs font-semibold mb-1">Conservative</p>
-                                <p class="text-2xl sm:text-3xl font-semibold text-navy-900 truncate" id="conservativeDisplay">$0</p>
-                            </div>
-                            <div class="bg-emerald-600 text-white rounded-lg p-4">
-                                <p class="text-emerald-100 text-xs font-semibold mb-1">Mid-Range (Most Likely)</p>
-                                <p class="text-2xl sm:text-3xl font-semibold truncate" id="midRangeDisplay">$0</p>
-                            </div>
-                            <div class="bg-white rounded-lg p-4 border border-slate-200">
-                                <p class="text-slate-500 text-xs font-semibold mb-1">Optimistic</p>
-                                <p class="text-2xl sm:text-3xl font-semibold text-navy-900 truncate" id="optimisticDisplay">$0</p>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4 mb-6">
-                            <div class="bg-white/70 rounded-lg p-4">
-                                <p class="text-slate-600 text-sm mb-1">You Paid</p>
-                                <p class="text-xl font-semibold text-navy-900" id="purchasePriceDisplay">$0</p>
-                            </div>
-                            <div class="bg-white/70 rounded-lg p-4">
-                                <p class="text-slate-600 text-sm mb-1">Years Owned</p>
-                                <p class="text-xl font-semibold text-navy-900" id="yearsOwnedDisplay">0</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-emerald-600 text-white rounded-xl p-6">
-                            <p class="text-emerald-100 text-sm font-medium mb-1">Equity Built (Mid-Range)</p>
-                            <p class="text-4xl font-semibold equity-number" id="equityDisplay">$0</p>
-                        </div>
-                    </div>
-
-                    <!-- Renovation Boost (if applicable) -->
-                    <div id="renovationBoostCard" class="hidden bg-brass-50 rounded-xl p-6 mb-8 border border-brass-200">
-                        <p class="text-slate-700 font-medium mb-2">Renovation Premium Added</p>
-                        <p class="text-3xl font-semibold text-brass-700" id="renovationBoostDisplay">+$0</p>
-                    </div>
-
-                    <!-- Info Text -->
-                    <div class="bg-navy-50 border-l-4 border-navy-700 rounded-lg p-6 mb-8">
-                        <p class="text-navy-900 font-semibold mb-2">Understanding Your Range</p>
-                        <p class="text-slate-700 text-sm mb-3">We show three scenarios because real estate valuation includes uncertainty:</p>
-                        <ul class="text-slate-700 text-sm space-y-2 ml-4 list-disc">
-                            <li><strong>Conservative:</strong> Market cools faster than expected, or your home's condition is stronger than we assessed</li>
-                            <li><strong>Mid-Range:</strong> Our best estimate based on 14,878 Longmont comps and current market trends</li>
-                            <li><strong>Optimistic:</strong> Market stabilizes faster, or buyer demand strengthens in your neighborhood</li>
-                        </ul>
-                        <p class="text-slate-700 text-sm mt-3">Most homes sell within this range. Next steps? Let's connect to discuss your specific situation.</p>
-                    </div>
-
-                    <!-- This Doesn't Look Right Button -->
-                    <div class="text-center mb-8">
-                        <button onclick="showFeedbackForm()" class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-navy-900 font-semibold py-3 px-6 rounded-lg border border-slate-200 transition-colors">
+</div>
+<p class="text-xs text-slate-500 mt-3 leading-relaxed"><strong>Privacy:</strong> The information you enter and the estimate generated may be securely recorded to help improve this estimator. Using this tool will not add you to a marketing list.</p></div>
+<!-- Results Display -->
+<div class="hidden" id="resultsSection">
+<!-- Main Value Card with Range -->
+<div class="bg-emerald-50 rounded-xl p-8 mb-8 border border-emerald-200">
+<p class="text-slate-600 text-sm font-medium mb-4">Your Estimated Home Value Range (July 2026)</p>
+<!-- Range Display -->
+<div class="space-y-3 mb-8">
+<div class="bg-white rounded-lg p-4 border border-slate-200">
+<p class="text-slate-500 text-xs font-semibold mb-1">Conservative</p>
+<p class="text-2xl sm:text-3xl font-semibold text-navy-900 truncate" id="conservativeDisplay">$0</p>
+</div>
+<div class="bg-emerald-600 text-white rounded-lg p-4">
+<p class="text-emerald-100 text-xs font-semibold mb-1">Mid-Range (Most Likely)</p>
+<p class="text-2xl sm:text-3xl font-semibold truncate" id="midRangeDisplay">$0</p>
+</div>
+<div class="bg-white rounded-lg p-4 border border-slate-200">
+<p class="text-slate-500 text-xs font-semibold mb-1">Optimistic</p>
+<p class="text-2xl sm:text-3xl font-semibold text-navy-900 truncate" id="optimisticDisplay">$0</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="bg-white/70 rounded-lg p-4">
+<p class="text-slate-600 text-sm mb-1">You Paid</p>
+<p class="text-xl font-semibold text-navy-900" id="purchasePriceDisplay">$0</p>
+</div>
+<div class="bg-white/70 rounded-lg p-4">
+<p class="text-slate-600 text-sm mb-1">Years Owned</p>
+<p class="text-xl font-semibold text-navy-900" id="yearsOwnedDisplay">0</p>
+</div>
+</div>
+<div class="bg-emerald-600 text-white rounded-xl p-6">
+<p class="text-emerald-100 text-sm font-medium mb-1">Equity Built (Mid-Range)</p>
+<p class="text-4xl font-semibold equity-number" id="equityDisplay">$0</p>
+</div>
+</div>
+<!-- Renovation Boost (if applicable) -->
+<div class="hidden bg-brass-50 rounded-xl p-6 mb-8 border border-brass-200" id="renovationBoostCard">
+<p class="text-slate-700 font-medium mb-2">Renovation Premium Added</p>
+<p class="text-3xl font-semibold text-brass-700" id="renovationBoostDisplay">+$0</p>
+</div>
+<!-- Info Text -->
+<div class="bg-navy-50 border-l-4 border-navy-700 rounded-lg p-6 mb-8">
+<p class="text-navy-900 font-semibold mb-2">Understanding Your Range</p>
+<p class="text-slate-700 text-sm mb-3">We show three scenarios because real estate valuation includes uncertainty:</p>
+<ul class="text-slate-700 text-sm space-y-2 ml-4 list-disc">
+<li><strong>Conservative:</strong> Market cools faster than expected, or your home's condition is stronger than we assessed</li>
+<li><strong>Mid-Range:</strong> Our best estimate based on 14,878 Longmont comps and current market trends</li>
+<li><strong>Optimistic:</strong> Market stabilizes faster, or buyer demand strengthens in your neighborhood</li>
+</ul>
+<p class="text-slate-700 text-sm mt-3">Most homes sell within this range. Next steps? Let's connect to discuss your specific situation.</p>
+</div>
+<!-- This Doesn't Look Right Button -->
+<div class="text-center mb-8">
+<button class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-navy-900 font-semibold py-3 px-6 rounded-lg border border-slate-200 transition-colors" onclick="showFeedbackForm()">
                             This Doesn't Look Right
                         </button>
-                    </div>
-
-                    <!-- Feedback Form (Hidden by default) -->
-                    <div id="feedbackFormSection" class="hidden bg-white rounded-xl border border-slate-200 p-8">
-                        <h3 class="font-serif text-2xl font-semibold text-navy-900 mb-2">Help Us Get It Right</h3>
-                        <p class="text-slate-600 mb-6">Tell us more about your property so we can provide a more accurate estimate.</p>
-
-                        <form id="feedbackForm" class="space-y-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label class="block text-sm font-semibold text-navy-900 mb-2">Name *</label>
-                                    <input
-                                        type="text"
-                                        id="feedbackName"
-                                        required
-                                        class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                                    >
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-navy-900 mb-2">Email *</label>
-                                    <input
-                                        type="email"
-                                        id="feedbackEmail"
-                                        required
-                                        class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                                    >
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label class="block text-sm font-semibold text-navy-900 mb-2">Phone</label>
-                                    <input
-                                        type="tel"
-                                        id="feedbackPhone"
-                                        class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                                    >
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-semibold text-navy-900 mb-2">Address *</label>
-                                    <input
-                                        type="text"
-                                        id="feedbackAddress"
-                                        required
-                                        class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-                                    >
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-navy-900 mb-2">Tell Me About the Improvements You Have Made to the Property During Your Ownership *</label>
-                                <textarea
-                                    id="feedbackImprovements"
-                                    required
-                                    rows="6"
-                                    placeholder="Describe any renovations, upgrades, or improvements you've made (e.g., kitchen remodel in 2018, new roof in 2020, etc.)"
-                                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent resize-none"
-                                ></textarea>
-                            </div>
-
-                            <div class="flex gap-4">
-                                <button
-                                    type="submit"
-                                    class="flex-1 bg-navy-800 hover:bg-navy-900 text-white font-semibold py-3 rounded-lg transition-colors"
-                                >
-                                    Submit Feedback
+</div>
+<!-- Feedback Form (Hidden by default) -->
+<div class="hidden bg-white rounded-xl border border-slate-200 p-8" id="feedbackFormSection">
+<h3 class="font-serif text-2xl font-semibold text-navy-900 mb-2">Request a More Accurate CMA</h3>
+<p class="text-slate-600 mb-6">If the estimate does not look right, tell me what the calculator may have missed. I will review the property details and follow up with a more personalized comparative market analysis.</p>
+<form action="https://formspree.io/f/mrenblva" class="space-y-6" id="feedbackForm" method="POST">
+<input name="_subject" type="hidden" value="CMA Request - Home Value Estimate Doesn't Look Right"/>
+<input name="Form" type="hidden" value="Doesn't Look Right / CMA Request"/>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-semibold text-navy-900 mb-2">Name *</label>
+<input class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="feedbackName" name="Name" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-navy-900 mb-2">Email *</label>
+<input class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="feedbackEmail" name="Email" required="" type="email"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-semibold text-navy-900 mb-2">Phone</label>
+<input class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="feedbackPhone" name="Phone" type="tel"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-navy-900 mb-2">Address *</label>
+<input class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="feedbackAddress" name="Address" required="" type="text"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-semibold text-navy-900 mb-2">Tell Me About the Improvements You Have Made to the Property During Your Ownership *</label>
+<textarea class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent resize-none" id="feedbackImprovements" name="Improvements and Corrections" placeholder="Describe any renovations, upgrades, or improvements you've made (e.g., kitchen remodel in 2018, new roof in 2020, etc.)" required="" rows="6"></textarea>
+</div>
+<div class="flex gap-4">
+<button class="flex-1 bg-navy-800 hover:bg-navy-900 text-white font-semibold py-3 rounded-lg transition-colors" id="feedbackSubmitButton" type="submit">
+                                    Request My CMA
                                 </button>
-                                <button
-                                    type="button"
-                                    onclick="hideFeedbackForm()"
-                                    class="flex-1 bg-slate-200 hover:bg-slate-300 text-navy-900 font-semibold py-3 rounded-lg transition-colors"
-                                >
+<button class="flex-1 bg-slate-200 hover:bg-slate-300 text-navy-900 font-semibold py-3 rounded-lg transition-colors" onclick="hideFeedbackForm()" type="button">
                                     Cancel
                                 </button>
+</div>
+<div class="hidden bg-emerald-50 border border-emerald-300 text-emerald-800 px-5 py-4 rounded-lg text-center font-medium" id="feedbackSuccessMessage">
+                                Thanks. I received your CMA request and will follow up after reviewing the property.
                             </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="bg-[#faf9f6] py-20 border-t border-slate-200">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="bg-white rounded-xl p-10 md:p-12 border border-slate-200">
-                    <h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-6">
+<div class="hidden bg-red-50 border border-red-300 text-red-800 px-5 py-4 rounded-lg text-center font-medium" id="feedbackErrorMessage"></div>
+</form>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-[#faf9f6] py-20 border-t border-slate-200">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="bg-white rounded-xl p-10 md:p-12 border border-slate-200">
+<h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-6">
                         Move When the Time Is Right for You
                     </h2>
-
-                    <div class="space-y-6 text-lg text-slate-600 leading-relaxed">
-                        <p>
+<div class="space-y-6 text-lg text-slate-600 leading-relaxed">
+<p>
                             As your local Longmont real estate expert, I believe moving should be about opportunity, not obstacles. Whether you're ready for more space, less maintenance, or simply a change of scenery, your next move should be on your terms.
                         </p>
-
-                        <p>
+<p>
                             That's why I offer flexible compensation options. I've built an efficient, full-service business that delivers the guidance, marketing, and negotiation you expect—while giving you more flexibility over what it costs to sell your home.
                         </p>
-
-                        <p>
+<p>
                             I've helped dozens of Longmont homeowners make successful moves, and I know this market inside and out. My goal is simple: make selling your home straightforward, transparent, and tailored to your needs.
                         </p>
-
-                        <p class="font-semibold text-navy-800 text-xl">
+<p class="font-semibold text-navy-800 text-xl">
                             Your next chapter starts with understanding your options. Let's explore them together.
                         </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section class="bg-white py-20 border-t border-slate-200">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">
+</div>
+</div>
+</div>
+</section>
+<section class="bg-white py-20 border-t border-slate-200">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-16">
+<p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">
                         60+ Happy Clients
                     </p>
-                    <h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">
+<h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">
                         My Track Record in Longmont
                     </h2>
-                    <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+<p class="text-lg text-slate-600 max-w-2xl mx-auto">
                         Every pin on this map represents a home that I've helped my clients buy or sell.
                         This is where I've built my reputation.
                     </p>
-                </div>
-
-                <div id="map" class="bg-slate-100 rounded-xl overflow-hidden h-96 md:h-[500px] border border-slate-200"></div>
-
-                <div class="grid md:grid-cols-3 gap-6 mt-16">
-                    <div class="bg-white rounded-xl p-8 border border-slate-200 text-center">
-                        <div class="text-3xl font-semibold text-navy-800 mb-2">$26.2M*</div>
-                        <p class="text-slate-600 font-medium mb-3">Total Sales Volume</p>
-                        <p class="text-xs text-slate-400 italic">*just in Longmont</p>
-                    </div>
-                    <div class="bg-white rounded-xl p-8 border border-slate-200 text-center">
-                        <div class="text-3xl font-semibold text-navy-800 mb-2">60+</div>
-                        <p class="text-slate-600 font-medium">Longmont Transactions</p>
-                    </div>
-                    <div class="bg-white rounded-xl p-8 border border-slate-200 text-center">
-                        <div class="text-3xl font-semibold text-navy-800 mb-2">17+</div>
-                        <p class="text-slate-600 font-medium">Years Selling Real Estate</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section class="bg-navy-900 py-20">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <img src="james-taylor-professional.jpg" alt="James Taylor" class="w-full h-96 object-cover rounded-xl border border-white/10">
-                    </div>
-                    <div>
-                        <h2 class="font-serif text-3xl md:text-4xl font-semibold text-white mb-6">
+</div>
+<div class="bg-slate-100 rounded-xl overflow-hidden h-96 md:h-[500px] border border-slate-200" id="map"></div>
+<div class="grid md:grid-cols-3 gap-6 mt-16">
+<div class="bg-white rounded-xl p-8 border border-slate-200 text-center">
+<div class="text-3xl font-semibold text-navy-800 mb-2">$26.2M*</div>
+<p class="text-slate-600 font-medium mb-3">Total Sales Volume</p>
+<p class="text-xs text-slate-400 italic">*just in Longmont</p>
+</div>
+<div class="bg-white rounded-xl p-8 border border-slate-200 text-center">
+<div class="text-3xl font-semibold text-navy-800 mb-2">60+</div>
+<p class="text-slate-600 font-medium">Longmont Transactions</p>
+</div>
+<div class="bg-white rounded-xl p-8 border border-slate-200 text-center">
+<div class="text-3xl font-semibold text-navy-800 mb-2">17+</div>
+<p class="text-slate-600 font-medium">Years Selling Real Estate</p>
+</div>
+</div>
+</div>
+</section>
+<!-- About Section -->
+<section class="bg-navy-900 py-20">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid md:grid-cols-2 gap-12 items-center">
+<div>
+<img alt="James Taylor" class="w-full h-96 object-cover rounded-xl border border-white/10" src="james-taylor-professional.jpg"/>
+</div>
+<div>
+<h2 class="font-serif text-3xl md:text-4xl font-semibold text-white mb-6">
                             I'm James Taylor
                         </h2>
-                        <p class="text-lg text-navy-100 mb-8 leading-relaxed">
+<p class="text-lg text-navy-100 mb-8 leading-relaxed">
                             I've been helping Longmont homeowners buy and sell since 2009. I know this market inside and out, and I know how to help you navigate it — with a compensation structure that reflects your situation.
                         </p>
-
-                        <div class="grid grid-cols-3 gap-4 mb-8">
-                            <div class="bg-white/5 rounded-lg p-4 border border-white/10">
-                                <div class="text-2xl font-semibold text-brass-300">$70M+</div>
-                                <p class="text-sm text-navy-200 mt-1">Total Sales Volume</p>
-                            </div>
-                            <div class="bg-white/5 rounded-lg p-4 border border-white/10">
-                                <div class="text-2xl font-semibold text-brass-300">2013</div>
-                                <p class="text-sm text-navy-200 mt-1">Longmont Resident Since</p>
-                            </div>
-                            <div class="bg-white/5 rounded-lg p-4 border border-white/10">
-                                <div class="text-2xl font-semibold text-brass-300">5.0</div>
-                                <p class="text-sm text-navy-200 mt-1">Star Reviews</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Form Section -->
-        <section id="form" class="bg-[#faf9f6] py-20">
-            <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">
+<div class="grid grid-cols-3 gap-4 mb-8">
+<div class="bg-white/5 rounded-lg p-4 border border-white/10">
+<div class="text-2xl font-semibold text-brass-300">$70M+</div>
+<p class="text-sm text-navy-200 mt-1">Total Sales Volume</p>
+</div>
+<div class="bg-white/5 rounded-lg p-4 border border-white/10">
+<div class="text-2xl font-semibold text-brass-300">2013</div>
+<p class="text-sm text-navy-200 mt-1">Longmont Resident Since</p>
+</div>
+<div class="bg-white/5 rounded-lg p-4 border border-white/10">
+<div class="text-2xl font-semibold text-brass-300">5.0</div>
+<p class="text-sm text-navy-200 mt-1">Star Reviews</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Form Section -->
+<section class="bg-[#faf9f6] py-20" id="form">
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-12">
+<h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">
                         Let's Talk About Your Move
                     </h2>
-                    <p class="text-lg text-slate-600">
+<p class="text-lg text-slate-600">
                         No pressure. Just an honest conversation about your situation.
                     </p>
-                </div>
-
-                <form id="contactForm" action="https://formspree.io/f/mbdnlyqr" method="POST">
-                    <input type="hidden" name="_subject" value="New Consultation Request - MyLongmontHome.com">
-
-                    <!-- Name -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-semibold text-navy-900 mb-3">
+</div>
+<form action="https://formspree.io/f/mbdnlyqr" id="contactForm" method="POST">
+<input name="_subject" type="hidden" value="New Consultation Request - MyLongmontHome.com"/>
+<!-- Name -->
+<div class="mb-6">
+<label class="block text-sm font-semibold text-navy-900 mb-3">
                             Your First Name *
                         </label>
-                        <input
-                            type="text"
-                            name="First Name"
-                            required
-                            class="w-full px-5 py-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent text-lg"
-                            placeholder="First name"
-                        >
-                    </div>
-
-                    <!-- Last Name -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-semibold text-navy-900 mb-3">
+<input class="w-full px-5 py-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent text-lg" name="First Name" placeholder="First name" required="" type="text"/>
+</div>
+<!-- Last Name -->
+<div class="mb-6">
+<label class="block text-sm font-semibold text-navy-900 mb-3">
                             Your Last Name *
                         </label>
-                        <input
-                            type="text"
-                            name="Last Name"
-                            required
-                            class="w-full px-5 py-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent text-lg"
-                            placeholder="Last name"
-                        >
-                    </div>
-
-                    <!-- Email -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-semibold text-navy-900 mb-3">
+<input class="w-full px-5 py-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent text-lg" name="Last Name" placeholder="Last name" required="" type="text"/>
+</div>
+<!-- Email -->
+<div class="mb-6">
+<label class="block text-sm font-semibold text-navy-900 mb-3">
                             Email Address *
                         </label>
-                        <input
-                            type="email"
-                            name="Email"
-                            required
-                            class="w-full px-5 py-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent text-lg"
-                            placeholder="you@example.com"
-                        >
-                    </div>
-
-                    <!-- Phone -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-semibold text-navy-900 mb-3">
+<input class="w-full px-5 py-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent text-lg" name="Email" placeholder="you@example.com" required="" type="email"/>
+</div>
+<!-- Phone -->
+<div class="mb-6">
+<label class="block text-sm font-semibold text-navy-900 mb-3">
                             Phone Number *
                         </label>
-                        <input
-                            type="tel"
-                            name="Phone"
-                            required
-                            class="w-full px-5 py-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent text-lg"
-                            placeholder="(720) 555-0123"
-                        >
-                    </div>
-
-                    <!-- Home Address -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-semibold text-navy-900 mb-3">
+<input class="w-full px-5 py-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent text-lg" name="Phone" placeholder="(720) 555-0123" required="" type="tel"/>
+</div>
+<!-- Home Address -->
+<div class="mb-6">
+<label class="block text-sm font-semibold text-navy-900 mb-3">
                             Your Home Address *
                         </label>
-                        <input
-                            type="text"
-                            name="Home Address"
-                            required
-                            class="w-full px-5 py-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent text-lg"
-                            placeholder="123 Main St, Longmont, CO"
-                        >
-                    </div>
-
-                    <!-- Timeline -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-semibold text-navy-900 mb-3">
+<input class="w-full px-5 py-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent text-lg" name="Home Address" placeholder="123 Main St, Longmont, CO" required="" type="text"/>
+</div>
+<!-- Timeline -->
+<div class="mb-6">
+<label class="block text-sm font-semibold text-navy-900 mb-3">
                             When are you thinking about moving? *
                         </label>
-                        <select
-                            name="Timeline"
-                            required
-                            class="w-full px-5 py-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent text-lg"
-                        >
-                            <option value="">Select a timeframe</option>
-                            <option value="As soon as possible">As soon as possible</option>
-                            <option value="Within 3-6 months">Within 3-6 months</option>
-                            <option value="Within 6-12 months">Within 6-12 months</option>
-                            <option value="Next year or later">Next year or later</option>
-                            <option value="Just exploring for now">Just exploring for now</option>
-                        </select>
-                    </div>
-
-                    <!-- Services -->
-                    <div class="mb-8">
-                        <label class="block text-sm font-semibold text-navy-900 mb-4">
+<select class="w-full px-5 py-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent text-lg" name="Timeline" required="">
+<option value="">Select a timeframe</option>
+<option value="As soon as possible">As soon as possible</option>
+<option value="Within 3-6 months">Within 3-6 months</option>
+<option value="Within 6-12 months">Within 6-12 months</option>
+<option value="Next year or later">Next year or later</option>
+<option value="Just exploring for now">Just exploring for now</option>
+</select>
+</div>
+<!-- Services -->
+<div class="mb-8">
+<label class="block text-sm font-semibold text-navy-900 mb-4">
                             What would be most helpful?
                         </label>
-                        <div class="space-y-3">
-                            <label class="flex items-center p-4 border border-slate-200 rounded-lg hover:border-navy-400 hover:bg-navy-50 cursor-pointer transition-colors">
-                                <input type="checkbox" name="Services" value="Free consultation" class="w-5 h-5 text-navy-700 rounded">
-                                <span class="ml-4 text-navy-900 font-medium">Free consultation</span>
-                            </label>
-                            <label class="flex items-center p-4 border border-slate-200 rounded-lg hover:border-navy-400 hover:bg-navy-50 cursor-pointer transition-colors">
-                                <input type="checkbox" name="Services" value="Estimated settlement statement" class="w-5 h-5 text-navy-700 rounded">
-                                <span class="ml-4 text-navy-900 font-medium">Estimated settlement statement</span>
-                            </label>
-                            <label class="flex items-center p-4 border border-slate-200 rounded-lg hover:border-navy-400 hover:bg-navy-50 cursor-pointer transition-colors">
-                                <input type="checkbox" name="Services" value="Just a phone call for now" class="w-5 h-5 text-navy-700 rounded">
-                                <span class="ml-4 text-navy-900 font-medium">Just a phone call for now</span>
-                            </label>
-                            <label class="flex items-center p-4 border border-slate-200 rounded-lg hover:border-navy-400 hover:bg-navy-50 cursor-pointer transition-colors">
-                                <input type="checkbox" name="Services" value="Something else" class="w-5 h-5 text-navy-700 rounded">
-                                <span class="ml-4 text-navy-900 font-medium">Something else</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button
-                        type="submit"
-                        class="w-full bg-navy-800 hover:bg-navy-900 text-white font-semibold py-4 px-6 rounded-lg transition-colors text-lg flex items-center justify-center gap-3"
-                    >
+<div class="space-y-3">
+<label class="flex items-center p-4 border border-slate-200 rounded-lg hover:border-navy-400 hover:bg-navy-50 cursor-pointer transition-colors">
+<input class="w-5 h-5 text-navy-700 rounded" name="Services" type="checkbox" value="Free consultation"/>
+<span class="ml-4 text-navy-900 font-medium">Free consultation</span>
+</label>
+<label class="flex items-center p-4 border border-slate-200 rounded-lg hover:border-navy-400 hover:bg-navy-50 cursor-pointer transition-colors">
+<input class="w-5 h-5 text-navy-700 rounded" name="Services" type="checkbox" value="Estimated settlement statement"/>
+<span class="ml-4 text-navy-900 font-medium">Estimated settlement statement</span>
+</label>
+<label class="flex items-center p-4 border border-slate-200 rounded-lg hover:border-navy-400 hover:bg-navy-50 cursor-pointer transition-colors">
+<input class="w-5 h-5 text-navy-700 rounded" name="Services" type="checkbox" value="Just a phone call for now"/>
+<span class="ml-4 text-navy-900 font-medium">Just a phone call for now</span>
+</label>
+<label class="flex items-center p-4 border border-slate-200 rounded-lg hover:border-navy-400 hover:bg-navy-50 cursor-pointer transition-colors">
+<input class="w-5 h-5 text-navy-700 rounded" name="Services" type="checkbox" value="Something else"/>
+<span class="ml-4 text-navy-900 font-medium">Something else</span>
+</label>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="w-full bg-navy-800 hover:bg-navy-900 text-white font-semibold py-4 px-6 rounded-lg transition-colors text-lg flex items-center justify-center gap-3" type="submit">
                         Get Your Free Consultation
-                        <svg class="w-5 h-5 rotate-[-90deg]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-                    </button>
-
-                    <!-- Success Message -->
-                    <div id="successMessage" class="mt-6 bg-emerald-50 border border-emerald-300 text-emerald-800 px-6 py-4 rounded-lg text-center font-medium hidden">
+                        <svg class="w-5 h-5 rotate-[-90deg]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<!-- Success Message -->
+<div class="mt-6 bg-emerald-50 border border-emerald-300 text-emerald-800 px-6 py-4 rounded-lg text-center font-medium hidden" id="successMessage">
                         Thanks! I'll be in touch within 24 hours.
                     </div>
-
-                    <!-- Error Message -->
-                    <div id="errorMessage" class="mt-6 bg-red-50 border border-red-300 text-red-800 px-6 py-4 rounded-lg text-center font-medium hidden"></div>
-                </form>
-
-                <p class="text-center text-sm text-slate-500 mt-8">
+<!-- Error Message -->
+<div class="mt-6 bg-red-50 border border-red-300 text-red-800 px-6 py-4 rounded-lg text-center font-medium hidden" id="errorMessage"></div>
+</form>
+<p class="text-center text-sm text-slate-500 mt-8">
                     Your information is secure and private. I'll only contact you how you prefer.
                 </p>
-            </div>
-        </section>
-
-        <!-- Testimonials Section -->
-        <section class="bg-navy-950 py-20">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="font-serif text-3xl md:text-4xl font-semibold text-white mb-4">
+</div>
+</section>
+<!-- Testimonials Section -->
+<section class="bg-navy-950 py-20">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-16">
+<h2 class="font-serif text-3xl md:text-4xl font-semibold text-white mb-4">
                         What Clients Say
                     </h2>
-                    <p class="text-lg text-navy-200 max-w-2xl mx-auto">
+<p class="text-lg text-navy-200 max-w-2xl mx-auto">
                         Real feedback from real clients
                     </p>
-                </div>
-
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Testimonial 1 -->
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-8">
-                        <p class="text-navy-50 mb-6 leading-relaxed italic">"James is wonderful to work with! We bought our first home this past April and couldn't have done it without him. He was extremely responsive, knowledgeable and compassionate throughout the whole process. We LOVE our new home and we are so glad that we worked with James."</p>
-                        <div class="border-t border-white/10 pt-4">
-                            <p class="text-brass-300 font-semibold">Colorado Homebuyer</p>
-                            <p class="text-navy-300 text-sm">First-Time Buyer</p>
-                        </div>
-                    </div>
-
-                    <!-- Testimonial 2 -->
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-8">
-                        <p class="text-navy-50 mb-6 leading-relaxed italic">"James did a fantastic job guiding my wife and me through the purchase process of our new home. He was easy to work with, knew when to give us space and when to jump in with additional info. He helped us understand different communities and settle on a neighborhood we loved."</p>
-                        <div class="border-t border-white/10 pt-4">
-                            <p class="text-brass-300 font-semibold">California to Colorado Move</p>
-                            <p class="text-navy-300 text-sm">Home Buyer</p>
-                        </div>
-                    </div>
-
-                    <!-- Testimonial 3 -->
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-8">
-                        <p class="text-navy-50 mb-6 leading-relaxed italic">"James helped us buy and sell a home in Longmont, Colorado. He's very professional, knowledgeable, honest and patient. I'd use him again in a heartbeat!"</p>
-                        <div class="border-t border-white/10 pt-4">
-                            <p class="text-brass-300 font-semibold">Longmont Clients</p>
-                            <p class="text-navy-300 text-sm">Buyer & Seller</p>
-                        </div>
-                    </div>
-
-                    <!-- Testimonial 4 -->
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-8">
-                        <p class="text-navy-50 mb-6 leading-relaxed italic">"James is great! He helped guide my husband and me through the entire process of buying our first home. He got us in to see our future house the day it went on the market. When we had to relocate, we knew we would go with James to sell our house."</p>
-                        <div class="border-t border-white/10 pt-4">
-                            <p class="text-brass-300 font-semibold">Colorado Family</p>
-                            <p class="text-navy-300 text-sm">Buyer & Seller</p>
-                        </div>
-                    </div>
-
-                    <!-- Testimonial 5 -->
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-8">
-                        <p class="text-navy-50 mb-6 leading-relaxed italic">"James was on-point, several times he got us in to see places that were just listed before anyone else had seen them which ultimately allowed us to buy one of the few non zillion-dollar homes for sale in Boulder. He was patient with our vague search and ultimately won us over."</p>
-                        <div class="border-t border-white/10 pt-4">
-                            <p class="text-brass-300 font-semibold">Boulder Buyer</p>
-                            <p class="text-navy-300 text-sm">Home Buyer</p>
-                        </div>
-                    </div>
-
-                    <!-- Testimonial 6 -->
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-8">
-                        <p class="text-navy-50 mb-6 leading-relaxed italic">"James helped our daughter and her family find a home and it went very smoothly. It wasn't an easy task with our visits being short and infrequent, but he stuck with us. He took care of everything in a professional and timely manner and made the entire experience seem easy."</p>
-                        <div class="border-t border-white/10 pt-4">
-                            <p class="text-brass-300 font-semibold">Family Referral</p>
-                            <p class="text-navy-300 text-sm">Home Buyer</p>
-                        </div>
-                    </div>
-
-                    <!-- Testimonial 7 -->
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-8">
-                        <p class="text-navy-50 mb-6 leading-relaxed italic">"Working with James was so easy, he had an excellent grasp on what we were looking for and was SUPER patient with us through the whole process. As first time home buyers, James was able to clearly answer all questions and help us understand the ins and outs."</p>
-                        <div class="border-t border-white/10 pt-4">
-                            <p class="text-brass-300 font-semibold">First-Time Buyers</p>
-                            <p class="text-navy-300 text-sm">Home Buyers</p>
-                        </div>
-                    </div>
-
-                    <!-- Testimonial 8 -->
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-8">
-                        <p class="text-navy-50 mb-6 leading-relaxed italic">"James did a fantastic job selling our house in Longmont. He is the most responsive agent I've ever worked with and his attention to detail is great."</p>
-                        <div class="border-t border-white/10 pt-4">
-                            <p class="text-brass-300 font-semibold">Longmont Seller</p>
-                            <p class="text-navy-300 text-sm">Home Seller</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="bg-navy-950 text-navy-300 py-12">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid md:grid-cols-3 gap-8 mb-8">
-                    <div>
-                        <p class="font-semibold text-white text-lg mb-4">Homestead Real Estate</p>
-                        <p class="text-sm">Honest real estate. Fair compensation. Better results.</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold text-white mb-3 text-lg">Contact</p>
-                        <p class="text-base">720-340-6743</p>
-                        <p class="text-base">JamesTaylorHomeSales@gmail.com</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold text-white mb-3 text-lg">Online</p>
-                        <p class="text-base">JamesTaylorHomeSales.com</p>
-                        <p class="text-base mt-3">Longmont, Colorado</p>
-                        <p class="text-base">Licensed Colorado Real Estate Broker</p>
-                    </div>
-                </div>
-                <div class="border-t border-white/10 pt-8 text-center text-xs">
-                    <p>© 2026 Homestead Real Estate, LLC. All rights reserved.</p>
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <script>
+</div>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Testimonial 1 -->
+<div class="bg-white/5 border border-white/10 rounded-xl p-8">
+<p class="text-navy-50 mb-6 leading-relaxed italic">"James is wonderful to work with! We bought our first home this past April and couldn't have done it without him. He was extremely responsive, knowledgeable and compassionate throughout the whole process. We LOVE our new home and we are so glad that we worked with James."</p>
+<div class="border-t border-white/10 pt-4">
+<p class="text-brass-300 font-semibold">Colorado Homebuyer</p>
+<p class="text-navy-300 text-sm">First-Time Buyer</p>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="bg-white/5 border border-white/10 rounded-xl p-8">
+<p class="text-navy-50 mb-6 leading-relaxed italic">"James did a fantastic job guiding my wife and me through the purchase process of our new home. He was easy to work with, knew when to give us space and when to jump in with additional info. He helped us understand different communities and settle on a neighborhood we loved."</p>
+<div class="border-t border-white/10 pt-4">
+<p class="text-brass-300 font-semibold">California to Colorado Move</p>
+<p class="text-navy-300 text-sm">Home Buyer</p>
+</div>
+</div>
+<!-- Testimonial 3 -->
+<div class="bg-white/5 border border-white/10 rounded-xl p-8">
+<p class="text-navy-50 mb-6 leading-relaxed italic">"James helped us buy and sell a home in Longmont, Colorado. He's very professional, knowledgeable, honest and patient. I'd use him again in a heartbeat!"</p>
+<div class="border-t border-white/10 pt-4">
+<p class="text-brass-300 font-semibold">Longmont Clients</p>
+<p class="text-navy-300 text-sm">Buyer &amp; Seller</p>
+</div>
+</div>
+<!-- Testimonial 4 -->
+<div class="bg-white/5 border border-white/10 rounded-xl p-8">
+<p class="text-navy-50 mb-6 leading-relaxed italic">"James is great! He helped guide my husband and me through the entire process of buying our first home. He got us in to see our future house the day it went on the market. When we had to relocate, we knew we would go with James to sell our house."</p>
+<div class="border-t border-white/10 pt-4">
+<p class="text-brass-300 font-semibold">Colorado Family</p>
+<p class="text-navy-300 text-sm">Buyer &amp; Seller</p>
+</div>
+</div>
+<!-- Testimonial 5 -->
+<div class="bg-white/5 border border-white/10 rounded-xl p-8">
+<p class="text-navy-50 mb-6 leading-relaxed italic">"James was on-point, several times he got us in to see places that were just listed before anyone else had seen them which ultimately allowed us to buy one of the few non zillion-dollar homes for sale in Boulder. He was patient with our vague search and ultimately won us over."</p>
+<div class="border-t border-white/10 pt-4">
+<p class="text-brass-300 font-semibold">Boulder Buyer</p>
+<p class="text-navy-300 text-sm">Home Buyer</p>
+</div>
+</div>
+<!-- Testimonial 6 -->
+<div class="bg-white/5 border border-white/10 rounded-xl p-8">
+<p class="text-navy-50 mb-6 leading-relaxed italic">"James helped our daughter and her family find a home and it went very smoothly. It wasn't an easy task with our visits being short and infrequent, but he stuck with us. He took care of everything in a professional and timely manner and made the entire experience seem easy."</p>
+<div class="border-t border-white/10 pt-4">
+<p class="text-brass-300 font-semibold">Family Referral</p>
+<p class="text-navy-300 text-sm">Home Buyer</p>
+</div>
+</div>
+<!-- Testimonial 7 -->
+<div class="bg-white/5 border border-white/10 rounded-xl p-8">
+<p class="text-navy-50 mb-6 leading-relaxed italic">"Working with James was so easy, he had an excellent grasp on what we were looking for and was SUPER patient with us through the whole process. As first time home buyers, James was able to clearly answer all questions and help us understand the ins and outs."</p>
+<div class="border-t border-white/10 pt-4">
+<p class="text-brass-300 font-semibold">First-Time Buyers</p>
+<p class="text-navy-300 text-sm">Home Buyers</p>
+</div>
+</div>
+<!-- Testimonial 8 -->
+<div class="bg-white/5 border border-white/10 rounded-xl p-8">
+<p class="text-navy-50 mb-6 leading-relaxed italic">"James did a fantastic job selling our house in Longmont. He is the most responsive agent I've ever worked with and his attention to detail is great."</p>
+<div class="border-t border-white/10 pt-4">
+<p class="text-brass-300 font-semibold">Longmont Seller</p>
+<p class="text-navy-300 text-sm">Home Seller</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-navy-950 text-navy-300 py-12">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid md:grid-cols-3 gap-8 mb-8">
+<div>
+<p class="font-semibold text-white text-lg mb-4">Homestead Real Estate</p>
+<p class="text-sm">Honest real estate. Fair compensation. Better results.</p>
+</div>
+<div>
+<p class="font-semibold text-white mb-3 text-lg">Contact</p>
+<p class="text-base">720-340-6743</p>
+<p class="text-base">JamesTaylorHomeSales@gmail.com</p>
+</div>
+<div>
+<p class="font-semibold text-white mb-3 text-lg">Online</p>
+<p class="text-base">JamesTaylorHomeSales.com</p>
+<p class="text-base mt-3">Longmont, Colorado</p>
+<p class="text-base">Licensed Colorado Real Estate Broker</p>
+</div>
+</div>
+<div class="border-t border-white/10 pt-8 text-center text-xs">
+<p>© 2026 Homestead Real Estate, LLC. All rights reserved.</p>
+</div>
+</div>
+</footer>
+</div>
+<script>
         // Calculator functionality
         const salePriceInput = document.getElementById('salePrice');
         const listingAgentInput = document.getElementById('listingAgentRate');
@@ -1334,9 +1135,8 @@
         });
 
     </script>
-
-    <!-- Home Value Calculator: valuation engine -->
-    <script>
+<!-- Home Value Calculator: valuation engine -->
+<script>
         let currentCalculation = null;
         let currentSubdivision = null;
         let currentMultipleOffers = false;
@@ -1664,9 +1464,19 @@
         }
 
         function showFeedbackForm() {
-            document.getElementById('feedbackFormSection').classList.remove('hidden');
+            const feedbackSection = document.getElementById('feedbackFormSection');
+            const feedbackAddress = document.getElementById('feedbackAddress');
+            const currentAddress = document.getElementById('addressInput').value.trim();
+
+            if (currentAddress && !feedbackAddress.value) {
+                feedbackAddress.value = currentAddress;
+            }
+
+            document.getElementById('feedbackSuccessMessage').classList.add('hidden');
+            document.getElementById('feedbackErrorMessage').classList.add('hidden');
+            feedbackSection.classList.remove('hidden');
             setTimeout(() => {
-                document.getElementById('feedbackFormSection').scrollIntoView({ behavior: 'smooth' });
+                feedbackSection.scrollIntoView({ behavior: 'smooth' });
             }, 200);
         }
 
@@ -1674,27 +1484,69 @@
             document.getElementById('feedbackFormSection').classList.add('hidden');
         }
 
-        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+        document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const feedbackData = {
-                name: document.getElementById('feedbackName').value,
-                email: document.getElementById('feedbackEmail').value,
-                phone: document.getElementById('feedbackPhone').value,
-                address: document.getElementById('feedbackAddress').value,
-                improvements: document.getElementById('feedbackImprovements').value,
-                estimatedValue: currentCalculation ? currentCalculation.currentValue : null,
-                originalEstimate: currentCalculation ? currentCalculation.originalPrice : null,
-                timestamp: new Date().toISOString()
-            };
+            const form = this;
+            const submitButton = document.getElementById('feedbackSubmitButton');
+            const successMessage = document.getElementById('feedbackSuccessMessage');
+            const errorMessage = document.getElementById('feedbackErrorMessage');
 
-            // Log to console for now — wire this up to Formspree or your CRM when ready.
-            console.log('Feedback submitted:', feedbackData);
+            successMessage.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending...';
+            submitButton.style.opacity = '0.7';
 
-            alert('Thanks for the feedback! I will review this and follow up with you soon.');
+            const payload = new FormData(form);
+            payload.append('Conservative Value Shown', document.getElementById('conservativeDisplay').textContent);
+            payload.append('Mid-Range Value Shown', document.getElementById('midRangeDisplay').textContent);
+            payload.append('Optimistic Value Shown', document.getElementById('optimisticDisplay').textContent);
+            payload.append('You Paid', document.getElementById('purchasePriceDisplay').textContent);
+            payload.append('Years Owned', document.getElementById('yearsOwnedDisplay').textContent);
+            payload.append('Equity Built (Mid-Range)', document.getElementById('equityDisplay').textContent);
 
-            document.getElementById('feedbackForm').reset();
-            document.getElementById('feedbackFormSection').classList.add('hidden');
+            const conditionThenEl = document.getElementById('manualConditionThen');
+            const conditionNowEl = document.getElementById('manualConditionNow');
+            const kitchenEl = document.getElementById('manualKitchen');
+            const investmentEl = document.getElementById('manualInvestment');
+
+            payload.append('Condition When Bought', conditionThenEl.options[conditionThenEl.selectedIndex]?.text || 'Not specified');
+            payload.append('Condition Today', conditionNowEl.options[conditionNowEl.selectedIndex]?.text || 'Not specified');
+            payload.append('Kitchen', kitchenEl.options[kitchenEl.selectedIndex]?.text || 'Not specified');
+            payload.append('Investment in Improvements', investmentEl.options[investmentEl.selectedIndex]?.text || 'Not specified');
+            payload.append('Submitted At', new Date().toISOString());
+
+            try {
+                const response = await fetch('https://formspree.io/f/mrenblva', {
+                    method: 'POST',
+                    body: payload,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                const responseData = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    const message = responseData.errors
+                        ? responseData.errors.map(error => error.message).join(', ')
+                        : (responseData.error || `Formspree returned HTTP ${response.status}`);
+                    throw new Error(message);
+                }
+
+                successMessage.classList.remove('hidden');
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                form.reset();
+
+                const currentAddress = document.getElementById('addressInput').value.trim();
+                if (currentAddress) document.getElementById('feedbackAddress').value = currentAddress;
+            } catch (error) {
+                console.error('CMA request submission failed:', error);
+                errorMessage.textContent = `I could not send your request: ${error.message}. Please try again.`;
+                errorMessage.classList.remove('hidden');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Request My CMA';
+                submitButton.style.opacity = '1';
+            }
         });
 
         // Show investment field if improvements were made
@@ -1716,9 +1568,8 @@
             }
         });
     </script>
-
-    <!-- Home Value Calculator: comps database, lazy-loaded so it doesn't block initial page render -->
-    <script>
+<!-- Home Value Calculator: comps database, lazy-loaded so it doesn't block initial page render -->
+<script>
         let compsDbLoading = false;
         let compsDbLoaded = false;
 
@@ -1765,9 +1616,8 @@
         // (e.g. an anchor link) before the observer fires.
         document.getElementById('addressInput').addEventListener('focus', loadCompsDatabase, { once: true });
     </script>
-
-    <!-- Home Value Calculator: address autocomplete -->
-    <script>
+<!-- Home Value Calculator: address autocomplete -->
+<script>
         const addressInput = document.getElementById('addressInput');
         const addressDropdown = document.getElementById('addressDropdown');
         const searchButton = document.getElementById('searchButton');
