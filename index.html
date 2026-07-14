@@ -107,6 +107,7 @@
     </style>
 </head>
 <body class="bg-white">
+    <iframe name="formspreeSilentTarget" id="formspreeSilentTarget" class="hidden" title="Form submission"></iframe>
     <div id="app">
         <!-- Header -->
         <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
@@ -307,7 +308,7 @@
                     <h2 class="font-serif text-2xl md:text-3xl font-semibold text-navy-900 mb-2">Send James Your Proposal</h2>
                     <p class="text-slate-600 mb-8">Tell me what you'd like to pay, and a bit about your situation. James isn't committing to sell your home for this amount — this simply starts the conversation.</p>
 
-                    <form id="proposalForm" action="https://formspree.io/f/mwvgpbqd" method="POST">
+                    <form id="proposalForm" action="https://formspree.io/f/mwvgpbqd" method="POST" onsubmit="updateCalculator()">
                         <input type="hidden" name="_subject" value="New Compensation Proposal - MyLongmontHome.com">
                         <input type="hidden" name="Form" value="Send James This Proposal">
                         <input type="hidden" name="Listing Agent Compensation Rate" id="proposalListingRate">
@@ -1152,52 +1153,8 @@
             return '+' + digits;
         }
 
-        proposalForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
+        // Proposal uses a normal HTML POST to Formspree. This remains functional even if other JavaScript fails.
 
-            // Capture the exact proposal terms shown on the calculator at submit time.
-            updateCalculator();
-
-            proposalSuccessMessage.classList.add('hidden');
-            proposalErrorMessage.classList.add('hidden');
-
-            const submitBtn = proposalForm.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.style.opacity = '0.6';
-
-            try {
-                const response = await fetch('https://formspree.io/f/mwvgpbqd', {
-                    method: 'POST',
-                    body: new FormData(proposalForm),
-                    headers: { 'Accept': 'application/json' }
-                });
-
-                submitBtn.disabled = false;
-                submitBtn.style.opacity = '1';
-
-                if (!response.ok) {
-                    const data = await response.json();
-                    proposalErrorMessage.textContent = data.errors ? data.errors.map(e => e.message).join(', ') : 'Something went wrong. Please try again.';
-                    proposalErrorMessage.classList.remove('hidden');
-                    return;
-                }
-
-                proposalSuccessMessage.classList.remove('hidden');
-                proposalSuccessMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-                setTimeout(() => {
-                    proposalForm.reset();
-                    purchasingDetails.classList.add('hidden');
-                    proposalSuccessMessage.classList.add('hidden');
-                    closeProposalModal();
-                }, 2500);
-            } catch (err) {
-                submitBtn.disabled = false;
-                submitBtn.style.opacity = '1';
-                proposalErrorMessage.textContent = 'Network error. Please check your connection and try again.';
-                proposalErrorMessage.classList.remove('hidden');
-            }
-        });
 
 
         // Initialize Map
@@ -1590,11 +1547,25 @@
             estimatorPayload.append('Condition Today', conditionNowLabels[conditionNowEl.value] || conditionNowEl.value || 'Not specified');
             estimatorPayload.append('Tell Me About the Kitchen', kitchenLabels[kitchenEl.value] || kitchenEl.value || 'Not specified');
 
-            fetch('https://formspree.io/f/mlgqdnan', {
-                method: 'POST',
-                body: estimatorPayload,
-                headers: { 'Accept': 'application/json' }
-            }).catch(() => {}); // Silent — visitor doesn't need to know
+            // Submit through a temporary native form into a hidden iframe.
+            // This avoids fetch/CORS failures while keeping the estimator experience uninterrupted.
+            const silentForm = document.createElement('form');
+            silentForm.method = 'POST';
+            silentForm.action = 'https://formspree.io/f/mlgqdnan';
+            silentForm.target = 'formspreeSilentTarget';
+            silentForm.style.display = 'none';
+
+            for (const [name, value] of estimatorPayload.entries()) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = name;
+                input.value = value;
+                silentForm.appendChild(input);
+            }
+
+            document.body.appendChild(silentForm);
+            silentForm.submit();
+            setTimeout(() => silentForm.remove(), 1000);
         }
 
         function toggleRenovation(type) {
