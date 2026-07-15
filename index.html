@@ -1189,8 +1189,7 @@
 
         // One-time adjustment for documented premium subdivisions that have
         // cooled faster than the citywide average since the boom — matched by
-        // exact subdivision name so nearby/compound MLS tags (e.g. "Longs
-        // Peak, Old Town") aren't accidentally swept in.
+        // extracting the subdivision name from MLS format ("... Sub: NAME")
         function getZoneAdjustment(subdivision) {
             if (!subdivision) return 0;
             const zoneAdjustments = {
@@ -1200,7 +1199,14 @@
                 'mountain view west': -0.02,
                 'longmont land co 2': -0.02
             };
-            const key = subdivision.trim().toLowerCase();
+            
+            // Extract subdivision name from MLS format: "... Sub: NAME"
+            let key = subdivision;
+            if (subdivision.includes('Sub:')) {
+                key = subdivision.split('Sub:')[1].trim();
+            }
+            key = key.trim().toLowerCase();
+            
             return zoneAdjustments.hasOwnProperty(key) ? zoneAdjustments[key] : 0;
         }
 
