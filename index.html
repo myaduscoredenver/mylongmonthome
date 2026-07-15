@@ -1155,10 +1155,11 @@
         // vast majority of cases.
         function getMarketMultiplier(purchaseYear) {
             const table = {
-                2006: 2.0315, 2007: 2.3738, 2008: 2.4545, 2009: 2.7786, 2010: 3.2280,
-                2011: 2.5566, 2012: 2.3390, 2013: 2.0148, 2014: 1.9222, 2015: 1.7622,
-                2016: 1.5354, 2017: 1.4496, 2018: 1.4215, 2019: 1.2278, 2020: 1.2814,
-                2021: 1.0138, 2022: 0.9396, 2023: 0.9650, 2024: 0.9769, 2025: 0.9800
+                2000: 2.6580, 2001: 2.3534, 2002: 2.2932, 2003: 2.3687, 2004: 2.3508, 2005: 2.3190,
+                2006: 2.2721, 2007: 2.3649, 2008: 2.6007, 2009: 2.5914, 2010: 2.5366, 2011: 2.6007,
+                2012: 2.5048, 2013: 2.3344, 2014: 2.0874, 2015: 1.8857, 2016: 1.6519, 2017: 1.5743,
+                2018: 1.4603, 2019: 1.4543, 2020: 1.3728, 2021: 1.1211, 2022: 0.9884, 2023: 1.0289,
+                2024: 0.9740, 2025: 1.0015
             };
             const SAFETY_MARGIN = 0.08;
 
@@ -1178,12 +1179,12 @@
                 // Purchased this year — not enough market history yet; treat as flat, no margin.
                 return 1.0;
             }
-            // Before 2006 (outside the real reality-check data): chain the old
-            // flat +4%/year assumption from the purchase year up to 2006, then
-            // apply the real 2006 multiplier from there.
-            const yearsBefore2006 = 2006 - purchaseYear;
-            const preTableGrowth = Math.pow(1.04, yearsBefore2006);
-            return preTableGrowth * table[2006] * (1 - SAFETY_MARGIN);
+            // Before 2000 (no real data): chain a conservative +3%/year assumption 
+            // from the purchase year up to 2000, then apply the actual 2000 multiplier from there.
+            // This is more conservative than the old 4% and acknowledges we're extrapolating.
+            const yearsBefore2000 = 2000 - purchaseYear;
+            const preTableGrowth = Math.pow(1.03, yearsBefore2000);
+            return preTableGrowth * table[2000] * (1 - SAFETY_MARGIN);
         }
 
         // One-time adjustment for documented premium subdivisions that have
