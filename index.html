@@ -1270,6 +1270,13 @@
         // address, matching the same logic used to build SFH_STREET_STATS, so
         // "628 Saint Andrews Dr, Longmont 80501" resolves to "SAINT ANDREWS DR".
         function parseSfhStreetName(raw) {
+            const parsed = parseSfhAddress(raw);
+            return parsed ? parsed.street : null;
+        }
+
+        // Splits a free-text address into house number + street name, matching
+        // the same logic used to build SFH_RAW_COMPS.
+        function parseSfhAddress(raw) {
             if (!raw) return null;
             const SUFFIXES = new Set(['AVE','AV','ST','STREET','DR','DRIVE','CT','COURT','LN','LANE','CIR','CIRCLE',
                 'PL','PLACE','RD','ROAD','WAY','BLVD','BOULEVARD','PKWY','PARKWAY','TER','TERRACE','TRL','TRAIL','LOOP']);
@@ -1277,8 +1284,9 @@
                 CIRCLE:'CIR', PLACE:'PL', ROAD:'RD', BOULEVARD:'BLVD', PARKWAY:'PKWY', TERRACE:'TER', TRAIL:'TRL' };
             let part = raw.split(',')[0].trim();
             part = part.replace(/#\S+/g, ' ').replace(/\s+/g, ' ').trim();
-            const m = part.match(/^(\d+(?:-\d+)?[A-Za-z]?)\s+(.*)$/);
+            const m = part.match(/^(\d+)(?:-\d+)?[A-Za-z]?\s+(.*)$/);
             if (!m) return null;
+            const houseNum = parseInt(m[1], 10);
             const tokens = m[2].split(' ');
             let suffixIdx = null;
             for (let i = 0; i < Math.min(tokens.length, 6); i++) {
@@ -1288,12 +1296,13 @@
             let name = (suffixIdx !== null ? tokens.slice(0, suffixIdx + 1) : tokens).join(' ').toUpperCase();
             name = name.replace(/[^A-Z0-9 ]/g, '');
             name = name.split(' ').filter(Boolean).map(p => REPL[p] || p).join(' ');
-            return name || null;
+            if (!name || isNaN(houseNum)) return null;
+            return { houseNum, street: name };
         }
 
-        // Mirrors the Python normalizer used to build SFH_SUBDIVISION_STATS:
-        // strips filing/phase/replat/section-style suffixes (and the "Fig"/"Flg"
-        // typo) without collapsing genuinely distinct communities into each other.
+        // Mirrors the Python normalizer used to build the comp dataset: strips
+        // filing/phase/replat/section-style suffixes (and the "Fig"/"Flg" typo)
+        // without collapsing genuinely distinct communities into each other.
         function normalizeSfhSubdivision(s) {
             if (!s) return null;
             let key = s.trim().toLowerCase().replace(/\s+/g, ' ');
@@ -1320,45 +1329,83 @@
             return working || null;
         }
 
-        // Tiered, comps-first $/sqft resolver for single-family homes: your own
-        // street first (heavily weighted, but discounted if its freshest comp is
-        // stale), then your subdivision, then the citywide median as a floor.
-        // This replaces the old flat lookup table entirely.
-        function resolveSfhPsf(streetName, subKey) {
-            const streetStats = (streetName && window.SFH_STREET_STATS) ? window.SFH_STREET_STATS[streetName] : null;
-            const subStats = (subKey && window.SFH_SUBDIVISION_STATS) ? window.SFH_SUBDIVISION_STATS[subKey] : null;
+        // Live, per-property weighted comp engine for single-family homes.
+        // A street name alone isn't a reliable "nearby" signal — long streets like
+        // Sumner St run through half a dozen unrelated subdivisions over their
+        // length. So instead of averaging every sale on the same street name, this
+        // scores every candidate sale by how close its house number is to the
+        // subject's (on the same street) or whether it shares the subject's actual
+        // platted subdivision (which correctly ties together cross streets in the
+        // same block, e.g. Sumner/Judson/Juniper all tagged "Longmont Land Co 2"),
+        // plus how recent the sale is — then takes a weighted average instead of a
+        // flat median, so a sale two doors down outweighs one a mile up the street.
+        function resolveSfhPsf(streetName, houseNum, subKey) {
             const citywide = window.SFH_CITYWIDE_STATS || { psf: 260, n: 0 };
-
-            const secondaryPsf = subStats ? subStats.median_psf : citywide.psf;
-
-            function monthsStale(dateStr) {
-                if (!dateStr) return 999;
-                const d = new Date(dateStr + 'T00:00:00');
-                const asOf = new Date('2026-07-02T00:00:00');
-                return Math.max(0, (asOf - d) / (1000 * 60 * 60 * 24 * 30));
+            const raw = window.SFH_RAW_COMPS;
+            if (!raw || !raw.length || (!streetName && !subKey)) {
+                return { psf: citywide.psf, compBasis: 'citywide', compN: citywide.n, compWindow: 'last 12 months', sampleComps: [] };
             }
 
-            if (streetStats && streetStats.n >= 1) {
-                const stale = monthsStale(streetStats.most_recent_sale);
-                // A street with plenty of comps still shouldn't dominate if its most
-                // recent sale is years old — that's not today's market anymore.
-                const recencyFactor = stale <= 24 ? 1.0 : stale <= 36 ? 0.5 : stale <= 60 ? 0.2 : 0.1;
-                const wStreet = Math.min(0.35 + 0.05 * streetStats.n, 0.85) * recencyFactor;
-                const blended = (streetStats.median_psf * wStreet) + (secondaryPsf * (1 - wStreet));
-                return {
-                    psf: blended,
-                    compBasis: 'street',
-                    compN: streetStats.n,
-                    compWindow: streetStats.window,
-                    sampleComps: streetStats.sample_comps || []
-                };
+            const asOf = new Date('2026-07-02T00:00:00');
+            const scored = [];
+            for (let i = 0; i < raw.length; i++) {
+                const r = raw[i]; // [address, street, houseNum, subdivisionNorm, price, psf, date]
+                const sameStreet = streetName && r[1] === streetName;
+                const sameSub = subKey && r[3] === subKey;
+                if (!sameStreet && !sameSub) continue;
+
+                const monthsStale = Math.max(0, (asOf - new Date(r[6] + 'T00:00:00')) / (1000 * 60 * 60 * 24 * 30));
+                // A citywide-market snapshot from a decade ago isn't useful even at a
+                // heavy discount — cut it rather than let sheer volume of old sales
+                // dilute the average. Same-street matches get a longer leash since
+                // proximity itself is strong evidence; subdivision-only matches need
+                // to be more recent to count at all.
+                if (sameStreet && monthsStale > 120) continue;
+                if (!sameStreet && monthsStale > 72) continue;
+
+                const recencyFactor = 1 / (1 + monthsStale / 24);
+
+                let base;
+                if (sameStreet) {
+                    const numDiff = (typeof houseNum === 'number' && !isNaN(houseNum)) ? Math.abs(r[2] - houseNum) : 400;
+                    base = 1.3 * (1 / (1 + numDiff / 150));
+                    if (sameSub) base *= 1.15; // same street AND same platted subdivision: extra confidence
+                } else {
+                    base = 0.5; // subdivision-only match, no house-number distance to lean on
+                }
+
+                const weight = base * recencyFactor;
+                if (weight > 0.08) scored.push({ addr: r[0], price: r[4], psf: r[5], date: r[6], weight, sameStreet });
             }
-            if (subStats && subStats.n >= 1) {
-                const wSub = Math.min(0.3 + 0.04 * subStats.n, 0.75);
-                const blended = (subStats.median_psf * wSub) + (citywide.psf * (1 - wSub));
-                return { psf: blended, compBasis: 'subdivision', compN: subStats.n, compWindow: subStats.window, sampleComps: [] };
+
+            if (scored.length === 0) {
+                return { psf: citywide.psf, compBasis: 'citywide', compN: citywide.n, compWindow: 'last 12 months', sampleComps: [] };
             }
-            return { psf: citywide.psf, compBasis: 'citywide', compN: citywide.n, compWindow: 'last 12 months', sampleComps: [] };
+
+            // Only the most relevant comps drive the number — a handful of close,
+            // recent sales should decide this, not hundreds of loosely-related ones.
+            scored.sort((a, b) => b.weight - a.weight);
+            const pool = scored.slice(0, 30);
+
+            let weightSum = 0, psfWeightedSum = 0;
+            pool.forEach(c => { weightSum += c.weight; psfWeightedSum += c.weight * c.psf; });
+            let blendedPsf = psfWeightedSum / weightSum;
+
+            // Thin/low-confidence pools (few close, recent comps) get pulled partway
+            // toward the citywide median rather than trusted outright.
+            const confidence = Math.min(weightSum / 3, 1);
+            blendedPsf = (blendedPsf * confidence) + (citywide.psf * (1 - confidence));
+
+            const sampleComps = pool.slice(0, 5).map(c => ({ address: c.addr, price: c.price, date: c.date, psf: c.psf }));
+
+            const usedStreet = pool.some(c => c.sameStreet && c.weight > 0.15);
+            return {
+                psf: blendedPsf,
+                compBasis: usedStreet ? 'street' : 'subdivision',
+                compN: pool.length,
+                compWindow: 'weighted by distance & recency',
+                sampleComps: sampleComps
+            };
         }
 
         function calculateEquity(purchasePrice, purchaseDate, renovations = [], conditionThen = null, conditionNow = null, kitchen = null, investmentAmount = null, subdivision = null, multipleOffers = false) {
@@ -1376,9 +1423,11 @@
             // right now, so this works whether the address came from the database
             // or was corrected/typed by hand.
             const addressInput = document.getElementById('addressInput');
-            const streetName = addressInput ? parseSfhStreetName(addressInput.value) : null;
+            const parsedSubject = addressInput ? parseSfhAddress(addressInput.value) : null;
+            const streetName = parsedSubject ? parsedSubject.street : null;
+            const houseNum = parsedSubject ? parsedSubject.houseNum : null;
 
-            const resolved = resolveSfhPsf(streetName, subKey);
+            const resolved = resolveSfhPsf(streetName, houseNum, subKey);
             const neighborhoodPsf = resolved.psf;
 
             // VALUATION: sqft x real comps-based $/sqft, leaning heavily on your
@@ -1873,7 +1922,7 @@
 
             Promise.all([
                 loadScriptOnce('./comps_database.js', '__sfhDbDone'),
-                loadScriptOnce('./sfh_comp_stats.js', '__sfhStatsDone'),
+                loadScriptOnce('./sfh_raw_comps.js', '__sfhRawDone'),
                 loadScriptOnce('./attached_comps_database.js', '__attachedDbDone'),
                 loadScriptOnce('./attached_comps_stats.js', '__attachedStatsDone')
             ]).then(function () {
