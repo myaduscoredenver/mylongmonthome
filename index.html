@@ -124,13 +124,11 @@
 <nav class="flex md:hidden items-center justify-center gap-6">
 <a class="text-slate-700 hover:text-navy-800 font-medium text-sm" href="index.html">Home</a>
 <a class="text-slate-700 hover:text-navy-800 font-medium text-sm" href="sellers-guide.html">Seller's Guide</a>
-<a class="text-slate-700 hover:text-navy-800 font-medium text-sm" href="market-update.html">Market Update</a>
 <a class="text-slate-700 hover:text-navy-800 font-medium text-sm" href="#form">Contact</a>
 </nav>
 <nav class="hidden md:flex items-center gap-8">
 <a class="text-slate-700 hover:text-navy-800 font-medium" href="index.html">Home</a>
 <a class="text-slate-700 hover:text-navy-800 font-medium" href="sellers-guide.html">Seller's Guide</a>
-<a class="text-slate-700 hover:text-navy-800 font-medium" href="market-update.html">Market Update</a>
 <a class="text-slate-700 hover:text-navy-800 font-medium" href="#form">Contact</a>
 </nav>
 </div>
@@ -1157,11 +1155,10 @@
         // vast majority of cases.
         function getMarketMultiplier(purchaseYear) {
             const table = {
-                2000: 2.6580, 2001: 2.3534, 2002: 2.2932, 2003: 2.3687, 2004: 2.3508, 2005: 2.3190,
-                2006: 2.2721, 2007: 2.3649, 2008: 2.6007, 2009: 2.5914, 2010: 2.5366, 2011: 2.6007,
-                2012: 2.5048, 2013: 2.3344, 2014: 2.0874, 2015: 1.8857, 2016: 1.6519, 2017: 1.5743,
-                2018: 1.4603, 2019: 1.4543, 2020: 1.3728, 2021: 1.1211, 2022: 0.9884, 2023: 1.0289,
-                2024: 0.9740, 2025: 1.0015
+                2006: 2.0315, 2007: 2.3738, 2008: 2.4545, 2009: 2.7786, 2010: 3.2280,
+                2011: 2.5566, 2012: 2.3390, 2013: 2.0148, 2014: 1.9222, 2015: 1.7622,
+                2016: 1.5354, 2017: 1.4496, 2018: 1.4215, 2019: 1.2278, 2020: 1.2814,
+                2021: 1.0138, 2022: 0.9396, 2023: 0.9650, 2024: 0.9769, 2025: 0.9800
             };
             const SAFETY_MARGIN = 0.08;
 
@@ -1181,17 +1178,18 @@
                 // Purchased this year — not enough market history yet; treat as flat, no margin.
                 return 1.0;
             }
-            // Before 2000 (no real data): chain a conservative +3%/year assumption 
-            // from the purchase year up to 2000, then apply the actual 2000 multiplier from there.
-            // This is more conservative than the old 4% and acknowledges we're extrapolating.
-            const yearsBefore2000 = 2000 - purchaseYear;
-            const preTableGrowth = Math.pow(1.03, yearsBefore2000);
-            return preTableGrowth * table[2000] * (1 - SAFETY_MARGIN);
+            // Before 2006 (outside the real reality-check data): chain the old
+            // flat +4%/year assumption from the purchase year up to 2006, then
+            // apply the real 2006 multiplier from there.
+            const yearsBefore2006 = 2006 - purchaseYear;
+            const preTableGrowth = Math.pow(1.04, yearsBefore2006);
+            return preTableGrowth * table[2006] * (1 - SAFETY_MARGIN);
         }
 
         // One-time adjustment for documented premium subdivisions that have
         // cooled faster than the citywide average since the boom — matched by
-        // extracting the subdivision name from MLS format ("... Sub: NAME")
+        // exact subdivision name so nearby/compound MLS tags (e.g. "Longs
+        // Peak, Old Town") aren't accidentally swept in.
         function getZoneAdjustment(subdivision) {
             if (!subdivision) return 0;
             const zoneAdjustments = {
@@ -1201,14 +1199,7 @@
                 'mountain view west': -0.02,
                 'longmont land co 2': -0.02
             };
-            
-            // Extract subdivision name from MLS format: "... Sub: NAME"
-            let key = subdivision;
-            if (subdivision.includes('Sub:')) {
-                key = subdivision.split('Sub:')[1].trim();
-            }
-            key = key.trim().toLowerCase();
-            
+            const key = subdivision.trim().toLowerCase();
             return zoneAdjustments.hasOwnProperty(key) ? zoneAdjustments[key] : 0;
         }
 
@@ -1283,19 +1274,41 @@
         }
 
         function calculateEquity(purchasePrice, purchaseDate, renovations = [], conditionThen = null, conditionNow = null, kitchen = null, investmentAmount = null, subdivision = null, multipleOffers = false) {
-            // 2026 LONGMONT NEIGHBORHOOD MEDIAN $/SQFT (from active listings July 2026)
-            const NEIGHBORHOOD_COMPS_2026 = {
-                'longmont land co 2': 412.57,
-                'brown': 288.46,
-                'capitol hill': 502.09,
-                'old town': 297.90,
-                'longmont ot': 382.04,
-                'west grange': 319.15,
-                'meadowlark 1': 254.63,
-                'clover creek flg 1': 238.06,
-                'park ridge 3': 293.87,
-                'longmont land co 1': 456.56,
-                'default': 280.00  // Citywide median fallback
+            // 2026 LONGMONT MEDIAN $/SQFT (from 478 ACTUAL CLOSED SALES - not list prices)
+            const NEIGHBORHOOD_COMPS_2026_SOLD = {
+                'longmont ot': 307.86,
+                'longmont land co 2': 418.09,
+                'old town': 309.87,
+                'columbia heights': 560.41,
+                'longmont land co 1': 391.59,
+                'dell acres': 365.18,
+                'kensington place': 438.18,
+                'blue vista': 453.54,
+                'wilcox': 555.03,
+                'west grange': 298.48,
+                'meadowlark': 297.76,
+                'meadow park': 308.29,
+                'park ridge': 324.07,
+                'range view acres': 307.43,
+                'dollhouse village 2': 376.85,
+                'holiday park 2': 393.80,
+                'north longmont aka howze & s…': 424.29,
+                'pratt & browns gardens': 295.24,
+                'sherri mar': 339.98,
+                'stroh heights': 161.56,
+                'montview park': 189.55,
+                'quail ridge': 297.82,
+                'park north': 303.33,
+                'meadowlark 4': 440.53,
+                'holiday park': 216.97,
+                'skrbina 2': 251.28,
+                'longmont village': 276.34,
+                'southmoor park': 271.53,
+                'fox creek farm flg 4': 275.33,
+                'hover acres': 208.37,
+                'longmont estates': 214.48,
+                'shores pud 1': 216.79,
+                'default': 300.00
             };
 
             const year = parseInt(purchaseDate);
@@ -1312,34 +1325,33 @@
                 }
             }
 
-            // LOOK UP 2026 NEIGHBORHOOD MEDIAN $/SQFT
-            const neighborhoodPsf = NEIGHBORHOOD_COMPS_2026[neighborhoodKey] || NEIGHBORHOOD_COMPS_2026['default'];
+            // LOOK UP 2026 ACTUAL SOLD MEDIAN $/SQFT
+            const neighborhoodPsf = NEIGHBORHOOD_COMPS_2026_SOLD[neighborhoodKey] || NEIGHBORHOOD_COMPS_2026_SOLD['default'];
 
-            // VALUATION: Use 2026 comp-based estimate if sqft available
-            let currentValue = purchasePrice; // Fallback to purchase price
+            // VALUATION: Use 2026 actual sold comp estimate
+            let currentValue = purchasePrice; // Fallback
 
             // Try to get sqft from form
             if (document.getElementById('manualSqft')) {
                 const manualSqft = parseFloat(document.getElementById('manualSqft').value);
                 if (!isNaN(manualSqft) && manualSqft > 0) {
-                    // Primary valuation: sqft × 2026 neighborhood median $/sqft
+                    // PRIMARY VALUATION: sqft × 2026 neighborhood median SOLD $/sqft
                     currentValue = manualSqft * neighborhoodPsf;
                 }
             }
 
-            // Apply condition multipliers ONLY if user explicitly selected them
-            if (conditionThen && conditionNow && kitchen && conditionThen !== 'nothing' && conditionNow !== 'nothing') {
+            // Apply condition multipliers ONLY if user selected them
+            if (conditionThen && conditionNow && kitchen) {
                 const conditionMultiplier = getConditionMultiplier(conditionThen, conditionNow, kitchen, investmentAmount);
                 currentValue *= conditionMultiplier;
             }
 
-            // Apply zone cooling adjustments (for premium neighborhoods)
+            // Apply zone cooling adjustments
             const zoneAdjustment = getZoneAdjustment(subdivision);
             if (zoneAdjustment < 0) {
                 currentValue *= (1 + zoneAdjustment);
             }
 
-            // Apply renovation boosts
             let renovationBoost = 0;
             renovations.forEach(reno => {
                 if (reno === 'kitchen') renovationBoost += currentValue * 0.045;
@@ -1731,6 +1743,18 @@
             document.getElementById('manualConditionThen').value = 'upgrades';
             document.getElementById('manualConditionNow').value = 'nothing';
             document.getElementById('manualKitchen').value = 'outdated';
+
+            // STORE SQFT for valuation
+            if (document.getElementById('manualSqft')) {
+                document.getElementById('manualSqft').value = lookup.sqft || '';
+            } else {
+                // If field doesn't exist, create it as hidden
+                const sqftField = document.createElement('input');
+                sqftField.id = 'manualSqft';
+                sqftField.type = 'hidden';
+                sqftField.value = lookup.sqft || '';
+                document.body.appendChild(sqftField);
+            }
 
             // Stash subdivision + multiple-offers so calculateManual() can factor
             // in zone-specific cooling and the boom-period fair-value adjustment.
