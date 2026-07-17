@@ -1281,19 +1281,63 @@
         }
 
         function calculateEquity(purchasePrice, purchaseDate, renovations = [], conditionThen = null, conditionNow = null, kitchen = null, investmentAmount = null, subdivision = null, multipleOffers = false) {
+            // 2026 LONGMONT NEIGHBORHOOD MEDIAN $/SQFT (from active listings July 2026)
+            const NEIGHBORHOOD_COMPS_2026 = {
+                'longmont land co 2': 412.57,
+                'brown': 288.46,
+                'capitol hill': 502.09,
+                'old town': 297.90,
+                'longmont ot': 382.04,
+                'west grange': 319.15,
+                'meadowlark 1': 254.63,
+                'clover creek flg 1': 238.06,
+                'park ridge 3': 293.87,
+                'longmont land co 1': 456.56,
+                'default': 280.00  // Citywide median fallback
+            };
+
             const year = parseInt(purchaseDate);
             const currentYear = 2026;
             const yearsOwned = currentYear - year;
 
-            const marketMultiplier = getMarketMultiplier(year);
-            const zoneAdjustment = getZoneAdjustment(subdivision);
-            let currentValue = purchasePrice * marketMultiplier * (1 + zoneAdjustment);
+            // Extract neighborhood from MLS format
+            let neighborhoodKey = 'default';
+            if (subdivision) {
+                if (subdivision.includes('Sub:')) {
+                    neighborhoodKey = subdivision.split('Sub:')[1].trim().toLowerCase();
+                } else {
+                    neighborhoodKey = subdivision.trim().toLowerCase();
+                }
+            }
 
-            if (conditionThen && conditionNow && kitchen) {
+            // LOOK UP 2026 NEIGHBORHOOD MEDIAN $/SQFT
+            const neighborhoodPsf = NEIGHBORHOOD_COMPS_2026[neighborhoodKey] || NEIGHBORHOOD_COMPS_2026['default'];
+
+            // VALUATION: Use 2026 comp-based estimate if sqft available
+            let currentValue = purchasePrice; // Fallback to purchase price
+
+            // Try to get sqft from form
+            if (document.getElementById('manualSqft')) {
+                const manualSqft = parseFloat(document.getElementById('manualSqft').value);
+                if (!isNaN(manualSqft) && manualSqft > 0) {
+                    // Primary valuation: sqft × 2026 neighborhood median $/sqft
+                    currentValue = manualSqft * neighborhoodPsf;
+                }
+            }
+
+            // Apply condition multipliers ONLY if user explicitly selected them
+            if (conditionThen && conditionNow && kitchen && conditionThen !== 'nothing' && conditionNow !== 'nothing') {
                 const conditionMultiplier = getConditionMultiplier(conditionThen, conditionNow, kitchen, investmentAmount);
                 currentValue *= conditionMultiplier;
             }
 
+            // Apply zone cooling adjustments (for premium neighborhoods)
+            const zoneAdjustment = getZoneAdjustment(subdivision);
+            if (zoneAdjustment < 0) {
+                currentValue *= (1 + zoneAdjustment);
+            }
+
+            // Apply renovation boosts
             let renovationBoost = 0;
             renovations.forEach(reno => {
                 if (reno === 'kitchen') renovationBoost += currentValue * 0.045;
@@ -1313,7 +1357,9 @@
                 currentValue: Math.round(currentValue),
                 equity: Math.round(equity),
                 yearsOwned: yearsOwned,
-                renovationBoost: Math.round(renovationBoost)
+                renovationBoost: Math.round(renovationBoost),
+                neighborhoodComps: neighborhoodPsf,
+                neighborhood: neighborhoodKey
             };
         }
 
