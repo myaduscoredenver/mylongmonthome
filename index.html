@@ -1266,154 +1266,128 @@
             return multiplier;
         }
 
-        function calculateEquity(purchasePrice, purchaseDate, renovations = [], conditionThen = null, conditionNow = null, kitchen = null, investmentAmount = null, subdivision = null, multipleOffers = false) {
-            // 2026 LONGMONT MEDIAN $/SQFT (from 478 ACTUAL CLOSED SALES - comprehensive)
-            const NEIGHBORHOOD_COMPS_2026_SOLD = {
-                'longmont ot': 307.86, 'longmont land co 2': 418.09, 'old town': 309.87,
-                'columbia heights': 560.41, 'longmont land co 1': 391.59, 'dell acres': 365.18,
-                'kensington place': 438.18, 'blue vista': 453.54, 'wilcox': 555.03,
-                'west grange': 298.48, 'meadowlark': 297.76, 'meadow park': 308.29,
-                'park ridge': 324.07, 'range view acres': 307.43, 'dollhouse village 2': 376.85,
-                'holiday park 2': 393.80, 'north longmont aka howze & s…': 424.29,
-                'pratt & browns gardens': 295.24, 'sherri mar': 339.98, 'stroh heights': 161.56,
-                'montview park': 189.55, 'quail ridge': 297.82, 'park north': 303.33,
-                'meadowlark 4': 440.53, 'holiday park': 216.97, 'skrbina 2': 251.28,
-                'longmont village': 276.34, 'southmoor park': 271.53, 'fox creek farm flg 4': 275.33,
-                'hover acres': 208.37, 'longmont estates': 214.48, 'shores pud 1': 216.79,
-                'brack': 288.39, 'boulder creek': 412.33, 'clark centennial': 395.38,
-                'clover basin ranch': 264.64, 'clover creek flg 1': 249.71, 'coffmans 1': 794.68,
-                'coffee mans 2': 306.58, 'creekside': 268.50, 'creekside 1': 217.44,
-                'creekside 3': 231.08, 'creekside 6': 193.34, 'creekside ii 2nd flg': 240.32,
-                'dodd estates 1': 189.69, 'dollhouse acres': 427.63, 'dollhouse village 1': 397.21,
-                'eastgate flg 1': 205.44, 'fox creek farm': 229.38, 'fox creek farm flg 1': 270.97,
-                'fox hill': 232.16, 'fox hill 2': 301.50, 'fox meadow': 208.84,
-                'fox meadow flg 3': 249.85, 'fox meadows': 186.82, 'fox meadows flg 1': 166.22,
-                'fox meadows flg 3': 212.23, 'golden bear': 175.02, 'harvest junction': 211.49,
-                'harvest junction village': 210.05, 'historic longmont': 266.65, 'holiday park 3': 229.89,
-                'holiday park 4': 261.98, 'kensington': 467.11, 'kensington/old town': 493.59,
-                'kent & davis': 354.03, 'lashleys resub': 268.60, 'linda vista': 273.91,
-                'longmont estates 1': 345.25, 'longmont estates 2': 329.37, 'longmont old town': 318.87,
-                'loomiller & forbes': 424.20, 'meadow mountain': 239.32, 'meadowlark 1': 271.66,
-                'meadowlark 2': 204.23, 'meadowlark 3': 352.99, 'meadowlark 5': 221.68,
-                'meadowview': 210.08, 'melody valley': 267.04, 'mill village': 201.11,
-                'montview park 1 & amd': 201.86, 'montview park 2': 372.23, 'morgan & forbes': 455.88,
-                'morningside': 256.16, 'mountain brook': 341.18, 'mountain brook flg 1': 304.60,
-                'mountain view west': 245.17, 'mumford heights': 272.29, 'north longmont': 358.59,
-                'northstar': 406.51, 'old town; ar goldens': 311.05, 'park ridge 1': 436.51,
-                'park ridge 2': 325.13, 'park ridge 3': 318.45, 'quail crossing': 170.89,
-                'rainbow ridge 1st flg': 293.05, 'renaissance': 191.43, 'rider ridge': 214.98,
-                'rosewood': 322.22, 'rural bo & lgt': 262.19, 'somerset meadows': 256.64,
-                'southmoor park 2': 264.01, 'spring valley': 184.78, 'spring valley ph 1 1st flg': 188.45,
-                'spring valley ph 6 prcl e': 167.80, 'spring valley ph 9 prcl k': 180.22,
-                'spring valley ph i flg 1': 180.87, 'stickler': 478.53, 'stoney ridge': 287.51,
-                'stoney ridge 2': 225.83, 'sunnyvale': 446.45, 'sun valley': 300.27,
-                'town & country': 243.77, 'turrells': 314.33, 'west grange flg 2': 333.25,
-                'west grange flg 3': 366.42, 'westbrook village': 227.26, 'westerberg': 295.03,
-                'westlake manor': 189.48, 'westlake manor 3': 253.04, 'westlake manors': 226.15,
-                'westview knolls': 320.51, 'wolf creek flg 1': 232.45, 'woodmeadow': 389.91,
-                'brown': 295.24,  // Use Pratt & Browns Gardens as proxy for Brown
-                'default': 300.00
-            };
+        // Pulls the street name (number and unit stripped) out of a free-text
+        // address, matching the same logic used to build SFH_STREET_STATS, so
+        // "628 Saint Andrews Dr, Longmont 80501" resolves to "SAINT ANDREWS DR".
+        function parseSfhStreetName(raw) {
+            if (!raw) return null;
+            const SUFFIXES = new Set(['AVE','AV','ST','STREET','DR','DRIVE','CT','COURT','LN','LANE','CIR','CIRCLE',
+                'PL','PLACE','RD','ROAD','WAY','BLVD','BOULEVARD','PKWY','PARKWAY','TER','TERRACE','TRL','TRAIL','LOOP']);
+            const REPL = { AVENUE:'AVE', AV:'AVE', STREET:'ST', DRIVE:'DR', COURT:'CT', LANE:'LN',
+                CIRCLE:'CIR', PLACE:'PL', ROAD:'RD', BOULEVARD:'BLVD', PARKWAY:'PKWY', TERRACE:'TER', TRAIL:'TRL' };
+            let part = raw.split(',')[0].trim();
+            part = part.replace(/#\S+/g, ' ').replace(/\s+/g, ' ').trim();
+            const m = part.match(/^(\d+(?:-\d+)?[A-Za-z]?)\s+(.*)$/);
+            if (!m) return null;
+            const tokens = m[2].split(' ');
+            let suffixIdx = null;
+            for (let i = 0; i < Math.min(tokens.length, 6); i++) {
+                const tt = tokens[i].replace(/[^A-Za-z]/g, '').toUpperCase();
+                if (SUFFIXES.has(tt)) suffixIdx = i;
+            }
+            let name = (suffixIdx !== null ? tokens.slice(0, suffixIdx + 1) : tokens).join(' ').toUpperCase();
+            name = name.replace(/[^A-Z0-9 ]/g, '');
+            name = name.split(' ').filter(Boolean).map(p => REPL[p] || p).join(' ');
+            return name || null;
+        }
 
-            // Resolves a lowercased subdivision string to a $/sqft comp. Tries the
-            // exact string first, then strips one filing/phase/replat/section-style
-            // suffix at a time (retrying the table after each strip) before ever
-            // falling back to the flat citywide default.
-            function resolveNeighborhoodPsf(key) {
-                if (NEIGHBORHOOD_COMPS_2026_SOLD.hasOwnProperty(key)) {
-                    return NEIGHBORHOOD_COMPS_2026_SOLD[key];
+        // Mirrors the Python normalizer used to build SFH_SUBDIVISION_STATS:
+        // strips filing/phase/replat/section-style suffixes (and the "Fig"/"Flg"
+        // typo) without collapsing genuinely distinct communities into each other.
+        function normalizeSfhSubdivision(s) {
+            if (!s) return null;
+            let key = s.trim().toLowerCase().replace(/\s+/g, ' ');
+            let working = key.replace(/\bfig\b/g, 'flg');
+            const patterns = [
+                /\bflg\.?\s*\d+[a-z]?$/, /\bfiling\.?\s*\d+[a-z]?$/, /\bph\.?\s*\d+[a-z]?$/,
+                /\bphase\.?\s*\d+[a-z]?$/, /\bsec\.?\s*\d+[a-z]?$/, /\bsection\.?\s*\d+[a-z]?$/,
+                /\breplat\.?\s*[a-z0-9]*$/, /\brep\.?\s*[a-z0-9]*$/, /\bamd\.?$/, /\bamended$/,
+                /\bsupp\.?\s*\d*$/, /\bsupplement\.?\s*\d*$/, /\bprcl\.?\s*[a-z0-9]*$/,
+                /\bparcel\.?\s*[a-z0-9]*$/, /\baddition\.?\s*\d*$/, /\badd\.?\s*\d*$/,
+                /\bblk\.?\s*\d+$/, /\bbldg\.?\s*[a-z0-9]*$/, /\bfinal\s*plat$/, /\bsub(division)?$/,
+                /&?\s*\b(1st|2nd|3rd|4th|5th)$/, /\s\d+$/
+            ];
+            for (let pass = 0; pass < 5; pass++) {
+                let stripped = working;
+                for (const p of patterns) {
+                    const cand = working.replace(p, '').trim().replace(/\s+/g, ' ');
+                    if (cand !== working && cand.length > 0) { stripped = cand; break; }
                 }
-                let working = key.replace(/\bfig\b/g, 'flg'); // common OCR/typo confusion
-                const suffixPatterns = [
-                    /\bflg\.?\s*\d+[a-z]?$/,
-                    /\bfiling\.?\s*\d+[a-z]?$/,
-                    /\bph\.?\s*\d+[a-z]?$/,
-                    /\bphase\.?\s*\d+[a-z]?$/,
-                    /\bsec\.?\s*\d+[a-z]?$/,
-                    /\bsection\.?\s*\d+[a-z]?$/,
-                    /\breplat\.?\s*[a-z0-9]*$/,
-                    /\brep\.?\s*[a-z0-9]*$/,
-                    /\bamd\.?$/,
-                    /\bamended$/,
-                    /\bsupp\.?\s*\d*$/,
-                    /\bsupplement\.?\s*\d*$/,
-                    /\bprcl\.?\s*[a-z0-9]*$/,
-                    /\bparcel\.?\s*[a-z0-9]*$/,
-                    /\baddition\.?\s*\d*$/,
-                    /\badd\.?\s*\d*$/,
-                    /\bblk\.?\s*\d+$/,
-                    /\bbldg\.?\s*[a-z0-9]*$/,
-                    /&?\s*\b(1st|2nd|3rd|4th|5th)$/
-                ];
-                // Up to 4 passes in case a subdivision has multiple chained suffixes
-                // (e.g. "Clover Creek Flg 1 Replat A" needs both "Replat A" and
-                // nothing else stripped before it matches "clover creek flg 1").
-                for (let pass = 0; pass < 4; pass++) {
-                    if (NEIGHBORHOOD_COMPS_2026_SOLD.hasOwnProperty(working)) {
-                        return NEIGHBORHOOD_COMPS_2026_SOLD[working];
-                    }
-                    let stripped = working;
-                    for (const pattern of suffixPatterns) {
-                        const candidate = working.replace(pattern, '').trim().replace(/\s+/g, ' ');
-                        if (candidate !== working && candidate.length > 0) {
-                            stripped = candidate;
-                            break;
-                        }
-                    }
-                    if (stripped === working) break; // nothing left to strip
-                    working = stripped;
-                }
-                if (NEIGHBORHOOD_COMPS_2026_SOLD.hasOwnProperty(working)) {
-                    return NEIGHBORHOOD_COMPS_2026_SOLD[working];
-                }
-                return NEIGHBORHOOD_COMPS_2026_SOLD['default'];
+                if (stripped === working) break;
+                working = stripped;
+            }
+            working = working.replace(/^the\s+/, '');
+            return working || null;
+        }
+
+        // Tiered, comps-first $/sqft resolver for single-family homes: your own
+        // street first (heavily weighted, but discounted if its freshest comp is
+        // stale), then your subdivision, then the citywide median as a floor.
+        // This replaces the old flat lookup table entirely.
+        function resolveSfhPsf(streetName, subKey) {
+            const streetStats = (streetName && window.SFH_STREET_STATS) ? window.SFH_STREET_STATS[streetName] : null;
+            const subStats = (subKey && window.SFH_SUBDIVISION_STATS) ? window.SFH_SUBDIVISION_STATS[subKey] : null;
+            const citywide = window.SFH_CITYWIDE_STATS || { psf: 260, n: 0 };
+
+            const secondaryPsf = subStats ? subStats.median_psf : citywide.psf;
+
+            function monthsStale(dateStr) {
+                if (!dateStr) return 999;
+                const d = new Date(dateStr + 'T00:00:00');
+                const asOf = new Date('2026-07-02T00:00:00');
+                return Math.max(0, (asOf - d) / (1000 * 60 * 60 * 24 * 30));
             }
 
+            if (streetStats && streetStats.n >= 1) {
+                const stale = monthsStale(streetStats.most_recent_sale);
+                // A street with plenty of comps still shouldn't dominate if its most
+                // recent sale is years old — that's not today's market anymore.
+                const recencyFactor = stale <= 24 ? 1.0 : stale <= 36 ? 0.5 : stale <= 60 ? 0.2 : 0.1;
+                const wStreet = Math.min(0.35 + 0.05 * streetStats.n, 0.85) * recencyFactor;
+                const blended = (streetStats.median_psf * wStreet) + (secondaryPsf * (1 - wStreet));
+                return {
+                    psf: blended,
+                    compBasis: 'street',
+                    compN: streetStats.n,
+                    compWindow: streetStats.window,
+                    sampleComps: streetStats.sample_comps || []
+                };
+            }
+            if (subStats && subStats.n >= 1) {
+                const wSub = Math.min(0.3 + 0.04 * subStats.n, 0.75);
+                const blended = (subStats.median_psf * wSub) + (citywide.psf * (1 - wSub));
+                return { psf: blended, compBasis: 'subdivision', compN: subStats.n, compWindow: subStats.window, sampleComps: [] };
+            }
+            return { psf: citywide.psf, compBasis: 'citywide', compN: citywide.n, compWindow: 'last 12 months', sampleComps: [] };
+        }
+
+        function calculateEquity(purchasePrice, purchaseDate, renovations = [], conditionThen = null, conditionNow = null, kitchen = null, investmentAmount = null, subdivision = null, multipleOffers = false) {
             const year = parseInt(purchaseDate);
             const currentYear = 2026;
             const yearsOwned = currentYear - year;
 
-            // Extract neighborhood from MLS format
-            let neighborhoodKey = 'default';
-            if (subdivision) {
-                if (subdivision.includes('Sub:')) {
-                    neighborhoodKey = subdivision.split('Sub:')[1].trim().toLowerCase();
-                } else {
-                    neighborhoodKey = subdivision.trim().toLowerCase();
-                }
-            }
+            // Resolve subdivision the same way the SFH comp stats build script did,
+            // so lookups actually hit (strips filing/phase/replat suffixes and
+            // common typos, without collapsing genuinely distinct communities like
+            // "Reserve at Renaissance" into plain "Renaissance").
+            const subKey = normalizeSfhSubdivision(subdivision);
 
-            // STREET-LEVEL MICRO-COMP OVERRIDE
-            // Some addresses have stale/incorrect subdivision assignments from old sales
-            // Check current address and override if it's on a premium street misclassified as generic Old Town
+            // Pull the street name straight from whatever's in the address field
+            // right now, so this works whether the address came from the database
+            // or was corrected/typed by hand.
             const addressInput = document.getElementById('addressInput');
-            if (addressInput && neighborhoodKey === 'old town') {
-                const currentAddress = addressInput.value.toLowerCase();
-                // Vivian St near downtown (739, 734 sold 2026 at $550+/sqft in Columbia Heights)
-                if (currentAddress.includes('vivian')) {
-                    neighborhoodKey = 'columbia heights';  // Use premium comp, not generic old town
-                }
-            }
+            const streetName = addressInput ? parseSfhStreetName(addressInput.value) : null;
 
-            // LOOK UP 2026 ACTUAL SOLD MEDIAN $/SQFT
-            // Try the exact subdivision string first (some entries are deliberately
-            // specific, e.g. 'spring valley ph 6 prcl e' prices differently than
-            // plain 'spring valley'). Only if that exact string isn't in the table
-            // do we strip filing/phase/replat suffixes and retry — this catches
-            // subdivisions like "Renaissance Flg 3" or "Clover Creek Fig 1 Replat A"
-            // that would otherwise silently fall through to the flat citywide
-            // default (which is often *higher* than the real neighborhood number,
-            // so the old behavior systematically overvalued these homes).
-            const neighborhoodPsf = resolveNeighborhoodPsf(neighborhoodKey);
+            const resolved = resolveSfhPsf(streetName, subKey);
+            const neighborhoodPsf = resolved.psf;
 
-            // VALUATION: Use 2026 actual sold comp estimate
-            let currentValue = purchasePrice; // Fallback
+            // VALUATION: sqft x real comps-based $/sqft, leaning heavily on your
+            // own street first, then your subdivision, then the citywide median.
+            let currentValue = purchasePrice; // fallback if sqft is unavailable
 
-            // Try to get sqft from form
             if (document.getElementById('manualSqft')) {
                 const manualSqft = parseFloat(document.getElementById('manualSqft').value);
                 if (!isNaN(manualSqft) && manualSqft > 0) {
-                    // PRIMARY VALUATION: sqft × 2026 neighborhood median SOLD $/sqft
                     currentValue = manualSqft * neighborhoodPsf;
                 }
             }
@@ -1424,11 +1398,10 @@
                 currentValue *= conditionMultiplier;
             }
 
-            // Apply zone cooling adjustments
-            const zoneAdjustment = getZoneAdjustment(subdivision);
-            if (zoneAdjustment < 0) {
-                currentValue *= (1 + zoneAdjustment);
-            }
+            // Zone cooling adjustments are no longer applied here: real street- and
+            // subdivision-level comps already reflect how a given pocket of town has
+            // cooled or held up, so layering a hand-tuned discount on top would be
+            // double-counting.
 
             let renovationBoost = 0;
             renovations.forEach(reno => {
@@ -1450,8 +1423,13 @@
                 equity: Math.round(equity),
                 yearsOwned: yearsOwned,
                 renovationBoost: Math.round(renovationBoost),
-                neighborhoodComps: neighborhoodPsf,
-                neighborhood: neighborhoodKey
+                neighborhoodComps: Math.round(neighborhoodPsf * 100) / 100,
+                neighborhood: subKey || 'default',
+                isAttached: false,
+                compBasis: resolved.compBasis,
+                compN: resolved.compN,
+                compWindow: resolved.compWindow,
+                sampleComps: resolved.sampleComps
             };
         }
 
@@ -1602,19 +1580,22 @@
             if (midRangeBasisText) {
                 midRangeBasisText.textContent = data.isAttached
                     ? 'Our best estimate based on 5,700+ Longmont condo and townhome comps, weighted heavily toward sales in your own building'
-                    : 'Our best estimate based on 14,878 Longmont comps and current market trends';
+                    : 'Our best estimate based on 29,800+ Longmont home sales, weighted heavily toward recent sales on your own street';
             }
 
             const compBasisCard = document.getElementById('compBasisCard');
-            if (data.isAttached && compBasisCard) {
+            if (data.compBasis && compBasisCard) {
                 const headline = document.getElementById('compBasisHeadline');
                 const subtext = document.getElementById('compBasisSubtext');
                 const list = document.getElementById('compBasisList');
                 list.innerHTML = '';
 
-                if (data.compBasis === 'complex') {
-                    headline.textContent = `Based on ${data.compN} recent sale${data.compN === 1 ? '' : 's'} in your building`;
-                    subtext.textContent = `Median sold price in this building: ${formatCurrency(Math.round(data.neighborhoodComps))}/sqft (${data.compWindow}). We lean on your building's own comps first, blended with the broader area for stability.`;
+                const locationWord = data.isAttached ? 'building' : 'street';
+                const wideWord = data.isAttached ? 'community' : 'neighborhood';
+
+                if (data.compBasis === 'complex' || data.compBasis === 'street') {
+                    headline.textContent = `Based on ${data.compN} recent sale${data.compN === 1 ? '' : 's'} on your ${locationWord === 'building' ? 'building' : 'street'}`;
+                    subtext.textContent = `Median sold price here: ${formatCurrency(Math.round(data.neighborhoodComps))}/sqft (${data.compWindow}). We lean on your own ${locationWord}'s comps first, blended with the broader area for stability.`;
                     (data.sampleComps || []).slice(0, 4).forEach(c => {
                         const row = document.createElement('div');
                         row.className = 'flex justify-between text-sm text-slate-700 bg-white rounded-lg px-4 py-2 border border-slate-200';
@@ -1623,11 +1604,11 @@
                         list.appendChild(row);
                     });
                 } else if (data.compBasis === 'subdivision') {
-                    headline.textContent = `Based on ${data.compN} recent sale${data.compN === 1 ? '' : 's'} in this community`;
-                    subtext.textContent = `We didn't find enough recent resales in your exact building, so this leans on comparable sales across the wider community (${data.compWindow}) at roughly ${formatCurrency(Math.round(data.neighborhoodComps))}/sqft.`;
+                    headline.textContent = `Based on ${data.compN} recent sale${data.compN === 1 ? '' : 's'} in this ${wideWord}`;
+                    subtext.textContent = `We didn't find enough recent resales on your exact ${locationWord}, so this leans on comparable sales across the wider ${wideWord} (${data.compWindow}) at roughly ${formatCurrency(Math.round(data.neighborhoodComps))}/sqft.`;
                 } else {
-                    headline.textContent = 'Based on the citywide attached-home market';
-                    subtext.textContent = `We didn't find enough recent comps in your building or community, so this estimate leans on Longmont's citywide median for condos and townhomes (${formatCurrency(Math.round(data.neighborhoodComps))}/sqft, last 12 months).`;
+                    headline.textContent = data.isAttached ? 'Based on the citywide attached-home market' : 'Based on the citywide Longmont market';
+                    subtext.textContent = `We didn't find enough recent comps on your ${locationWord} or in your ${wideWord}, so this estimate leans on Longmont's citywide median${data.isAttached ? ' for condos and townhomes' : ''} (${formatCurrency(Math.round(data.neighborhoodComps))}/sqft, last 12 months).`;
                 }
                 compBasisCard.classList.remove('hidden');
             } else if (compBasisCard) {
@@ -1892,6 +1873,7 @@
 
             Promise.all([
                 loadScriptOnce('./comps_database.js', '__sfhDbDone'),
+                loadScriptOnce('./sfh_comp_stats.js', '__sfhStatsDone'),
                 loadScriptOnce('./attached_comps_database.js', '__attachedDbDone'),
                 loadScriptOnce('./attached_comps_stats.js', '__attachedStatsDone')
             ]).then(function () {
