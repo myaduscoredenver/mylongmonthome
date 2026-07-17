@@ -476,13 +476,19 @@
 <p class="text-slate-700 font-medium mb-2">Renovation Premium Added</p>
 <p class="text-3xl font-semibold text-brass-700" id="renovationBoostDisplay">+$0</p>
 </div>
+<!-- Comp Basis (shown for condo/townhome estimates, where we lean on building-level comps) -->
+<div class="hidden bg-navy-50 rounded-xl p-6 mb-8 border border-navy-200" id="compBasisCard">
+<p class="text-navy-900 font-semibold mb-2" id="compBasisHeadline">Based on recent sales in your building</p>
+<p class="text-slate-700 text-sm mb-4" id="compBasisSubtext"></p>
+<div class="space-y-2" id="compBasisList"></div>
+</div>
 <!-- Info Text -->
 <div class="bg-navy-50 border-l-4 border-navy-700 rounded-lg p-6 mb-8">
 <p class="text-navy-900 font-semibold mb-2">Understanding Your Range</p>
 <p class="text-slate-700 text-sm mb-3">We show three scenarios because real estate valuation includes uncertainty:</p>
 <ul class="text-slate-700 text-sm space-y-2 ml-4 list-disc">
 <li><strong>Conservative:</strong> Market cools faster than expected, or your home's condition is stronger than we assessed</li>
-<li><strong>Mid-Range:</strong> Our best estimate based on 14,878 Longmont comps and current market trends</li>
+<li><strong>Mid-Range:</strong> <span id="midRangeBasisText">Our best estimate based on 14,878 Longmont comps and current market trends</span></li>
 <li><strong>Optimistic:</strong> Market stabilizes faster, or buyer demand strengthens in your neighborhood</li>
 </ul>
 <p class="text-slate-700 text-sm mt-3">Most homes sell within this range. Next steps? Let's connect to discuss your specific situation.</p>
@@ -1126,6 +1132,8 @@
         let currentSubdivision = null;
         let currentMultipleOffers = false;
         let selectedRenovations = [];
+        let currentIsAttached = false;
+        let currentComplexKey = null;
 
         // --- Market value model, calibrated 2026-07 against 152 real Longmont ---
         // --- active listings matched to their prior sold history.           ---
@@ -1385,6 +1393,103 @@
             };
         }
 
+        // Normalize a subdivision string the same way the attached-unit stats
+        // build script did, so lookups actually hit.
+        function normalizeSubdivisionForAttached(s) {
+            if (!s) return null;
+            let out = s.toLowerCase().trim().replace(/\s+/g, ' ');
+            out = out.replace(/\b(condominiums?|condos?)\b/g, 'condos');
+            return out;
+        }
+
+        // ATTACHED-UNIT VALUATION MODEL
+        // Condos and townhomes vary building-to-building far more than single-family
+        // homes vary block-to-block, so this leans on real building-level comps first,
+        // falling back to the subdivision/complex name, then the citywide attached
+        // median only when nothing more specific is available.
+        function calculateAttachedEquity(purchasePrice, purchaseDate, renovations = [], conditionThen = null, conditionNow = null, kitchen = null, investmentAmount = null, subdivision = null, complexKey = null) {
+            const year = parseInt(purchaseDate);
+            const currentYear = 2026;
+            const yearsOwned = currentYear - year;
+
+            const complexStats = (complexKey && window.ATTACHED_COMPLEX_STATS) ? window.ATTACHED_COMPLEX_STATS[complexKey] : null;
+            const subKey = normalizeSubdivisionForAttached(subdivision);
+            const subStats = (subKey && window.ATTACHED_SUBDIVISION_STATS) ? window.ATTACHED_SUBDIVISION_STATS[subKey] : null;
+            const citywide = window.ATTACHED_CITYWIDE_STATS || { psf: 280, n: 0 };
+
+            // Secondary anchor: prefer the named subdivision/complex over the raw
+            // citywide number whenever we have it.
+            const secondaryPsf = subStats ? subStats.median_psf : citywide.psf;
+            const secondaryLabel = subStats ? `the ${subdivision || 'subdivision'} comps` : 'the citywide attached-home median';
+
+            let blendedPsf, compBasis, compN, compWindow, sampleComps = [];
+
+            if (complexStats && complexStats.n >= 1) {
+                // Weight the building's own comps more heavily as the sample grows,
+                // capping out so a single small building never fully overrides the
+                // broader market.
+                const wComplex = Math.min(0.35 + 0.05 * complexStats.n, 0.85);
+                blendedPsf = (complexStats.median_psf * wComplex) + (secondaryPsf * (1 - wComplex));
+                compBasis = 'complex';
+                compN = complexStats.n;
+                compWindow = complexStats.window;
+                sampleComps = complexStats.sample_comps || [];
+            } else if (subStats) {
+                blendedPsf = (subStats.median_psf * 0.6) + (citywide.psf * 0.4);
+                compBasis = 'subdivision';
+                compN = subStats.n;
+                compWindow = subStats.window;
+            } else {
+                blendedPsf = citywide.psf;
+                compBasis = 'citywide';
+                compN = citywide.n;
+                compWindow = 'last 12 months';
+            }
+
+            let currentValue = purchasePrice; // fallback
+            const sqftField = document.getElementById('manualSqft');
+            if (sqftField) {
+                const manualSqft = parseFloat(sqftField.value);
+                if (!isNaN(manualSqft) && manualSqft > 0) {
+                    currentValue = manualSqft * blendedPsf;
+                }
+            }
+
+            if (conditionThen && conditionNow && kitchen) {
+                const conditionMultiplier = getConditionMultiplier(conditionThen, conditionNow, kitchen, investmentAmount);
+                currentValue *= conditionMultiplier;
+            }
+
+            let renovationBoost = 0;
+            renovations.forEach(reno => {
+                if (reno === 'kitchen') renovationBoost += currentValue * 0.045;
+                if (reno === 'roof') renovationBoost += currentValue * 0.01; // HOA usually owns the roof on attached units
+                if (reno === 'hvac') renovationBoost += currentValue * 0.02;
+                if (reno === 'masterbath') renovationBoost += currentValue * 0.03;
+                if (reno === 'bathroom') renovationBoost += currentValue * 0.025;
+                if (reno === 'flooring') renovationBoost += currentValue * 0.035;
+                if (reno === 'windows') renovationBoost += currentValue * 0.02;
+            });
+
+            currentValue += renovationBoost;
+            const equity = currentValue - purchasePrice;
+
+            return {
+                originalPrice: purchasePrice,
+                currentValue: Math.round(currentValue),
+                equity: Math.round(equity),
+                yearsOwned: yearsOwned,
+                renovationBoost: Math.round(renovationBoost),
+                neighborhoodComps: Math.round(blendedPsf * 100) / 100,
+                neighborhood: subKey || 'default',
+                isAttached: true,
+                compBasis: compBasis,
+                compN: compN,
+                compWindow: compWindow,
+                sampleComps: sampleComps
+            };
+        }
+
         // Manual entry handler
         function calculateManual() {
             const year = document.getElementById('manualPurchaseYear').value;
@@ -1399,7 +1504,9 @@
                 return;
             }
 
-            currentCalculation = calculateEquity(price, year, selectedRenovations, conditionThen, conditionNow, kitchen, investment || null, currentSubdivision, currentMultipleOffers);
+            currentCalculation = currentIsAttached
+                ? calculateAttachedEquity(price, year, selectedRenovations, conditionThen, conditionNow, kitchen, investment || null, currentSubdivision, currentComplexKey)
+                : calculateEquity(price, year, selectedRenovations, conditionThen, conditionNow, kitchen, investment || null, currentSubdivision, currentMultipleOffers);
             displayResults(null, { purchasePrice: price, purchaseDate: year });
         }
 
@@ -1427,6 +1534,42 @@
                 document.getElementById('renovationBoostCard').classList.remove('hidden');
             } else {
                 document.getElementById('renovationBoostCard').classList.add('hidden');
+            }
+
+            const midRangeBasisText = document.getElementById('midRangeBasisText');
+            if (midRangeBasisText) {
+                midRangeBasisText.textContent = data.isAttached
+                    ? 'Our best estimate based on 5,700+ Longmont condo and townhome comps, weighted heavily toward sales in your own building'
+                    : 'Our best estimate based on 14,878 Longmont comps and current market trends';
+            }
+
+            const compBasisCard = document.getElementById('compBasisCard');
+            if (data.isAttached && compBasisCard) {
+                const headline = document.getElementById('compBasisHeadline');
+                const subtext = document.getElementById('compBasisSubtext');
+                const list = document.getElementById('compBasisList');
+                list.innerHTML = '';
+
+                if (data.compBasis === 'complex') {
+                    headline.textContent = `Based on ${data.compN} recent sale${data.compN === 1 ? '' : 's'} in your building`;
+                    subtext.textContent = `Median sold price in this building: ${formatCurrency(Math.round(data.neighborhoodComps))}/sqft (${data.compWindow}). We lean on your building's own comps first, blended with the broader area for stability.`;
+                    (data.sampleComps || []).slice(0, 4).forEach(c => {
+                        const row = document.createElement('div');
+                        row.className = 'flex justify-between text-sm text-slate-700 bg-white rounded-lg px-4 py-2 border border-slate-200';
+                        const dateLabel = new Date(c.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                        row.innerHTML = `<span>${c.address}</span><span class="font-semibold text-navy-900">${formatCurrency(c.price)} &middot; ${dateLabel}</span>`;
+                        list.appendChild(row);
+                    });
+                } else if (data.compBasis === 'subdivision') {
+                    headline.textContent = `Based on ${data.compN} recent sale${data.compN === 1 ? '' : 's'} in this community`;
+                    subtext.textContent = `We didn't find enough recent resales in your exact building, so this leans on comparable sales across the wider community (${data.compWindow}) at roughly ${formatCurrency(Math.round(data.neighborhoodComps))}/sqft.`;
+                } else {
+                    headline.textContent = 'Based on the citywide attached-home market';
+                    subtext.textContent = `We didn't find enough recent comps in your building or community, so this estimate leans on Longmont's citywide median for condos and townhomes (${formatCurrency(Math.round(data.neighborhoodComps))}/sqft, last 12 months).`;
+                }
+                compBasisCard.classList.remove('hidden');
+            } else if (compBasisCard) {
+                compBasisCard.classList.add('hidden');
             }
 
             document.getElementById('manualEntryForm').classList.add('hidden');
@@ -1514,17 +1657,29 @@
                 const kitchen = document.getElementById('manualKitchen').value;
                 const investment = document.getElementById('manualInvestment').value;
 
-                currentCalculation = calculateEquity(
-                    currentCalculation.originalPrice,
-                    (2026 - currentCalculation.yearsOwned).toString(),
-                    selectedRenovations,
-                    conditionThen || null,
-                    conditionNow || null,
-                    kitchen || null,
-                    investment || null,
-                    currentSubdivision,
-                    currentMultipleOffers
-                );
+                currentCalculation = currentIsAttached
+                    ? calculateAttachedEquity(
+                        currentCalculation.originalPrice,
+                        (2026 - currentCalculation.yearsOwned).toString(),
+                        selectedRenovations,
+                        conditionThen || null,
+                        conditionNow || null,
+                        kitchen || null,
+                        investment || null,
+                        currentSubdivision,
+                        currentComplexKey
+                    )
+                    : calculateEquity(
+                        currentCalculation.originalPrice,
+                        (2026 - currentCalculation.yearsOwned).toString(),
+                        selectedRenovations,
+                        conditionThen || null,
+                        conditionNow || null,
+                        kitchen || null,
+                        investment || null,
+                        currentSubdivision,
+                        currentMultipleOffers
+                    );
 
                 document.getElementById('currentValueDisplay').textContent = formatCurrency(currentCalculation.currentValue);
                 document.getElementById('equityDisplay').textContent = formatCurrency(currentCalculation.equity);
@@ -1648,6 +1803,24 @@
         let compsDbLoading = false;
         let compsDbLoaded = false;
 
+        // Loads a script once, tracking its own tiny loaded/loading flags on the
+        // window so multiple call sites can share state without globals collisions.
+        function loadScriptOnce(src, doneFlagName) {
+            return new Promise((resolve) => {
+                if (window[doneFlagName]) { resolve(); return; }
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = function () {
+                    window[doneFlagName] = true;
+                    resolve();
+                };
+                script.onerror = function () {
+                    resolve(); // don't block the rest of the app on a missing file
+                };
+                document.head.appendChild(script);
+            });
+        }
+
         function loadCompsDatabase() {
             if (compsDbLoading || compsDbLoaded) return;
             compsDbLoading = true;
@@ -1655,18 +1828,15 @@
             const msg = document.getElementById('dbLoadingMsg');
             if (msg) msg.classList.remove('hidden');
 
-            const script = document.createElement('script');
-            script.src = './comps_database.js';
-            script.onload = function () {
+            Promise.all([
+                loadScriptOnce('./comps_database.js', '__sfhDbDone'),
+                loadScriptOnce('./attached_comps_database.js', '__attachedDbDone'),
+                loadScriptOnce('./attached_comps_stats.js', '__attachedStatsDone')
+            ]).then(function () {
                 compsDbLoaded = true;
                 compsDbLoading = false;
                 if (msg) msg.classList.add('hidden');
-            };
-            script.onerror = function () {
-                compsDbLoading = false;
-                if (msg) msg.classList.add('hidden');
-            };
-            document.head.appendChild(script);
+            });
         }
 
         // Trigger 1: start loading as soon as the calculator section scrolls into view,
@@ -1698,6 +1868,23 @@
         const searchButton = document.getElementById('searchButton');
         const manualForm = document.getElementById('manualEntryForm');
 
+        // Both databases are ready once this returns true. Single-family comes from
+        // comps_database.js; condos/townhomes come from the two attached-unit files.
+        function dbsReady() {
+            return !!(window.COMPS_DATABASE && window.ATTACHED_COMPS_DATABASE);
+        }
+
+        // Look up one address key across both databases and return {source, record}.
+        function lookupAnyAddress(key) {
+            if (window.ATTACHED_COMPS_DATABASE && window.ATTACHED_COMPS_DATABASE[key]) {
+                return { source: 'attached', record: window.ATTACHED_COMPS_DATABASE[key] };
+            }
+            if (window.COMPS_DATABASE && window.COMPS_DATABASE[key]) {
+                return { source: 'sfh', record: window.COMPS_DATABASE[key] };
+            }
+            return null;
+        }
+
         addressInput.addEventListener('input', function(e) {
             const query = e.target.value.toLowerCase().trim();
 
@@ -1706,14 +1893,27 @@
                 return;
             }
 
-            if (!window.COMPS_DATABASE) {
+            if (!dbsReady()) {
                 loadCompsDatabase();
                 return;
             }
 
-            const matches = Object.keys(window.COMPS_DATABASE)
-                .filter(addr => addr.includes(query))
-                .slice(0, 8);
+            // Merge matches from both databases. Some townhome addresses ended up
+            // in both the SFH master list and the attached-unit file; when that
+            // happens, prefer the attached entry since its comps model fits condos/
+            // townhomes better. Prefer addresses that start with the query over ones
+            // that merely contain it, so typing a house number surfaces the right
+            // street first.
+            const sfhKeys = window.COMPS_DATABASE ? Object.keys(window.COMPS_DATABASE) : [];
+            const attachedKeys = window.ATTACHED_COMPS_DATABASE ? Object.keys(window.ATTACHED_COMPS_DATABASE) : [];
+            const seen = new Set();
+            const all = [];
+            attachedKeys.forEach(k => { if (!seen.has(k)) { seen.add(k); all.push({ key: k, source: 'attached' }); } });
+            sfhKeys.forEach(k => { if (!seen.has(k)) { seen.add(k); all.push({ key: k, source: 'sfh' }); } });
+
+            const starts = all.filter(a => a.key.startsWith(query));
+            const contains = all.filter(a => !a.key.startsWith(query) && a.key.includes(query));
+            const matches = starts.concat(contains).slice(0, 8);
 
             if (matches.length === 0) {
                 addressDropdown.classList.add('hidden');
@@ -1721,13 +1921,22 @@
             }
 
             addressDropdown.innerHTML = '';
-            matches.forEach(addr => {
+            matches.forEach(m => {
+                const record = m.source === 'attached' ? window.ATTACHED_COMPS_DATABASE[m.key] : window.COMPS_DATABASE[m.key];
                 const div = document.createElement('div');
-                div.className = 'px-4 py-3 border-b border-slate-200 cursor-pointer text-navy-900 hover:bg-navy-50 transition-colors';
-                div.textContent = window.COMPS_DATABASE[addr].address;
+                div.className = 'px-4 py-3 border-b border-slate-200 cursor-pointer text-navy-900 hover:bg-navy-50 transition-colors flex items-center justify-between gap-3';
+                const label = document.createElement('span');
+                label.textContent = record.address;
+                div.appendChild(label);
+                if (m.source === 'attached') {
+                    const badge = document.createElement('span');
+                    badge.className = 'text-xs font-semibold text-navy-500 bg-navy-50 px-2 py-0.5 rounded-full whitespace-nowrap';
+                    badge.textContent = 'Condo/Townhome';
+                    div.appendChild(badge);
+                }
                 div.onclick = (e) => {
                     e.preventDefault();
-                    selectAddress(addr);
+                    selectAddress(m.key, m.source);
                 };
                 addressDropdown.appendChild(div);
             });
@@ -1741,8 +1950,10 @@
             }
         });
 
-        function selectAddress(addr) {
-            const lookup = window.COMPS_DATABASE[addr];
+        function selectAddress(addr, source) {
+            const lookup = source === 'attached' ? window.ATTACHED_COMPS_DATABASE[addr] : window.COMPS_DATABASE[addr];
+            if (!lookup) return;
+
             addressInput.value = lookup.address;
             addressDropdown.classList.add('hidden');
 
@@ -1764,10 +1975,11 @@
                 document.body.appendChild(sqftField);
             }
 
-            // Stash subdivision + multiple-offers so calculateManual() can factor
-            // in zone-specific cooling and the boom-period fair-value adjustment.
             currentSubdivision = lookup.subdivision || null;
-            currentMultipleOffers = !!lookup.multiple_offers;
+            currentIsAttached = (source === 'attached');
+            currentComplexKey = currentIsAttached ? (lookup.complex_key || null) : null;
+            // Multiple-offers boom adjustment only applies to the single-family model.
+            currentMultipleOffers = currentIsAttached ? false : !!lookup.multiple_offers;
 
             manualForm.classList.remove('hidden');
             setTimeout(() => {
@@ -1781,17 +1993,17 @@
 
             addressDropdown.classList.add('hidden');
 
-            // If the database hasn't finished loading yet (e.g. clicked very fast
-            // on a slow connection), wait for it instead of wrongly falling back
+            // If the databases haven't finished loading yet (e.g. clicked very fast
+            // on a slow connection), wait for them instead of wrongly falling back
             // to manual entry.
-            if (!window.COMPS_DATABASE) {
+            if (!dbsReady()) {
                 loadCompsDatabase();
                 const msg = document.getElementById('dbLoadingMsg');
                 if (msg) msg.classList.remove('hidden');
                 let attempts = 0;
                 const waitForDb = setInterval(function () {
                     attempts++;
-                    if (window.COMPS_DATABASE) {
+                    if (dbsReady()) {
                         clearInterval(waitForDb);
                         searchButton.click();
                     } else if (attempts > 40) { // ~10s timeout
@@ -1802,12 +2014,15 @@
                 return;
             }
 
-            if (window.COMPS_DATABASE[query]) {
-                selectAddress(query);
+            const found = lookupAnyAddress(query);
+            if (found) {
+                selectAddress(query, found.source);
             } else {
                 // Address not found - show manual entry.
                 currentSubdivision = null;
                 currentMultipleOffers = false;
+                currentIsAttached = false;
+                currentComplexKey = null;
                 manualForm.classList.remove('hidden');
                 setTimeout(() => {
                     manualForm.scrollIntoView({ behavior: 'smooth', block: 'start' });

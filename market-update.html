@@ -171,6 +171,11 @@ Longmont<br/>CO 80501
 
 <div class="grid sm:grid-cols-3 gap-5 mb-14" id="statStrip"></div>
 
+<div class="flex items-center gap-3 mb-6">
+<span class="bg-navy-800 text-white text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap uppercase tracking-wide">Single-Family Dwellings</span>
+<span class="text-sm text-slate-500">Detached houses only</span>
+</div>
+
 <div class="grid lg:grid-cols-2 gap-6">
 
 <div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
@@ -219,6 +224,65 @@ Longmont<br/>CO 80501
 </div>
 <div class="chart-wrap mt-4"><svg class="chart" id="countChart" viewBox="0 0 1080 300"></svg><div class="tooltip" id="countTip"></div></div>
 <p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="countInsight"></p>
+</div>
+
+</div>
+
+<!-- Attached Dwellings (condos & townhomes) -->
+<div class="flex items-center gap-3 mt-16 mb-6">
+<span class="bg-brass-600 text-white text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap uppercase tracking-wide">Attached Dwellings</span>
+<span class="text-sm text-slate-500">Condos &amp; townhomes only</span>
+</div>
+<p class="text-slate-600 max-w-2xl mb-10">Condos and townhomes move differently than detached houses in Longmont: smaller price tags, different buyer pool, different pace. Here's that market on its own terms.</p>
+
+<div class="grid lg:grid-cols-2 gap-6">
+
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
+<div class="flex justify-between items-start gap-4 flex-wrap mb-1">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">How Fast Attached Homes Are Selling</h3>
+<p class="text-sm text-slate-500">Median days from list to contract, by year</p>
+</div>
+<span class="bg-brass-50 text-brass-700 text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap" id="attDomBadge">-</span>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="attDomChart" viewBox="0 0 560 320"></svg><div class="tooltip" id="attDomTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="attDomInsight"></p>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
+<div class="flex justify-between items-start gap-4 flex-wrap mb-1">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">Attached Home Values, Over Time</h3>
+<p class="text-sm text-slate-500">Average closed sale price for Longmont condos &amp; townhomes, by year</p>
+</div>
+<span class="bg-brass-50 text-brass-700 text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap" id="attPriceBadge">-</span>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="attPriceChart" viewBox="0 0 560 320"></svg><div class="tooltip" id="attPriceTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="attPriceInsight"></p>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8 lg:col-span-2">
+<div class="flex justify-between items-start gap-4 flex-wrap mb-1">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">Attached Home Year-Over-Year Price Change</h3>
+<p class="text-sm text-slate-500">How much the typical Longmont condo or townhome gained or gave back in value each year</p>
+</div>
+<span class="bg-brass-50 text-brass-700 text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap" id="attYoyBadge">-</span>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="attYoyChart" viewBox="0 0 1080 300"></svg><div class="tooltip" id="attYoyTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="attYoyInsight"></p>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8 lg:col-span-2">
+<div class="flex justify-between items-start gap-4 flex-wrap mb-1">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">How Many Attached Homes Sell Each Year</h3>
+<p class="text-sm text-slate-500">Closed condo &amp; townhome transactions across Longmont; 2026 shown year-to-date with a full-year projection</p>
+</div>
+<span class="bg-brass-50 text-brass-700 text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap" id="attCountBadge">-</span>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="attCountChart" viewBox="0 0 1080 300"></svg><div class="tooltip" id="attCountTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="attCountInsight"></p>
 </div>
 
 </div>
@@ -315,6 +379,7 @@ Talk Through My Timeline
 
 <script>
 const DATA = {"years": [2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "dom": [101.0, 91.0, 84.0, 83.0, 86.0, 92.0, 78.0, 58.0, 51.0, 46.0, 42.0, 41.0, 38.0, 44.0, 41.0, 30.0, 28.0, 36.0, 37.0, 40.0, 37.0], "avg_price": [288940, 279237, 249628, 240871, 255581, 244327, 258278, 284465, 305372, 342126, 387605, 422292, 461253, 469847, 508579, 590785, 648587, 657436, 666098, 638318, 658003], "counts": [1226, 1118, 1032, 894, 829, 831, 1000, 1160, 1098, 1239, 1110, 1157, 1129, 1200, 1282, 1195, 979, 817, 902, 927, 477], "yoy": [null, -0.9, -8.6, 0.4, 3.4, -3.3, 6.4, 11.1, 5.6, 13.0, 15.4, 9.3, 9.4, 1.6, 6.4, 16.3, 12.0, 1.2, -1.6, -2.5, 4.3], "proj2026": 950, "count_2026_ytd": 477, "as_of": "2026-07-02"};
+const ATTACHED_DATA = {"years": [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "dom": [32.0, 79.0, 84.0, 127.0, 132.0, 112.0, 117.0, 111.0, 109.0, 97.0, 98.0, 116.0, 85.0, 62.0, 46.0, 40.0, 44.0, 37.0, 37.0, 50.0, 40.0, 30.0, 27.0, 41.0, 51.0, 54.0, 66.0], "avg_price": [153243, 175302, 187308, 191145, 195135, 192111, 201720, 195632, 192327, 180506, 180450, 187735, 183109, 201172, 217994, 252939, 310633, 321207, 363968, 351501, 375716, 425912, 481602, 482960, 459453, 470785, 453606], "counts": [427, 457, 307, 342, 368, 274, 249, 232, 235, 173, 166, 164, 225, 274, 284, 326, 323, 356, 343, 373, 319, 355, 315, 296, 308, 304, 166], "yoy": [null, 14.0, 6.0, 3.4, -0.9, 0.4, 2.8, 0.0, -5.7, 1.7, -4.2, 0.0, 1.2, 8.7, 5.2, 21.7, 21.9, 3.3, 12.3, -2.6, 7.6, 15.2, 13.1, -0.5, -2.3, 2.3, -2.8], "proj2026": 344, "count_2026_ytd": 166, "as_of": "2026-07-16"};
 
 function fmtMoney(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
 function fmtPct(n){ return (n>0?'+':'') + n.toFixed(1) + '%'; }
@@ -460,6 +525,41 @@ document.getElementById('yoyInsight').innerHTML = `After a run of double-digit y
 buildChart(document.getElementById('countChart'), document.getElementById('countTip'), {
   years:DATA.years.slice(0,-1).concat([2026]), values:DATA.counts.slice(0,-1).concat([DATA.proj2026]), w:1080, h:300, pad:{l:50,r:30,t:30,b:44},
   color:'#886831', fillOpacity:0.16, unit:'num', fmt:v=>Math.round(v).toLocaleString()+' homes', markLastLabel:true, dashedLastSegment:true
+});
+
+// ---------- Attached Dwellings (condos & townhomes) ----------
+const attLastIdx = ATTACHED_DATA.years.length - 1;
+
+document.getElementById('attDomBadge').textContent = Math.round(ATTACHED_DATA.dom[attLastIdx]) + ' days \u00b7 2026';
+document.getElementById('attPriceBadge').textContent = fmtMoney(ATTACHED_DATA.avg_price[attLastIdx]) + ' \u00b7 2026';
+document.getElementById('attCountBadge').textContent = ATTACHED_DATA.proj2026.toLocaleString() + ' projected \u00b7 2026';
+
+document.getElementById('attDomInsight').innerHTML = `Attached homes are currently taking <b class="text-navy-800">${Math.round(ATTACHED_DATA.dom[attLastIdx])} days</b> to go under contract, versus <b class="text-navy-800">${Math.round(DATA.dom[lastIdx])} days</b> for detached houses right now, a gap that's been fairly consistent for years.`;
+document.getElementById('attPriceInsight').innerHTML = `The average Longmont condo or townhome sold for <b class="text-navy-800">${fmtMoney(ATTACHED_DATA.avg_price[attLastIdx])}</b> so far in 2026, well below the ${fmtMoney(DATA.avg_price[lastIdx])} detached-house average, and a common way to buy into Longmont at a lower price point.`;
+document.getElementById('attCountInsight').innerHTML = `Longmont is on pace for roughly <b class="text-navy-800">${ATTACHED_DATA.proj2026.toLocaleString()} closed attached-home sales in 2026</b>, projected from year-to-date activity (${ATTACHED_DATA.count_2026_ytd.toLocaleString()} sales through ${new Date(ATTACHED_DATA.as_of+'T00:00:00').toLocaleDateString('en-US',{month:'short', day:'numeric'})}).`;
+
+buildChart(document.getElementById('attDomChart'), document.getElementById('attDomTip'), {
+  years:ATTACHED_DATA.years, values:ATTACHED_DATA.dom, w:560, h:320, pad:{l:44,r:20,t:24,b:44},
+  color:'#886831', fillOpacity:0.22, unit:'num', fmt:v=>Math.round(v)+' days', markLastLabel:true
+});
+buildChart(document.getElementById('attPriceChart'), document.getElementById('attPriceTip'), {
+  years:ATTACHED_DATA.years, values:ATTACHED_DATA.avg_price, w:560, h:320, pad:{l:56,r:20,t:24,b:44},
+  color:'#a37f3c', fillOpacity:0.2, unit:'money', fmt:v=>fmtMoney(v), markLastLabel:true
+});
+
+// Attached YoY chart: also ends one year before the partial current year
+const attYoyYears = ATTACHED_DATA.years.slice(1, -1);
+const attYoyVals = ATTACHED_DATA.yoy.slice(1, -1);
+buildChart(document.getElementById('attYoyChart'), document.getElementById('attYoyTip'), {
+  years:attYoyYears, values:attYoyVals, w:1080, h:300, pad:{l:50,r:30,t:30,b:44},
+  color:'#b8934a', fillOpacity:0.2, unit:'pct', fmt:v=>fmtPct(v), markLastLabel:true
+});
+document.getElementById('attYoyBadge').textContent = fmtPct(attYoyVals[attYoyVals.length-1]) + ' \u00b7 2025';
+document.getElementById('attYoyInsight').innerHTML = `Attached-home prices moved <b class="text-navy-800">${fmtPct(attYoyVals[attYoyVals.length-1])}</b> in 2025, generally tracking the detached-house market's ups and downs but with sharper swings in high-growth years like 2015-2016.`;
+
+buildChart(document.getElementById('attCountChart'), document.getElementById('attCountTip'), {
+  years:ATTACHED_DATA.years.slice(0,-1).concat([2026]), values:ATTACHED_DATA.counts.slice(0,-1).concat([ATTACHED_DATA.proj2026]), w:1080, h:300, pad:{l:50,r:30,t:30,b:44},
+  color:'#6b5227', fillOpacity:0.18, unit:'num', fmt:v=>Math.round(v).toLocaleString()+' homes', markLastLabel:true, dashedLastSegment:true
 });
 </script>
 
