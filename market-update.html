@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Longmont Market Update - Homestead Real Estate</title>
+<meta name="description" content="See how the Longmont, CO real estate market is really moving: days on market, sale prices, and how many homes sold, straight from MLS data."/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    navy: {
+                        50: '#eef2f6',
+                        100: '#d6e0ea',
+                        200: '#aec2d6',
+                        300: '#7f9cba',
+                        400: '#4f739c',
+                        500: '#345580',
+                        600: '#28436a',
+                        700: '#1f3555',
+                        800: '#182944',
+                        900: '#111e33',
+                        950: '#0a1420'
+                    },
+                    brass: {
+                        50: '#faf6ec',
+                        100: '#f0e6c8',
+                        200: '#e2cd94',
+                        300: '#cfae5f',
+                        400: '#b8934a',
+                        500: '#a37f3c',
+                        600: '#886831',
+                        700: '#6b5227'
+                    }
+                },
+                fontFamily: {
+                    serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                    sans: ['Inter', 'system-ui', 'sans-serif']
+                }
+            }
+        }
+    }
+</script>
+<style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .tooltip {
+        position: absolute; pointer-events: none; background: #111e33; color: #fff;
+        padding: 7px 11px; border-radius: 8px; font-size: 0.78rem; font-weight: 600;
+        transform: translate(-50%, -115%); opacity: 0; transition: opacity .1s ease;
+        white-space: nowrap; z-index: 10;
+    }
+    .chart-wrap { position: relative; }
+    svg.chart { width: 100%; height: auto; overflow: visible; }
+</style>
+</head>
+<body class="bg-white">
+<div id="app">
+
+<!-- Header -->
+<header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+<div class="flex justify-between items-center gap-4 mb-2 sm:mb-0">
+<a class="flex items-center" href="index.html">
+<img alt="Homestead Real Estate" class="h-12 sm:h-14" src="logo.png"/>
+</a>
+<a class="border border-navy-700 text-navy-800 hover:bg-navy-800 hover:text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2 rounded transition-colors cursor-pointer whitespace-nowrap sm:ml-auto" href="index.html#form">
+Talk Compensation
+</a>
+</div>
+<nav class="flex md:hidden items-center justify-center gap-6">
+<a class="text-slate-700 hover:text-navy-800 font-medium text-sm" href="index.html">Home</a>
+<a class="text-slate-700 hover:text-navy-800 font-medium text-sm" href="sellers-guide.html">Seller's Guide</a>
+<a class="text-slate-700 hover:text-navy-800 font-medium text-sm" href="index.html#form">Contact</a>
+</nav>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-700 hover:text-navy-800 font-medium" href="index.html">Home</a>
+<a class="text-slate-700 hover:text-navy-800 font-medium" href="sellers-guide.html">Seller's Guide</a>
+<a class="text-navy-900 font-semibold" href="market-update.html">Market Update</a>
+<a class="text-slate-700 hover:text-navy-800 font-medium" href="index.html#form">Contact</a>
+</nav>
+</div>
+</header>
+
+<!-- Hero / Postcard -->
+<section class="relative overflow-hidden bg-navy-900">
+<div class="absolute inset-0 opacity-10" style="background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 800%22%3E%3Cdefs%3E%3Cpattern id=%22grid%22 width=%2240%22 height=%2240%22 patternUnits=%22userSpaceOnUse%22%3E%3Cpath d=%22M 40 0 L 0 0 0 40%22 fill=%22none%22 stroke=%22white%22 stroke-width=%220.5%22/%3E%3C/pattern%3E%3C/defs%3E%3Crect width=%221200%22 height=%22800%22 fill=%22url(%23grid)%22/%3E%3C/svg%3E')"></div>
+<div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+<div class="bg-white rounded-2xl shadow-2xl overflow-hidden grid md:grid-cols-[1.5fr_1fr]">
+<!-- Message side -->
+<div class="p-8 sm:p-12 md:p-14">
+<h1 class="font-serif text-3xl sm:text-4xl md:text-[2.75rem] font-semibold text-navy-900 mb-5 leading-[1.1]">
+Real Information for <em class="italic text-brass-600">Real Longmont</em> Homeowners.
+</h1>
+<p class="text-lg text-slate-600 mb-8 max-w-md leading-relaxed">
+<span class="font-semibold text-navy-900">Your next move starts with better information.</span> See exactly how the Longmont market is moving, straight from closed MLS sales.
+</p>
+<div class="flex flex-wrap gap-3">
+<a class="inline-flex items-center gap-2 bg-brass-500 hover:bg-brass-600 text-white font-semibold py-3.5 px-7 rounded transition-colors" href="index.html#home-value-calculator">
+Estimate My Home Value
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+<a class="inline-flex items-center gap-2 border border-navy-700 text-navy-800 hover:bg-navy-800 hover:text-white font-semibold py-3.5 px-7 rounded transition-colors" href="#market">
+See the Market Data
+</a>
+</div>
+</div>
+<!-- Stamp side -->
+<div class="hidden md:flex flex-col justify-between bg-navy-900 p-8 border-l-2 border-dashed border-white/25 relative">
+<div></div>
+<div class="self-end flex flex-col items-end">
+<div class="w-24 h-28 bg-white rounded p-2 flex items-center justify-center rotate-3 border-2 border-dashed border-navy-300">
+<svg viewBox="0 0 64 64" fill="none" class="w-full h-full">
+<rect x="4" y="10" width="56" height="44" rx="2" fill="#faf6ec" stroke="#111e33" stroke-width="2"/>
+<path d="M8 14 L32 34 L56 14" stroke="#28436a" stroke-width="2" fill="none"/>
+<path d="M18 40 L26 28 L34 36 L46 24" stroke="#a37f3c" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</div>
+<div class="mt-3 mr-1 w-20 h-20 rounded-full border border-white/35 flex items-center justify-center text-center text-[0.62rem] tracking-widest uppercase text-white/55 font-serif leading-tight -rotate-6">
+Longmont<br/>CO 80501
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- CTA Cards -->
+<section class="bg-white pb-16 sm:pb-24 -mt-1">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid md:grid-cols-3 gap-6 -mt-10 relative z-10">
+
+<a class="bg-white rounded-xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all p-7 flex flex-col" href="index.html#home-value-calculator">
+<p class="text-brass-600 font-semibold text-xs tracking-widest uppercase mb-3">01 &middot; Know your number</p>
+<h3 class="font-serif text-xl font-semibold text-navy-900 mb-3">Estimate your home value</h3>
+<p class="text-slate-600 text-sm leading-relaxed mb-4">Get a data-backed read on what your Longmont home is worth right now, based on real closed sales near you.</p>
+<span class="mt-auto text-navy-800 font-semibold text-sm">Start my estimate &rarr;</span>
+</a>
+
+<a class="bg-white rounded-xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all p-7 flex flex-col" href="sellers-guide.html">
+<p class="text-brass-600 font-semibold text-xs tracking-widest uppercase mb-3">02 &middot; Picture the move</p>
+<h3 class="font-serif text-xl font-semibold text-navy-900 mb-3">See what selling could look like</h3>
+<p class="text-slate-600 text-sm leading-relaxed mb-4">From listing to closing: how long it typically takes, what a sale nets you today, and what to expect at each step.</p>
+<span class="mt-auto text-navy-800 font-semibold text-sm">Read the seller's guide &rarr;</span>
+</a>
+
+<a class="bg-white rounded-xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all p-7 flex flex-col" href="#market">
+<p class="text-brass-600 font-semibold text-xs tracking-widest uppercase mb-3">03 &middot; Read the market</p>
+<h3 class="font-serif text-xl font-semibold text-navy-900 mb-3">Explore the Longmont market</h3>
+<p class="text-slate-600 text-sm leading-relaxed mb-4">Twenty years of Longmont MLS data: days on market, prices, and sales volume, in plain English.</p>
+<span class="mt-auto text-navy-800 font-semibold text-sm">View the charts &rarr;</span>
+</a>
+
+</div>
+</div>
+</section>
+
+<!-- Market Section -->
+<section class="bg-[#faf9f6] py-16 sm:py-24 border-t border-slate-200" id="market">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-10">
+<p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">The Longmont Market, Right Now</p>
+<h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">Twenty years of closed sales, no spin.</h2>
+<p class="text-lg text-slate-600 max-w-2xl mx-auto">Every number below comes from actual closed MLS transactions in Longmont, CO. Not a national index, not an estimate. This is what actually happened in your market.</p>
+</div>
+<p class="text-center text-sm text-slate-500 mb-12">Data current through <span class="font-semibold text-navy-700" id="asOfText">-</span> &middot; Source: Longmont-area MLS closed residential sales</p>
+
+<div class="grid sm:grid-cols-3 gap-5 mb-14" id="statStrip"></div>
+
+<div class="grid lg:grid-cols-2 gap-6">
+
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
+<div class="flex justify-between items-start gap-4 flex-wrap mb-1">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">How Fast Homes Are Selling</h3>
+<p class="text-sm text-slate-500">Median days from list to contract, by year</p>
+</div>
+<span class="bg-navy-50 text-navy-800 text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap" id="domBadge">-</span>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="domChart" viewBox="0 0 560 320"></svg><div class="tooltip" id="domTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="domInsight"></p>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
+<div class="flex justify-between items-start gap-4 flex-wrap mb-1">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">Your Home's Value, Over Time</h3>
+<p class="text-sm text-slate-500">Average closed sale price across Longmont, by year</p>
+</div>
+<span class="bg-navy-50 text-navy-800 text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap" id="priceBadge">-</span>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="priceChart" viewBox="0 0 560 320"></svg><div class="tooltip" id="priceTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="priceInsight"></p>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8 lg:col-span-2">
+<div class="flex justify-between items-start gap-4 flex-wrap mb-1">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">Year-Over-Year Price Change</h3>
+<p class="text-sm text-slate-500">How much the typical Longmont home gained or gave back in value each year</p>
+</div>
+<span class="bg-navy-50 text-navy-800 text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap" id="yoyBadge">-</span>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="yoyChart" viewBox="0 0 1080 300"></svg><div class="tooltip" id="yoyTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="yoyInsight"></p>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8 lg:col-span-2">
+<div class="flex justify-between items-start gap-4 flex-wrap mb-1">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">How Many Homes Sell Each Year</h3>
+<p class="text-sm text-slate-500">Closed residential transactions across Longmont; 2026 shown year-to-date with a full-year projection</p>
+</div>
+<span class="bg-navy-50 text-navy-800 text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap" id="countBadge">-</span>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="countChart" viewBox="0 0 1080 300"></svg><div class="tooltip" id="countTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="countInsight"></p>
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- Estimate teaser -->
+<section class="bg-white py-16 sm:py-24 border-t border-slate-200">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
+<div>
+<p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">01 &middot; Know your number</p>
+<h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-5 leading-tight">What is your Longmont home actually worth today?</h2>
+<p class="text-lg text-slate-600 leading-relaxed mb-8">Home values in Longmont have moved a lot over the past five years, and no two blocks move the same way. Enter your address on the home page and I'll build you a real comparison using recently closed sales near you.</p>
+<a class="inline-flex items-center gap-2 bg-brass-500 hover:bg-brass-600 text-white font-semibold py-3.5 px-8 rounded transition-colors" href="index.html#home-value-calculator">
+Get My Estimate
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+<div class="bg-navy-900 rounded-2xl p-8 sm:p-10 text-white">
+<h4 class="font-serif text-lg text-white/85 mb-5">Longmont at a glance, 2026 YTD</h4>
+<div class="flex justify-between items-baseline py-3 border-b border-white/15">
+<span class="text-sm text-white/65">Average sale price</span>
+<span class="font-serif text-xl font-semibold" id="vcAvg">-</span>
+</div>
+<div class="flex justify-between items-baseline py-3 border-b border-white/15">
+<span class="text-sm text-white/65">Median days on market</span>
+<span class="font-serif text-xl font-semibold" id="vcDom">-</span>
+</div>
+<div class="flex justify-between items-baseline py-3">
+<span class="text-sm text-white/65">Homes sold, projected 2026</span>
+<span class="font-serif text-xl font-semibold" id="vcCount">-</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Selling teaser -->
+<section class="bg-[#faf9f6] py-16 sm:py-24 border-t border-slate-200">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
+<img alt="James Taylor" class="w-full h-96 object-cover rounded-xl border border-slate-200 order-2 md:order-1" src="james-taylor-professional.jpg"/>
+<div class="order-1 md:order-2">
+<p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">02 &middot; Picture the move</p>
+<h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-5 leading-tight">Here's what selling in Longmont looks like right now.</h2>
+<p class="text-lg text-slate-600 leading-relaxed mb-6">The market has cooled from the frenzy of 2021, but it hasn't stalled. Here's what that means if you listed today.</p>
+<ul class="space-y-4 mb-8">
+<li class="flex gap-3 items-start">
+<span class="flex-none w-6 h-6 rounded-full bg-brass-100 text-brass-700 flex items-center justify-center font-bold text-xs mt-0.5">1</span>
+<span class="text-slate-600">Most Longmont homes are going under contract in roughly <b class="text-navy-900" id="sellDom">-</b> days, a normal, healthy pace, not a fire sale.</span>
+</li>
+<li class="flex gap-3 items-start">
+<span class="flex-none w-6 h-6 rounded-full bg-brass-100 text-brass-700 flex items-center justify-center font-bold text-xs mt-0.5">2</span>
+<span class="text-slate-600">The average Longmont sale is landing around <b class="text-navy-900" id="sellAvg">-</b> right now, well above pre-2020 levels.</span>
+</li>
+<li class="flex gap-3 items-start">
+<span class="flex-none w-6 h-6 rounded-full bg-brass-100 text-brass-700 flex items-center justify-center font-bold text-xs mt-0.5">3</span>
+<span class="text-slate-600">I'll walk you through pricing, prep, and timing using your home's actual comps, not a canned script.</span>
+</li>
+</ul>
+<a class="inline-flex items-center gap-2 bg-brass-500 hover:bg-brass-600 text-white font-semibold py-3.5 px-8 rounded transition-colors" href="index.html#form">
+Talk Through My Timeline
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-navy-950 text-navy-300 py-12">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid md:grid-cols-3 gap-8 mb-8">
+<div>
+<p class="font-semibold text-white text-lg mb-4">Homestead Real Estate</p>
+<p class="text-sm">Honest real estate. Fair compensation. Better results.</p>
+</div>
+<div>
+<p class="font-semibold text-white mb-3 text-lg">Contact</p>
+<p class="text-base">720-340-6743</p>
+<p class="text-base">JamesTaylorHomeSales@gmail.com</p>
+</div>
+<div>
+<p class="font-semibold text-white mb-3 text-lg">Online</p>
+<p class="text-base">JamesTaylorHomeSales.com</p>
+<p class="text-base mt-3">Longmont, Colorado</p>
+<p class="text-base">Licensed Colorado Real Estate Broker</p>
+</div>
+</div>
+<div class="border-t border-white/10 pt-8 text-center text-xs">
+<p>&copy; 2026 Homestead Real Estate, LLC. All rights reserved. Market figures reflect closed residential MLS transactions in Longmont, CO and are updated periodically. Not a formal appraisal.</p>
+</div>
+</div>
+</footer>
+
+</div>
+
+<script>
+const DATA = {"years": [2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "dom": [101.0, 91.0, 84.0, 83.0, 86.0, 92.0, 78.0, 58.0, 51.0, 46.0, 42.0, 41.0, 38.0, 44.0, 41.0, 30.0, 28.0, 36.0, 37.0, 40.0, 37.0], "avg_price": [288940, 279237, 249628, 240871, 255581, 244327, 258278, 284465, 305372, 342126, 387605, 422292, 461253, 469847, 508579, 590785, 648587, 657436, 666098, 638318, 658003], "counts": [1226, 1118, 1032, 894, 829, 831, 1000, 1160, 1098, 1239, 1110, 1157, 1129, 1200, 1282, 1195, 979, 817, 902, 927, 477], "yoy": [null, -0.9, -8.6, 0.4, 3.4, -3.3, 6.4, 11.1, 5.6, 13.0, 15.4, 9.3, 9.4, 1.6, 6.4, 16.3, 12.0, 1.2, -1.6, -2.5, 4.3], "proj2026": 950, "count_2026_ytd": 477, "as_of": "2026-07-02"};
+
+function fmtMoney(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
+function fmtPct(n){ return (n>0?'+':'') + n.toFixed(1) + '%'; }
+
+function buildChart(svgEl, tipEl, {years, values, w, h, pad, color, fillOpacity, fmt, unit, markLastLabel, dashedLastSegment}){
+  svgEl.innerHTML = '';
+  const N = svgEl.namespaceURI;
+  const innerW = w - pad.l - pad.r;
+  const innerH = h - pad.t - pad.b;
+  const vmin = Math.min(...values), vmax = Math.max(...values);
+  const vpad = (vmax - vmin) * 0.18 || vmax*0.1 || 1;
+  const yMin = Math.min(0, vmin - vpad);
+  const yMax = vmax + vpad;
+
+  const x = i => pad.l + (innerW * i/(values.length-1));
+  const y = v => pad.t + innerH - ((v - yMin)/(yMax - yMin)) * innerH;
+
+  function el(tag, attrs){
+    const e = document.createElementNS(N, tag);
+    for(const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  const gridCount = 4;
+  for(let g=0; g<=gridCount; g++){
+    const gv = yMin + (yMax-yMin)*g/gridCount;
+    const gy = y(gv);
+    svgEl.appendChild(el('line', {x1:pad.l, x2:w-pad.r, y1:gy, y2:gy, stroke:'#E5E9EF', 'stroke-width':1}));
+    const label = el('text', {x:pad.l-10, y:gy+4, 'text-anchor':'end', 'font-size':11, fill:'#8592A3', 'font-family':'Inter, sans-serif'});
+    label.textContent = unit==='pct' ? Math.round(gv)+'%' : (unit==='money' ? '$'+Math.round(gv/1000)+'k' : Math.round(gv));
+    svgEl.appendChild(label);
+  }
+  if(yMin < 0 && yMax > 0){
+    const zy = y(0);
+    svgEl.appendChild(el('line', {x1:pad.l, x2:w-pad.r, y1:zy, y2:zy, stroke:'#C3CBD6', 'stroke-width':1.4}));
+  }
+
+  let dArea = `M ${x(0)} ${y(values[0])}`;
+  for(let i=1;i<values.length;i++) dArea += ` L ${x(i)} ${y(values[i])}`;
+  dArea += ` L ${x(values.length-1)} ${y(yMin)} L ${x(0)} ${y(yMin)} Z`;
+  const gradId = 'grad-' + Math.random().toString(36).slice(2,9);
+  const defs = el('defs', {});
+  const grad = el('linearGradient', {id:gradId, x1:'0', y1:'0', x2:'0', y2:'1'});
+  grad.appendChild(el('stop', {offset:'0%', 'stop-color':color, 'stop-opacity':fillOpacity}));
+  grad.appendChild(el('stop', {offset:'100%', 'stop-color':color, 'stop-opacity':0}));
+  defs.appendChild(grad);
+  svgEl.appendChild(defs);
+  svgEl.appendChild(el('path', {d:dArea, fill:`url(#${gradId})`}));
+
+  const splitAt = dashedLastSegment ? values.length-2 : values.length-1;
+  let dLine = `M ${x(0)} ${y(values[0])}`;
+  for(let i=1;i<=splitAt;i++) dLine += ` L ${x(i)} ${y(values[i])}`;
+  svgEl.appendChild(el('path', {d:dLine, fill:'none', stroke:color, 'stroke-width':3, 'stroke-linecap':'round', 'stroke-linejoin':'round'}));
+  if(dashedLastSegment){
+    const dTail = `M ${x(splitAt)} ${y(values[splitAt])} L ${x(values.length-1)} ${y(values[values.length-1])}`;
+    svgEl.appendChild(el('path', {d:dTail, fill:'none', stroke:color, 'stroke-width':3, 'stroke-linecap':'round', 'stroke-dasharray':'2 7'}));
+  }
+
+  values.forEach((v,i)=>{
+    const isLast = i===values.length-1;
+    const c = el('circle', {cx:x(i), cy:y(v), r: isLast?5.5:4, fill:'#fff', stroke:color, 'stroke-width':2.4});
+    svgEl.appendChild(c);
+    const hit = el('circle', {cx:x(i), cy:y(v), r:12, fill:'transparent', style:'cursor:pointer'});
+    hit.addEventListener('mousemove', (e)=>{
+      const rect = svgEl.getBoundingClientRect();
+      const px = (x(i)/w) * rect.width;
+      const py = (y(v)/h) * rect.height;
+      tipEl.style.left = px + 'px';
+      tipEl.style.top = py + 'px';
+      tipEl.style.opacity = 1;
+      tipEl.textContent = years[i] + ' \u00b7 ' + fmt(v);
+    });
+    hit.addEventListener('mouseleave', ()=>{ tipEl.style.opacity = 0; });
+    svgEl.appendChild(hit);
+  });
+
+  const step = years.length > 14 ? 2 : 1;
+  years.forEach((yr,i)=>{
+    if(i % step !== 0 && i !== years.length-1) return;
+    const t = el('text', {x:x(i), y:h-pad.b+22, 'text-anchor':'middle', 'font-size':11, fill:'#8592A3', 'font-family':'Inter, sans-serif'});
+    t.textContent = yr;
+    svgEl.appendChild(t);
+  });
+
+  if(markLastLabel){
+    const lastI = values.length-1;
+    const lbl = el('text', {x:x(lastI)-8, y:y(values[lastI])-16, 'text-anchor':'end', 'font-size':13, 'font-weight':700, fill:color, 'font-family':'Playfair Display, serif'});
+    lbl.textContent = fmt(values[lastI]);
+    svgEl.appendChild(lbl);
+  }
+}
+
+document.getElementById('asOfText').textContent = new Date(DATA.as_of + 'T00:00:00').toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
+
+const lastIdx = DATA.years.length-1;
+const stripEl = document.getElementById('statStrip');
+const stats = [
+  {num: fmtMoney(DATA.avg_price[lastIdx]), lab:'Average sale price so far in 2026'},
+  {num: Math.round(DATA.dom[lastIdx]) + ' days', lab:'Median time from list to contract in 2026'},
+  {num: DATA.proj2026.toLocaleString(), lab:'Homes projected to sell in 2026'}
+];
+stats.forEach(s=>{
+  const d = document.createElement('div');
+  d.className='bg-white rounded-xl border border-slate-200 p-6 text-center';
+  d.innerHTML = `<div class="font-serif text-3xl font-semibold text-navy-900">${s.num}</div><div class="text-sm text-slate-500 mt-2">${s.lab}</div>`;
+  stripEl.appendChild(d);
+});
+
+document.getElementById('domBadge').textContent = Math.round(DATA.dom[lastIdx]) + ' days \u00b7 2026';
+document.getElementById('priceBadge').textContent = fmtMoney(DATA.avg_price[lastIdx]) + ' \u00b7 2026';
+document.getElementById('countBadge').textContent = DATA.proj2026.toLocaleString() + ' projected \u00b7 2026';
+
+document.getElementById('domInsight').innerHTML = `Homes are currently taking <b class="text-navy-800">${Math.round(DATA.dom[lastIdx])} days</b> to go under contract, down from a high of over 100 days in 2006, but a bit slower than the fast ${Math.round(Math.min(...DATA.dom))}-day pace of 2022.`;
+document.getElementById('priceInsight').innerHTML = `The average Longmont home sold for <b class="text-navy-800">${fmtMoney(DATA.avg_price[lastIdx])}</b> so far in 2026, more than double the ${fmtMoney(DATA.avg_price[0])} average back in 2006.`;
+document.getElementById('countInsight').innerHTML = `Longmont is on pace for roughly <b class="text-navy-800">${DATA.proj2026.toLocaleString()} closed sales in 2026</b>, projected from year-to-date activity (${DATA.count_2026_ytd.toLocaleString()} sales through ${new Date(DATA.as_of+'T00:00:00').toLocaleDateString('en-US',{month:'short', day:'numeric'})}), in line with the steadier volume of the last few years, well below the 2020 peak of 1,282.`;
+
+document.getElementById('vcAvg').textContent = fmtMoney(DATA.avg_price[lastIdx]);
+document.getElementById('vcDom').textContent = Math.round(DATA.dom[lastIdx]) + ' days';
+document.getElementById('vcCount').textContent = DATA.proj2026.toLocaleString();
+
+document.getElementById('sellDom').textContent = Math.round(DATA.dom[lastIdx]);
+document.getElementById('sellAvg').textContent = fmtMoney(DATA.avg_price[lastIdx]);
+
+buildChart(document.getElementById('domChart'), document.getElementById('domTip'), {
+  years:DATA.years, values:DATA.dom, w:560, h:320, pad:{l:44,r:20,t:24,b:44},
+  color:'#a37f3c', fillOpacity:0.22, unit:'num', fmt:v=>Math.round(v)+' days', markLastLabel:true
+});
+buildChart(document.getElementById('priceChart'), document.getElementById('priceTip'), {
+  years:DATA.years, values:DATA.avg_price, w:560, h:320, pad:{l:56,r:20,t:24,b:44},
+  color:'#28436a', fillOpacity:0.18, unit:'money', fmt:v=>fmtMoney(v), markLastLabel:true
+});
+
+// YoY chart: ends at 2025, 2026 excluded
+const yoyYears = DATA.years.slice(1, -1);
+const yoyVals = DATA.yoy.slice(1, -1);
+buildChart(document.getElementById('yoyChart'), document.getElementById('yoyTip'), {
+  years:yoyYears, values:yoyVals, w:1080, h:300, pad:{l:50,r:30,t:30,b:44},
+  color:'#345580', fillOpacity:0.18, unit:'pct', fmt:v=>fmtPct(v), markLastLabel:true
+});
+document.getElementById('yoyBadge').textContent = fmtPct(yoyVals[yoyVals.length-1]) + ' \u00b7 2025';
+document.getElementById('yoyInsight').innerHTML = `After a run of double-digit years, Longmont price growth settled to <b class="text-navy-800">${fmtPct(yoyVals[yoyVals.length-1])}</b> in 2025, a more normal, sustainable pace compared with the double-digit swings of 2021 and 2022.`;
+
+buildChart(document.getElementById('countChart'), document.getElementById('countTip'), {
+  years:DATA.years.slice(0,-1).concat([2026]), values:DATA.counts.slice(0,-1).concat([DATA.proj2026]), w:1080, h:300, pad:{l:50,r:30,t:30,b:44},
+  color:'#886831', fillOpacity:0.16, unit:'num', fmt:v=>Math.round(v).toLocaleString()+' homes', markLastLabel:true, dashedLastSegment:true
+});
+</script>
+
+</body>
+</html>
