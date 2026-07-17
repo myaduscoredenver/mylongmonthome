@@ -1315,6 +1315,60 @@
                 'default': 300.00
             };
 
+            // Resolves a lowercased subdivision string to a $/sqft comp. Tries the
+            // exact string first, then strips one filing/phase/replat/section-style
+            // suffix at a time (retrying the table after each strip) before ever
+            // falling back to the flat citywide default.
+            function resolveNeighborhoodPsf(key) {
+                if (NEIGHBORHOOD_COMPS_2026_SOLD.hasOwnProperty(key)) {
+                    return NEIGHBORHOOD_COMPS_2026_SOLD[key];
+                }
+                let working = key.replace(/\bfig\b/g, 'flg'); // common OCR/typo confusion
+                const suffixPatterns = [
+                    /\bflg\.?\s*\d+[a-z]?$/,
+                    /\bfiling\.?\s*\d+[a-z]?$/,
+                    /\bph\.?\s*\d+[a-z]?$/,
+                    /\bphase\.?\s*\d+[a-z]?$/,
+                    /\bsec\.?\s*\d+[a-z]?$/,
+                    /\bsection\.?\s*\d+[a-z]?$/,
+                    /\breplat\.?\s*[a-z0-9]*$/,
+                    /\brep\.?\s*[a-z0-9]*$/,
+                    /\bamd\.?$/,
+                    /\bamended$/,
+                    /\bsupp\.?\s*\d*$/,
+                    /\bsupplement\.?\s*\d*$/,
+                    /\bprcl\.?\s*[a-z0-9]*$/,
+                    /\bparcel\.?\s*[a-z0-9]*$/,
+                    /\baddition\.?\s*\d*$/,
+                    /\badd\.?\s*\d*$/,
+                    /\bblk\.?\s*\d+$/,
+                    /\bbldg\.?\s*[a-z0-9]*$/,
+                    /&?\s*\b(1st|2nd|3rd|4th|5th)$/
+                ];
+                // Up to 4 passes in case a subdivision has multiple chained suffixes
+                // (e.g. "Clover Creek Flg 1 Replat A" needs both "Replat A" and
+                // nothing else stripped before it matches "clover creek flg 1").
+                for (let pass = 0; pass < 4; pass++) {
+                    if (NEIGHBORHOOD_COMPS_2026_SOLD.hasOwnProperty(working)) {
+                        return NEIGHBORHOOD_COMPS_2026_SOLD[working];
+                    }
+                    let stripped = working;
+                    for (const pattern of suffixPatterns) {
+                        const candidate = working.replace(pattern, '').trim().replace(/\s+/g, ' ');
+                        if (candidate !== working && candidate.length > 0) {
+                            stripped = candidate;
+                            break;
+                        }
+                    }
+                    if (stripped === working) break; // nothing left to strip
+                    working = stripped;
+                }
+                if (NEIGHBORHOOD_COMPS_2026_SOLD.hasOwnProperty(working)) {
+                    return NEIGHBORHOOD_COMPS_2026_SOLD[working];
+                }
+                return NEIGHBORHOOD_COMPS_2026_SOLD['default'];
+            }
+
             const year = parseInt(purchaseDate);
             const currentYear = 2026;
             const yearsOwned = currentYear - year;
@@ -1342,7 +1396,15 @@
             }
 
             // LOOK UP 2026 ACTUAL SOLD MEDIAN $/SQFT
-            const neighborhoodPsf = NEIGHBORHOOD_COMPS_2026_SOLD[neighborhoodKey] || NEIGHBORHOOD_COMPS_2026_SOLD['default'];
+            // Try the exact subdivision string first (some entries are deliberately
+            // specific, e.g. 'spring valley ph 6 prcl e' prices differently than
+            // plain 'spring valley'). Only if that exact string isn't in the table
+            // do we strip filing/phase/replat suffixes and retry — this catches
+            // subdivisions like "Renaissance Flg 3" or "Clover Creek Fig 1 Replat A"
+            // that would otherwise silently fall through to the flat citywide
+            // default (which is often *higher* than the real neighborhood number,
+            // so the old behavior systematically overvalued these homes).
+            const neighborhoodPsf = resolveNeighborhoodPsf(neighborhoodKey);
 
             // VALUATION: Use 2026 actual sold comp estimate
             let currentValue = purchasePrice; // Fallback
