@@ -376,6 +376,119 @@ Longmont<br/>CO 80501
 </div>
 </section>
 
+<!-- Deep Market Intelligence -->
+<section class="bg-[#faf9f6] py-16 sm:py-24 border-t border-slate-200" id="deep-intel">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-10">
+<p class="text-navy-700 font-semibold text-sm tracking-widest uppercase mb-3">Deep Market Intelligence</p>
+<h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">What 21,602 Sales Tell Us About Longmont</h2>
+<p class="text-lg text-slate-600 max-w-2xl mx-auto">Ownership loyalty, long-run appreciation, which home styles and price points attract the most competition, and what listing features actually move the needle on price.</p>
+</div>
+
+<div class="grid lg:grid-cols-2 gap-6">
+
+<!-- 01: Longest current ownership -->
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
+<h3 class="font-serif text-xl font-semibold text-navy-900">Longmont's Most Loyal Neighborhoods</h3>
+<p class="text-sm text-slate-500 mb-4">Median years since the current owner's last recorded purchase</p>
+<div class="chart-wrap"><svg class="chart" id="deepOwnershipChart" viewBox="0 0 520 580"></svg><div class="tooltip" id="deepOwnershipTip"></div></div>
+</div>
+
+<!-- 02: Subdivision appreciation since 2006-2008 -->
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
+<h3 class="font-serif text-xl font-semibold text-navy-900">Which Neighborhoods Appreciated the Most?</h3>
+<p class="text-sm text-slate-500 mb-4">Change in median price per square foot since the 2006-2008 market</p>
+<div class="chart-wrap"><svg class="chart" id="deepAppreciationChart" viewBox="0 0 520 580"></svg><div class="tooltip" id="deepAppreciationTip"></div></div>
+</div>
+
+<!-- 18: Estimated value gain -->
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8 lg:col-span-2">
+<h3 class="font-serif text-xl font-semibold text-navy-900">Estimated Gross Value Gain by Subdivision</h3>
+<p class="text-sm text-slate-500 mb-4">Median estimated current value minus last recorded purchase price, by neighborhood</p>
+<div class="chart-wrap"><svg class="chart" id="deepValueGainChart" viewBox="0 0 1080 560"></svg><div class="tooltip" id="deepValueGainTip"></div></div>
+</div>
+
+<!-- 06: Appreciation by decade built -->
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
+<h3 class="font-serif text-xl font-semibold text-navy-900">Which Era of Home Appreciates Fastest?</h3>
+<p class="text-sm text-slate-500 mb-4">Median annualized appreciation from repeat sales, grouped by construction decade</p>
+<div class="chart-wrap mt-4"><svg class="chart" id="deepDecadeChart" viewBox="0 0 520 300"></svg><div class="tooltip" id="deepDecadeTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100">1950s-era homes lead at <b class="text-navy-800">8.3% annual appreciation</b>, likely because they're small, affordable, and in walkable older neighborhoods that have seen strong demand. 2000s homes trail at 5.4%.</p>
+</div>
+
+<!-- 04: Sales frequency pie (rendered as horizontal bar) -->
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
+<h3 class="font-serif text-xl font-semibold text-navy-900">How Often Do Longmont Homes Change Hands?</h3>
+<p class="text-sm text-slate-500 mb-4">How many times each unique address has sold since 2006</p>
+<div class="chart-wrap mt-4"><svg class="chart" id="deepSalesFreqChart" viewBox="0 0 520 200"></svg><div class="tooltip" id="deepSalesFreqTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100"><b class="text-navy-800">61.6%</b> of Longmont homes have only sold once since 2006, meaning most current owners have held on through the entire boom-and-correction cycle. Only 2.5% have sold four or more times.</p>
+</div>
+
+<!-- 07a + 07b: Style competition and appreciation -->
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
+<h3 class="font-serif text-xl font-semibold text-navy-900">Competition by Home Style</h3>
+<p class="text-sm text-slate-500 mb-4">Percent sold above list price, 2020 to 2026</p>
+<div class="chart-wrap mt-4"><svg class="chart" id="deepStyleAboveChart" viewBox="0 0 520 220"></svg><div class="tooltip" id="deepStyleAboveTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100">Tri-levels draw the most multiple-offer activity at <b class="text-navy-800">49.7%</b>, likely because they're the most affordable style in many neighborhoods. Two-stories are the least competitive at 35.6%.</p>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
+<h3 class="font-serif text-xl font-semibold text-navy-900">Appreciation by Home Style</h3>
+<p class="text-sm text-slate-500 mb-4">Median annualized repeat-sale appreciation by architectural style</p>
+<div class="chart-wrap mt-4"><svg class="chart" id="deepStyleApprChart" viewBox="0 0 520 220"></svg><div class="tooltip" id="deepStyleApprTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100">Bi-level/split homes have appreciated fastest at <b class="text-navy-800">7.8% annually</b>. Two-stories trail at 6.0%, partly because they tend to be newer, higher-priced homes where percentage gains compress.</p>
+</div>
+
+<!-- 08: Competition by price range -->
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
+<h3 class="font-serif text-xl font-semibold text-navy-900">Where's the Most Competition by Price?</h3>
+<p class="text-sm text-slate-500 mb-4">Percent sold above list price by listing-price range, 2020 to 2026</p>
+<div class="chart-wrap mt-4"><svg class="chart" id="deepPriceRangeChart" viewBox="0 0 520 300"></svg><div class="tooltip" id="deepPriceRangeTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100">Homes listed under $400K see bidding wars <b class="text-navy-800">53.3%</b> of the time. Above $1M, that drops to under 20%. The affordable end of the market is still the most competitive.</p>
+</div>
+
+<!-- 09: Competition by square footage -->
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
+<h3 class="font-serif text-xl font-semibold text-navy-900">The Square-Footage Sweet Spot</h3>
+<p class="text-sm text-slate-500 mb-4">Percent sold above list by total square footage, 2020 to 2026</p>
+<div class="chart-wrap mt-4"><svg class="chart" id="deepSizeRangeChart" viewBox="0 0 520 300"></svg><div class="tooltip" id="deepSizeRangeTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100">The 1,500-1,799 sqft range is the most competitive at <b class="text-navy-800">45.4%</b> sold above list. Homes over 3,200 sqft see the least competition at 30.9%.</p>
+</div>
+
+<!-- 12: Best month to sell -->
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8 lg:col-span-2">
+<h3 class="font-serif text-xl font-semibold text-navy-900">Best Closing Month for Bidding Competition</h3>
+<p class="text-sm text-slate-500 mb-4">Historical percent of sales that closed above list, by closing month (2006-2026)</p>
+<div class="chart-wrap mt-4"><svg class="chart" id="deepBestMonthChart" viewBox="0 0 1080 300"></svg><div class="tooltip" id="deepBestMonthTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100">May closings have the highest above-list rate at <b class="text-navy-800">34.5%</b>, with April and June right behind. Since contracts close 30-45 days after going under contract, listing in March or April puts you in that sweet spot.</p>
+</div>
+
+<!-- 15: Most mentioned features -->
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
+<h3 class="font-serif text-xl font-semibold text-navy-900">Most-Mentioned Listing Features</h3>
+<p class="text-sm text-slate-500 mb-4">Share of 2020-2026 listing remarks mentioning each feature</p>
+<div class="chart-wrap mt-4"><svg class="chart" id="deepFeatureFreqChart" viewBox="0 0 520 540"></svg><div class="tooltip" id="deepFeatureFreqTip"></div></div>
+</div>
+
+<!-- 16: Adjusted feature premiums -->
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8">
+<h3 class="font-serif text-xl font-semibold text-navy-900">Which Features Actually Move the Price?</h3>
+<p class="text-sm text-slate-500 mb-4">Median difference in adjusted $/sqft when a feature is mentioned vs. not, controlling for year, size, and location</p>
+<div class="chart-wrap mt-4"><svg class="chart" id="deepFeaturePremChart" viewBox="0 0 520 480"></svg><div class="tooltip" id="deepFeaturePremTip"></div></div>
+</div>
+
+<!-- 17: Neighborhood personality -->
+<div class="bg-white rounded-xl border border-slate-200 p-7 sm:p-8 lg:col-span-2">
+<h3 class="font-serif text-xl font-semibold text-navy-900">Neighborhood Personality</h3>
+<p class="text-sm text-slate-500 mb-4">Each neighborhood's most distinctive listing features vs. the citywide average (higher = more distinctive for that area)</p>
+<div class="chart-wrap mt-4" id="deepNeighDnaWrap"></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100">Old Town and North Longmont lead with "Downtown / walkable" mentions at <b class="text-navy-800">4.6x</b> and <b class="text-navy-800">2.8x</b> the citywide rate. Longmont Estates sellers lean into mountain views. Each neighborhood tells its own story in how listings are marketed.</p>
+</div>
+
+</div>
+</div>
+</section>
+
 <!-- Estimate teaser -->
 <section class="bg-white py-16 sm:py-24 border-t border-slate-200">
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
@@ -811,6 +924,138 @@ buildBarChart(document.getElementById('funSubPremiumChart'), document.getElement
   w: 520, h: 480, pad: {l: 180, r: 60, t: 10, b: 10},
   color: '#a37f3c', fmt: v => '+' + v.toFixed(1) + '%'
 });
+
+// =============== DEEP MARKET INTELLIGENCE ===============
+const DEEP = {"ownership": {"labels": ["Sunnyvale", "North Longmont", "Nelson Park", "Spring Valley", "Meadowview", "Clover Creek", "Hamilton Heights", "Sienna Park", "Meadow Mountain", "Quail Crossing", "The Shores", "Longmont Village", "Parkside", "Wolf Creek", "Skrbina", "Rider Ridge", "Renaissance", "Prospect", "Westerberg", "Dollhouse Village"], "values": [12.5, 11.6, 10.4, 10.2, 10.2, 9.8, 9.6, 9.5, 9.3, 9.3, 9.3, 9.3, 9.1, 9.1, 9.1, 9.0, 9.0, 9.0, 8.9, 8.8]}, "appreciation": {"labels": ["Dollhouse Village", "Southmoor Park", "Hilltop Village", "Longmont Village", "Park Ridge", "Melody Valley", "Woodmeadow", "Sunnyvale", "Horizon West", "Holiday Park", "Meadowlark", "Park North", "Clover Creek", "Old Town", "Pleasant Valley", "Fox Creek Farm", "Longmont Estates", "Wolf Creek", "Meadowview", "Stoney Ridge"], "values": [234.4, 204.1, 186.8, 179.2, 178.4, 171.1, 167.8, 166.2, 165.0, 161.8, 159.6, 149.2, 146.7, 145.0, 143.7, 141.0, 140.0, 136.4, 135.3, 134.6]}, "salesFrequency": {"labels": ["1", "2", "3", "4+"], "values": [61.6, 27.3, 8.6, 2.5]}, "decadeBuilt": {"labels": ["Pre-1950", "1950s", "1960s", "1970s", "1980s", "1990s", "2000s", "2010s"], "values": [7.3, 8.3, 7.8, 7.5, 7.3, 6.1, 5.4, 6.4]}, "styleAboveList": {"labels": ["Tri-level", "Bi-level / Split", "Ranch", "Two-story"], "values": [49.7, 46.0, 40.1, 35.6]}, "styleAppreciation": {"labels": ["Tri-level", "Bi-level / Split", "Ranch", "Two-story"], "values": [7.0, 7.8, 7.0, 6.0]}, "priceRange": {"labels": ["Under $400k", "$400k\u2013$499k", "$500k\u2013$599k", "$600k\u2013$699k", "$700k\u2013$799k", "$800k\u2013$999k", "$1M+"], "values": [53.3, 47.8, 38.8, 33.0, 33.6, 28.6, 19.7]}, "sizeRange": {"labels": ["Under 1,200", "1,200\u20131,499", "1,500\u20131,799", "1,800\u20132,199", "2,200\u20132,599", "2,600\u20133,199", "3,200+"], "values": [43.4, 43.8, 45.4, 43.7, 44.8, 39.0, 30.9]}, "bestMonth": {"labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], "values": [21.3, 25.2, 30.5, 34.2, 34.5, 34.0, 30.7, 28.6, 24.6, 23.8, 23.4, 22.0]}, "featureFrequency": {"labels": ["Updated / remodeled", "Fireplace", "Hardwood floors", "Open floor plan", "Granite counters", "Vaulted ceilings", "New roof", "Deck", "Finished basement", "Corner lot", "Quartz counters", "Near trails", "Mountain views", "Cul-de-sac", "Greenbelt / open space", "Mature trees", "Covered patio", "New windows"], "values": [33.5, 24.7, 19.3, 18.6, 15.0, 14.1, 12.7, 12.2, 9.8, 8.3, 7.9, 7.7, 6.7, 6.5, 5.8, 4.5, 3.8, 3.7]}, "featurePremiums": {"labels": ["Deck", "Mountain views", "Updated / remodeled", "Quartz counters", "Granite counters", "Cul-de-sac", "Hardwood floors", "Open floor plan", "Corner lot", "Greenbelt / open space", "Finished basement", "Vaulted ceilings", "Fireplace", "Main-floor primary", "Near trails", "New roof"], "values": [2.2, 1.8, 1.4, 0.9, 0.9, 0.8, 0.3, 0.2, 0.1, 0.0, 0.0, 0.0, -0.1, -0.5, -0.8, -1.6]}, "neighborhoodDNA": {"subdivisions": ["Old Town", "North Longmont", "Longmont Estates", "Southmoor Park", "Clover Creek", "Park Ridge", "Meadowlark", "Prospect", "Holiday Park", "The Shores"], "features": [["Downtown / walkable", "Updated / remodeled", "Mature trees"], ["Downtown / walkable", "RV parking", "Updated / remodeled"], ["Mountain views", "Mature trees", "Updated / remodeled"], ["Mature trees", "RV parking", "Updated / remodeled"], ["Greenbelt / open space", "Solar", "Mountain views"], ["Main-floor primary", "Mountain views", "Downtown / walkable"], ["Finished basement", "Updated / remodeled", "Solar"], ["Main-floor primary", "Open floor plan", "Finished basement"], ["Solar", "RV parking", "Updated / remodeled"], ["Solar", "Mature trees", "Finished basement"]], "lifts": [[4.6, 1.4, 1.1], [2.8, 2.3, 1.3], [2.5, 1.5, 1.2], [1.9, 1.8, 1.5], [2.8, 2.1, 1.1], [2.4, 1.9, 1.5], [1.5, 1.3, 1.1], [2.6, 1.7, 1.6], [2.9, 1.8, 1.3], [2.5, 1.2, 1.1]]}, "valueGain": {"labels": ["Sundance", "Prospect", "Rainbow Ridge", "Spring Valley Ph", "Golden Bear", "Golden Pond Estates", "Harvest Junction", "Rider Ridge Farm", "Shadow Grass Park", "Champion Greens", "Westlake Manor", "Yeager Farm", "Somerset Meadows", "West Point", "Horizon Parkway", "Meadow Mountain", "Meadowview", "Quail Crossing", "Creekside", "Clover Creek"], "values": [636631.0, 595633.0, 481247.0, 447644.0, 402319.0, 354307.0, 348921.0, 347510.0, 344238.0, 343305.0, 335018.0, 330340.0, 319309.0, 317988.0, 315723.0, 305833.0, 271360.0, 258405.0, 257932.0, 257550.0]}};
+
+buildBarChart(document.getElementById('deepOwnershipChart'), document.getElementById('deepOwnershipTip'), {
+  labels: DEEP.ownership.labels, values: DEEP.ownership.values,
+  w: 520, h: 580, pad: {l: 155, r: 70, t: 10, b: 10},
+  color: '#28436a', fmt: v => v.toFixed(1) + ' yrs'
+});
+
+buildBarChart(document.getElementById('deepAppreciationChart'), document.getElementById('deepAppreciationTip'), {
+  labels: DEEP.appreciation.labels, values: DEEP.appreciation.values,
+  w: 520, h: 580, pad: {l: 140, r: 70, t: 10, b: 10},
+  color: '#345580', fmt: v => v.toFixed(1) + '%'
+});
+
+buildBarChart(document.getElementById('deepValueGainChart'), document.getElementById('deepValueGainTip'), {
+  labels: DEEP.valueGain.labels, values: DEEP.valueGain.values,
+  w: 1080, h: 560, pad: {l: 175, r: 100, t: 10, b: 10},
+  color: '#28436a', fmt: v => '$' + Math.round(v).toLocaleString()
+});
+
+buildVertBarChart(document.getElementById('deepDecadeChart'), document.getElementById('deepDecadeTip'), {
+  labels: DEEP.decadeBuilt.labels, values: DEEP.decadeBuilt.values,
+  w: 520, h: 300, pad: {l: 40, r: 16, t: 20, b: 44},
+  color: '#345580', fmt: v => v.toFixed(1) + '%', allowNegative: false
+});
+
+buildVertBarChart(document.getElementById('deepSalesFreqChart'), document.getElementById('deepSalesFreqTip'), {
+  labels: DEEP.salesFrequency.labels.map(String), values: DEEP.salesFrequency.values,
+  w: 520, h: 200, pad: {l: 40, r: 16, t: 16, b: 36},
+  color: '#a37f3c', fmt: v => v.toFixed(1) + '%', allowNegative: false
+});
+
+buildVertBarChart(document.getElementById('deepStyleAboveChart'), document.getElementById('deepStyleAboveTip'), {
+  labels: DEEP.styleAboveList.labels, values: DEEP.styleAboveList.values,
+  w: 520, h: 220, pad: {l: 40, r: 16, t: 16, b: 50},
+  color: '#28436a', fmt: v => v.toFixed(1) + '%', allowNegative: false
+});
+
+buildVertBarChart(document.getElementById('deepStyleApprChart'), document.getElementById('deepStyleApprTip'), {
+  labels: DEEP.styleAppreciation.labels, values: DEEP.styleAppreciation.values,
+  w: 520, h: 220, pad: {l: 40, r: 16, t: 16, b: 50},
+  color: '#a37f3c', fmt: v => v.toFixed(1) + '%', allowNegative: false
+});
+
+buildVertBarChart(document.getElementById('deepPriceRangeChart'), document.getElementById('deepPriceRangeTip'), {
+  labels: DEEP.priceRange.labels, values: DEEP.priceRange.values,
+  w: 520, h: 300, pad: {l: 40, r: 16, t: 16, b: 56},
+  color: '#345580', fmt: v => v.toFixed(1) + '%', allowNegative: false
+});
+
+buildVertBarChart(document.getElementById('deepSizeRangeChart'), document.getElementById('deepSizeRangeTip'), {
+  labels: DEEP.sizeRange.labels, values: DEEP.sizeRange.values,
+  w: 520, h: 300, pad: {l: 40, r: 16, t: 16, b: 56},
+  color: '#886831', fmt: v => v.toFixed(1) + '%', allowNegative: false
+});
+
+buildVertBarChart(document.getElementById('deepBestMonthChart'), document.getElementById('deepBestMonthTip'), {
+  labels: DEEP.bestMonth.labels, values: DEEP.bestMonth.values,
+  w: 1080, h: 300, pad: {l: 44, r: 20, t: 16, b: 44},
+  color: '#28436a', fmt: v => v.toFixed(1) + '%', allowNegative: false
+});
+
+buildBarChart(document.getElementById('deepFeatureFreqChart'), document.getElementById('deepFeatureFreqTip'), {
+  labels: DEEP.featureFrequency.labels, values: DEEP.featureFrequency.values,
+  w: 520, h: 540, pad: {l: 175, r: 60, t: 10, b: 10},
+  color: '#345580', fmt: v => v.toFixed(1) + '%'
+});
+
+// Feature premiums: mixed positive/negative horizontal bars
+(function(){
+  const svgEl = document.getElementById('deepFeaturePremChart');
+  const tipEl = document.getElementById('deepFeaturePremTip');
+  const labels = DEEP.featurePremiums.labels;
+  const values = DEEP.featurePremiums.values;
+  const N = svgEl.namespaceURI;
+  const w = 520, h = 480;
+  const pad = {l: 180, r: 60, t: 10, b: 10};
+  const innerW = w - pad.l - pad.r;
+  const innerH = h - pad.t - pad.b;
+  const barH = Math.min(22, (innerH - labels.length * 4) / labels.length);
+  const gap = 4;
+  const maxAbs = Math.max(...values.map(Math.abs));
+  function el(tag, attrs) {
+    const e = document.createElementNS(N, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  const centerX = pad.l + innerW * (maxAbs / (maxAbs * 2));
+  svgEl.appendChild(el('line', {x1: centerX, x2: centerX, y1: pad.t, y2: h - pad.b, stroke: '#C3CBD6', 'stroke-width': 1.5}));
+  labels.forEach((label, i) => {
+    const y = pad.t + i * (barH + gap);
+    const val = values[i];
+    const barW = (Math.abs(val) / maxAbs) * (innerW / 2);
+    const x = val >= 0 ? centerX : centerX - barW;
+    const color = val >= 0 ? '#28436a' : '#A34A32';
+    svgEl.appendChild(el('rect', {x: x, y: y, width: barW, height: barH, rx: 2, fill: color, opacity: 0.85}));
+    const txt = el('text', {x: pad.l - 8, y: y + barH/2 + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#3B4F63', 'font-family': 'Inter, sans-serif'});
+    txt.textContent = label;
+    svgEl.appendChild(txt);
+    const vTxt = el('text', {x: (val >= 0 ? x + barW + 6 : x - 6), y: y + barH/2 + 4, 'text-anchor': val >= 0 ? 'start' : 'end', 'font-size': 11, 'font-weight': 600, fill: color, 'font-family': 'Inter, sans-serif'});
+    vTxt.textContent = (val >= 0 ? '+' : '') + val.toFixed(1) + '%';
+    svgEl.appendChild(vTxt);
+    const hit = el('rect', {x: pad.l, y: y, width: innerW, height: barH, fill: 'transparent', style: 'cursor:pointer'});
+    hit.addEventListener('mousemove', () => { tipEl.style.left = centerX + 'px'; tipEl.style.top = y + 'px'; tipEl.style.opacity = 1; tipEl.textContent = label + ': ' + (val>=0?'+':'') + val.toFixed(1) + '%'; });
+    hit.addEventListener('mouseleave', () => { tipEl.style.opacity = 0; });
+    svgEl.appendChild(hit);
+  });
+})();
+
+// Neighborhood personality: rendered as a styled HTML table instead of SVG heatmap
+(function(){
+  const wrap = document.getElementById('deepNeighDnaWrap');
+  const d = DEEP.neighborhoodDNA;
+  let html = '<div class="overflow-x-auto"><table class="w-full text-sm border-collapse">';
+  html += '<thead><tr class="border-b border-slate-300"><th class="text-left py-2 pr-4 font-semibold text-navy-900">Neighborhood</th><th class="text-left py-2 px-3">Top feature</th><th class="text-center py-2 px-2">Lift</th><th class="text-left py-2 px-3">2nd feature</th><th class="text-center py-2 px-2">Lift</th><th class="text-left py-2 px-3">3rd feature</th><th class="text-center py-2 px-2">Lift</th></tr></thead><tbody>';
+  d.subdivisions.forEach((sub, i) => {
+    html += '<tr class="border-b border-slate-100">';
+    html += `<td class="py-2.5 pr-4 font-medium text-navy-900">${sub}</td>`;
+    for (let j = 0; j < 3; j++) {
+      const lift = d.lifts[i][j];
+      const intensity = Math.min(lift / 5, 1);
+      const bg = `rgba(40,67,106,${(intensity * 0.3).toFixed(2)})`;
+      html += `<td class="py-2.5 px-3 text-slate-700">${d.features[i][j]}</td>`;
+      html += `<td class="py-2.5 px-2 text-center font-semibold" style="background:${bg}; border-radius:4px;">${lift.toFixed(1)}x</td>`;
+    }
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  wrap.innerHTML = html;
+})();
 
 </script>
 
