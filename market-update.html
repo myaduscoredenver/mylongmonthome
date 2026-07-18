@@ -289,6 +289,93 @@ Longmont<br/>CO 80501
 </div>
 </section>
 
+<!-- Fun Market Stats -->
+<section class="bg-white py-16 sm:py-24 border-t border-slate-200" id="fun-stats">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-10">
+<p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">Deeper Digs</p>
+<h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">Fun Market Stats for Single-Family Homes</h2>
+<p class="text-lg text-slate-600 max-w-2xl mx-auto">Seasonality, bidding wars, and which neighborhoods command the most above-list action, all from 21,600+ closed MLS sales (2006 to 2026).</p>
+</div>
+
+<div class="grid lg:grid-cols-2 gap-6">
+
+<!-- Chart 2: Citywide above-list % by year -->
+<div class="bg-[#faf9f6] rounded-xl border border-slate-200 p-7 sm:p-8 lg:col-span-2">
+<div class="flex justify-between items-start gap-4 flex-wrap mb-1">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">Citywide Share of Homes Sold Above List Price</h3>
+<p class="text-sm text-slate-500">Percent of all Longmont closings where the buyer paid more than the asking price</p>
+</div>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="funCitywideAboveChart" viewBox="0 0 1080 300"></svg><div class="tooltip" id="funCitywideAboveTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="funCitywideAboveInsight"></p>
+</div>
+
+<!-- Chart 7: Seasonal PSF anomaly -->
+<div class="bg-[#faf9f6] rounded-xl border border-slate-200 p-7 sm:p-8 lg:col-span-2">
+<div class="flex justify-between items-start gap-4 flex-wrap mb-1">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">When Do Homes Sell for the Most Per Square Foot?</h3>
+<p class="text-sm text-slate-500">Seasonal price-per-square-foot anomaly: how much above or below the yearly median each closing month tends to land</p>
+</div>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="funPsfAnomalyChart" viewBox="0 0 1080 320"></svg><div class="tooltip" id="funPsfAnomalyTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="funPsfAnomalyInsight"></p>
+</div>
+
+<!-- Chart 4: Sales seasonality -->
+<div class="bg-[#faf9f6] rounded-xl border border-slate-200 p-7 sm:p-8">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">When Do the Most Homes Close?</h3>
+<p class="text-sm text-slate-500">Average closed sales per month, 2006 to 2025</p>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="funSeasonalityChart" viewBox="0 0 520 300"></svg><div class="tooltip" id="funSeasonalityTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="funSeasonalityInsight"></p>
+</div>
+
+<!-- Chart 6: Above-list closings by month -->
+<div class="bg-[#faf9f6] rounded-xl border border-slate-200 p-7 sm:p-8">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">Which Month Produces the Most Bidding Wars?</h3>
+<p class="text-sm text-slate-500">Total above-list closings by closing month, 2006 to 2025</p>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="funAboveListMonthChart" viewBox="0 0 520 300"></svg><div class="tooltip" id="funAboveListMonthTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="funAboveListMonthInsight"></p>
+</div>
+
+<!-- Chart 5: Monthly transactions since 2020 -->
+<div class="bg-[#faf9f6] rounded-xl border border-slate-200 p-7 sm:p-8 lg:col-span-2">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">Monthly Transaction Volume Since 2020</h3>
+<p class="text-sm text-slate-500">Closed single-family transactions per month, showing the post-2021 cooldown in real time</p>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="funMonthlyTxChart" viewBox="0 0 1080 280"></svg><div class="tooltip" id="funMonthlyTxTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="funMonthlyTxInsight"></p>
+</div>
+
+<!-- Chart 1: Subdivision above-list rates (horizontal bar) -->
+<div class="bg-[#faf9f6] rounded-xl border border-slate-200 p-7 sm:p-8">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">Which Neighborhoods See the Most Bidding Wars?</h3>
+<p class="text-sm text-slate-500">Highest sold-above-list rates by subdivision, 2020 to 2026 (min 20 sales)</p>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="funSubAboveListChart" viewBox="0 0 520 480"></svg><div class="tooltip" id="funSubAboveListTip"></div></div>
+</div>
+
+<!-- Chart 3: Subdivision premium (horizontal bar) -->
+<div class="bg-[#faf9f6] rounded-xl border border-slate-200 p-7 sm:p-8">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">Which Neighborhoods Command the Biggest Premiums?</h3>
+<p class="text-sm text-slate-500">Highest median percent above list price when a bidding war happens, 2020 to 2026 (min 10 above-list sales)</p>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="funSubPremiumChart" viewBox="0 0 520 480"></svg><div class="tooltip" id="funSubPremiumTip"></div></div>
+</div>
+
+</div>
+</div>
+</section>
+
 <!-- Estimate teaser -->
 <section class="bg-white py-16 sm:py-24 border-t border-slate-200">
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
@@ -561,6 +648,170 @@ buildChart(document.getElementById('attCountChart'), document.getElementById('at
   years:ATTACHED_DATA.years.slice(0,-1).concat([2026]), values:ATTACHED_DATA.counts.slice(0,-1).concat([ATTACHED_DATA.proj2026]), w:1080, h:300, pad:{l:50,r:30,t:30,b:44},
   color:'#6b5227', fillOpacity:0.18, unit:'num', fmt:v=>Math.round(v).toLocaleString()+' homes', markLastLabel:true, dashedLastSegment:true
 });
+
+// =============== FUN MARKET STATS ===============
+const FUN = {"aboveListBySubdivision": {"labels": ["Dollhouse Village", "Skrbina", "Horizon Parkway", "Yeager Garden Acres", "Horizon West", "Westlake Manor", "Valley", "Park North", "Clover Creek", "Meadowlark", "Mill Village", "Southmoor Park", "Hamilton Heights", "Stoney Ridge", "Westerberg", "Nelson Park"], "values": [62.0, 60.0, 56.5, 56.0, 55.4, 54.5, 54.5, 54.1, 53.5, 53.4, 52.7, 50.5, 50.0, 50.0, 50.0, 50.0]}, "citywideAboveList": {"years": [2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "values": [15.3, 11.9, 15.7, 12.6, 8.8, 10.2, 13.2, 19.8, 27.3, 42.9, 45.0, 36.6, 36.0, 23.0, 36.2, 64.9, 56.3, 30.2, 25.5, 21.6, 24.1]}, "premiumBySubdivision": {"labels": ["Longmont Estates Lakeshore", "Dell Acres", "Old Town", "Fox Meadow", "Longmont Land Co", "Westerberg", "Longmont Ot", "Sun Valley", "Renaissance", "Meadow Mountain", "Woodmeadow", "Creekside", "Stoney Ridge", "Range View Acres", "Shores", "Montview Park"], "values": [7.5, 5.7, 5.7, 5.3, 5.1, 5.1, 4.8, 4.7, 4.6, 4.4, 4.3, 4.2, 4.1, 3.8, 3.7, 3.4]}, "seasonality": {"months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], "values": [52.7, 61.1, 85.6, 92.2, 105.0, 115.6, 109.4, 105.8, 91.8, 87.6, 76.2, 73.0]}, "monthlyTxSince2020": {"labels": ["2020-01", "2020-02", "2020-03", "2020-04", "2020-05", "2020-06", "2020-07", "2020-08", "2020-09", "2020-10", "2020-11", "2020-12", "2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06", "2021-07", "2021-08", "2021-09", "2021-10", "2021-11", "2021-12", "2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06"], "values": [64, 94, 103, 76, 87, 137, 134, 138, 123, 119, 122, 85, 46, 67, 87, 86, 99, 116, 133, 117, 134, 118, 101, 91, 61, 59, 84, 102, 115, 105, 97, 84, 91, 69, 66, 46, 40, 42, 70, 79, 88, 101, 69, 78, 75, 67, 44, 64, 46, 61, 76, 77, 99, 80, 85, 83, 75, 77, 68, 75, 48, 50, 84, 83, 102, 99, 80, 87, 81, 85, 51, 77, 43, 62, 72, 92, 104, 86]}, "aboveListByMonth": {"months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], "values": [224, 308, 522, 631, 724, 787, 671, 606, 451, 418, 357, 321]}, "psfAnomaly": {"months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], "values": [-5.96, -5.56, -1.37, 1.22, 1.0, 2.41, 0.95, 0.16, 0.26, 0.93, -0.04, 0.11]}};
+
+// Horizontal bar chart builder for subdivision rankings
+function buildBarChart(svgEl, tipEl, {labels, values, w, h, pad, color, fmt, unit}) {
+  svgEl.innerHTML = '';
+  const N = svgEl.namespaceURI;
+  const innerW = w - pad.l - pad.r;
+  const innerH = h - pad.t - pad.b;
+  const barH = Math.min(24, (innerH - labels.length * 4) / labels.length);
+  const gap = 4;
+  const maxVal = Math.max(...values);
+
+  function el(tag, attrs) {
+    const e = document.createElementNS(N, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  labels.forEach((label, i) => {
+    const y = pad.t + i * (barH + gap);
+    const barW = (values[i] / maxVal) * innerW;
+    // label
+    const txt = el('text', {x: pad.l - 8, y: y + barH/2 + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#3B4F63', 'font-family': 'Inter, sans-serif'});
+    txt.textContent = label;
+    svgEl.appendChild(txt);
+    // bar
+    const gradId = 'bg-' + Math.random().toString(36).slice(2,8);
+    const defs = el('defs', {});
+    const grad = el('linearGradient', {id: gradId, x1:'0', y1:'0', x2:'1', y2:'0'});
+    grad.appendChild(el('stop', {offset:'0%', 'stop-color': color, 'stop-opacity':'0.85'}));
+    grad.appendChild(el('stop', {offset:'100%', 'stop-color': color, 'stop-opacity':'1'}));
+    defs.appendChild(grad);
+    svgEl.appendChild(defs);
+    svgEl.appendChild(el('rect', {x: pad.l, y: y, width: barW, height: barH, rx: 3, fill: `url(#${gradId})`}));
+    // value label
+    const vTxt = el('text', {x: pad.l + barW + 6, y: y + barH/2 + 4, 'font-size': 11, 'font-weight': 600, fill: '#1B3A57', 'font-family': 'Inter, sans-serif'});
+    vTxt.textContent = fmt(values[i]);
+    svgEl.appendChild(vTxt);
+    // hover
+    const hit = el('rect', {x: pad.l, y: y, width: innerW, height: barH, fill: 'transparent', style: 'cursor:pointer'});
+    hit.addEventListener('mousemove', () => {
+      tipEl.style.left = (pad.l + barW/2) + 'px';
+      tipEl.style.top = y + 'px';
+      tipEl.style.opacity = 1;
+      tipEl.textContent = label + ': ' + fmt(values[i]);
+    });
+    hit.addEventListener('mouseleave', () => { tipEl.style.opacity = 0; });
+    svgEl.appendChild(hit);
+  });
+}
+
+// Vertical bar chart builder for monthly stats
+function buildVertBarChart(svgEl, tipEl, {labels, values, w, h, pad, color, fmt, allowNegative}) {
+  svgEl.innerHTML = '';
+  const N = svgEl.namespaceURI;
+  const innerW = w - pad.l - pad.r;
+  const innerH = h - pad.t - pad.b;
+  const vmin = allowNegative ? Math.min(0, ...values) : 0;
+  const vmax = Math.max(...values);
+  const vpad = (vmax - vmin) * 0.12;
+  const yMin = vmin - (allowNegative ? vpad : 0);
+  const yMax = vmax + vpad;
+  const barW = Math.min(36, (innerW - labels.length * 3) / labels.length);
+  const gap = (innerW - barW * labels.length) / (labels.length + 1);
+
+  function el(tag, attrs) {
+    const e = document.createElementNS(N, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  const y = v => pad.t + innerH - ((v - yMin) / (yMax - yMin)) * innerH;
+  const zeroY = y(0);
+
+  // gridlines
+  const gridCount = 4;
+  for (let g = 0; g <= gridCount; g++) {
+    const gv = yMin + (yMax - yMin) * g / gridCount;
+    const gy = y(gv);
+    svgEl.appendChild(el('line', {x1: pad.l, x2: w - pad.r, y1: gy, y2: gy, stroke: '#E5E9EF', 'stroke-width': 1}));
+    const lbl = el('text', {x: pad.l - 8, y: gy + 4, 'text-anchor': 'end', 'font-size': 10, fill: '#8592A3', 'font-family': 'Inter, sans-serif'});
+    lbl.textContent = fmt(Math.round(gv * 10) / 10);
+    svgEl.appendChild(lbl);
+  }
+  if (allowNegative) {
+    svgEl.appendChild(el('line', {x1: pad.l, x2: w - pad.r, y1: zeroY, y2: zeroY, stroke: '#C3CBD6', 'stroke-width': 1.5}));
+  }
+
+  labels.forEach((label, i) => {
+    const x = pad.l + gap + i * (barW + gap);
+    const val = values[i];
+    const barTop = val >= 0 ? y(val) : zeroY;
+    const barBot = val >= 0 ? zeroY : y(val);
+    const barH = Math.abs(barBot - barTop);
+    const barColor = val >= 0 ? color : '#A34A32';
+    svgEl.appendChild(el('rect', {x: x, y: barTop, width: barW, height: Math.max(barH, 1), rx: 2, fill: barColor, opacity: 0.85}));
+    // x-axis label
+    const t = el('text', {x: x + barW / 2, y: h - pad.b + 16, 'text-anchor': 'middle', 'font-size': 10, fill: '#8592A3', 'font-family': 'Inter, sans-serif'});
+    t.textContent = label;
+    svgEl.appendChild(t);
+    // hover
+    const hit = el('rect', {x: x, y: Math.min(barTop, barBot) - 4, width: barW, height: barH + 8, fill: 'transparent', style: 'cursor:pointer'});
+    hit.addEventListener('mousemove', () => {
+      tipEl.style.left = (x + barW / 2) + 'px';
+      tipEl.style.top = barTop + 'px';
+      tipEl.style.opacity = 1;
+      tipEl.textContent = label + ': ' + fmt(val);
+    });
+    hit.addEventListener('mouseleave', () => { tipEl.style.opacity = 0; });
+    svgEl.appendChild(hit);
+  });
+}
+
+// Render all 7 fun stats charts
+buildChart(document.getElementById('funCitywideAboveChart'), document.getElementById('funCitywideAboveTip'), {
+  years: FUN.citywideAboveList.years, values: FUN.citywideAboveList.values, w: 1080, h: 300, pad: {l: 44, r: 30, t: 24, b: 44},
+  color: '#28436a', fillOpacity: 0.18, unit: 'pct', fmt: v => v.toFixed(1) + '%', markLastLabel: true
+});
+document.getElementById('funCitywideAboveInsight').innerHTML = `At the 2021 peak, <b class="text-navy-800">65%</b> of Longmont homes sold above list. That's cooled to about <b class="text-navy-800">24%</b> in 2026, back closer to pre-boom levels but still well above the single-digit rates of 2010-2012.`;
+
+buildVertBarChart(document.getElementById('funPsfAnomalyChart'), document.getElementById('funPsfAnomalyTip'), {
+  labels: FUN.psfAnomaly.months, values: FUN.psfAnomaly.values, w: 1080, h: 320, pad: {l: 50, r: 20, t: 24, b: 44},
+  color: '#28436a', fmt: v => (v >= 0 ? '+' : '') + v.toFixed(1) + '%', allowNegative: true
+});
+document.getElementById('funPsfAnomalyInsight').innerHTML = `Homes closing in June sell for roughly <b class="text-navy-800">2.4% more per square foot</b> than the yearly median. January and February closings come in about <b class="text-navy-800">6% below</b>. If you can list so your closing lands in the May-June window, the data says you'll net more per square foot.`;
+
+buildVertBarChart(document.getElementById('funSeasonalityChart'), document.getElementById('funSeasonalityTip'), {
+  labels: FUN.seasonality.months, values: FUN.seasonality.values, w: 520, h: 300, pad: {l: 44, r: 16, t: 20, b: 44},
+  color: '#345580', fmt: v => Math.round(v) + ' sales', allowNegative: false
+});
+document.getElementById('funSeasonalityInsight').innerHTML = `June is Longmont's busiest closing month, averaging <b class="text-navy-800">116 sales per year</b>. January is the quietest at 53. Since contracts typically close 30-45 days after going under contract, the best time to <i>list</i> is usually April-May.`;
+
+buildVertBarChart(document.getElementById('funAboveListMonthChart'), document.getElementById('funAboveListMonthTip'), {
+  labels: FUN.aboveListByMonth.months, values: FUN.aboveListByMonth.values, w: 520, h: 300, pad: {l: 44, r: 16, t: 20, b: 44},
+  color: '#a37f3c', fmt: v => v.toLocaleString() + ' sales', allowNegative: false
+});
+document.getElementById('funAboveListMonthInsight').innerHTML = `June also produces the most above-list closings (<b class="text-navy-800">787</b> since 2006), followed closely by May (724). If attracting multiple offers matters to you, listing so you close in that window gives you the best odds.`;
+
+// Monthly tx since 2020: use the line chart builder, labeling every 6th month
+const txLabels = FUN.monthlyTxSince2020.labels;
+const txValues = FUN.monthlyTxSince2020.values;
+const txYears = txLabels.map((l, i) => {
+  const parts = l.split('-');
+  return (parseInt(parts[1]) === 1 || i === 0 || i === txLabels.length - 1) ? l : '';
+});
+buildChart(document.getElementById('funMonthlyTxChart'), document.getElementById('funMonthlyTxTip'), {
+  years: txLabels.map((l, i) => i % 6 === 0 || i === txLabels.length - 1 ? l : ''),
+  values: txValues, w: 1080, h: 280, pad: {l: 44, r: 20, t: 20, b: 44},
+  color: '#345580', fillOpacity: 0.14, unit: 'num', fmt: v => Math.round(v) + ' sales', markLastLabel: false
+});
+document.getElementById('funMonthlyTxInsight').innerHTML = `The 2020-2021 boom regularly hit 130+ closings per month. Since 2023, volume has settled into a 40-100 range, with the usual summer peaks and winter dips still clearly visible.`;
+
+buildBarChart(document.getElementById('funSubAboveListChart'), document.getElementById('funSubAboveListTip'), {
+  labels: FUN.aboveListBySubdivision.labels, values: FUN.aboveListBySubdivision.values,
+  w: 520, h: 480, pad: {l: 150, r: 60, t: 10, b: 10},
+  color: '#28436a', fmt: v => v.toFixed(1) + '%'
+});
+
+buildBarChart(document.getElementById('funSubPremiumChart'), document.getElementById('funSubPremiumTip'), {
+  labels: FUN.premiumBySubdivision.labels, values: FUN.premiumBySubdivision.values,
+  w: 520, h: 480, pad: {l: 180, r: 60, t: 10, b: 10},
+  color: '#a37f3c', fmt: v => '+' + v.toFixed(1) + '%'
+});
+
 </script>
 
 </body>
