@@ -476,19 +476,13 @@
 <p class="text-slate-700 font-medium mb-2">Renovation Premium Added</p>
 <p class="text-3xl font-semibold text-brass-700" id="renovationBoostDisplay">+$0</p>
 </div>
-<!-- Comp Basis (shown for condo/townhome estimates, where we lean on building-level comps) -->
-<div class="hidden bg-navy-50 rounded-xl p-6 mb-8 border border-navy-200" id="compBasisCard">
-<p class="text-navy-900 font-semibold mb-2" id="compBasisHeadline">Based on recent sales in your building</p>
-<p class="text-slate-700 text-sm mb-4" id="compBasisSubtext"></p>
-<div class="space-y-2" id="compBasisList"></div>
-</div>
 <!-- Info Text -->
 <div class="bg-navy-50 border-l-4 border-navy-700 rounded-lg p-6 mb-8">
 <p class="text-navy-900 font-semibold mb-2">Understanding Your Range</p>
 <p class="text-slate-700 text-sm mb-3">We show three scenarios because real estate valuation includes uncertainty:</p>
 <ul class="text-slate-700 text-sm space-y-2 ml-4 list-disc">
 <li><strong>Conservative:</strong> Market cools faster than expected, or your home's condition is stronger than we assessed</li>
-<li><strong>Mid-Range:</strong> <span id="midRangeBasisText">Our best estimate based on 14,878 Longmont comps and current market trends</span></li>
+<li><strong>Mid-Range:</strong> Our best estimate based on 14,878 Longmont comps and current market trends</li>
 <li><strong>Optimistic:</strong> Market stabilizes faster, or buyer demand strengthens in your neighborhood</li>
 </ul>
 <p class="text-slate-700 text-sm mt-3">Most homes sell within this range. Next steps? Let's connect to discuss your specific situation.</p>
@@ -1132,8 +1126,6 @@
         let currentSubdivision = null;
         let currentMultipleOffers = false;
         let selectedRenovations = [];
-        let currentIsAttached = false;
-        let currentComplexKey = null;
 
         // --- Market value model, calibrated 2026-07 against 152 real Longmont ---
         // --- active listings matched to their prior sold history.           ---
@@ -1266,177 +1258,60 @@
             return multiplier;
         }
 
-        // Pulls the street name (number and unit stripped) out of a free-text
-        // address, matching the same logic used to build SFH_STREET_STATS, so
-        // "628 Saint Andrews Dr, Longmont 80501" resolves to "SAINT ANDREWS DR".
-        function parseSfhStreetName(raw) {
-            const parsed = parseSfhAddress(raw);
-            return parsed ? parsed.street : null;
-        }
-
-        // Splits a free-text address into house number + street name, matching
-        // the same logic used to build SFH_RAW_COMPS.
-        function parseSfhAddress(raw) {
-            if (!raw) return null;
-            const SUFFIXES = new Set(['AVE','AV','ST','STREET','DR','DRIVE','CT','COURT','LN','LANE','CIR','CIRCLE',
-                'PL','PLACE','RD','ROAD','WAY','BLVD','BOULEVARD','PKWY','PARKWAY','TER','TERRACE','TRL','TRAIL','LOOP']);
-            const REPL = { AVENUE:'AVE', AV:'AVE', STREET:'ST', DRIVE:'DR', COURT:'CT', LANE:'LN',
-                CIRCLE:'CIR', PLACE:'PL', ROAD:'RD', BOULEVARD:'BLVD', PARKWAY:'PKWY', TERRACE:'TER', TRAIL:'TRL' };
-            let part = raw.split(',')[0].trim();
-            part = part.replace(/#\S+/g, ' ').replace(/\s+/g, ' ').trim();
-            const m = part.match(/^(\d+)(?:-\d+)?[A-Za-z]?\s+(.*)$/);
-            if (!m) return null;
-            const houseNum = parseInt(m[1], 10);
-            const tokens = m[2].split(' ');
-            let suffixIdx = null;
-            for (let i = 0; i < Math.min(tokens.length, 6); i++) {
-                const tt = tokens[i].replace(/[^A-Za-z]/g, '').toUpperCase();
-                if (SUFFIXES.has(tt)) suffixIdx = i;
-            }
-            let name = (suffixIdx !== null ? tokens.slice(0, suffixIdx + 1) : tokens).join(' ').toUpperCase();
-            name = name.replace(/[^A-Z0-9 ]/g, '');
-            name = name.split(' ').filter(Boolean).map(p => REPL[p] || p).join(' ');
-            if (!name || isNaN(houseNum)) return null;
-            return { houseNum, street: name };
-        }
-
-        // Mirrors the Python normalizer used to build the comp dataset: strips
-        // filing/phase/replat/section-style suffixes (and the "Fig"/"Flg" typo)
-        // without collapsing genuinely distinct communities into each other.
-        function normalizeSfhSubdivision(s) {
-            if (!s) return null;
-            let key = s.trim().toLowerCase().replace(/\s+/g, ' ');
-            let working = key.replace(/\bfig\b/g, 'flg');
-            const patterns = [
-                /\bflg\.?\s*\d+[a-z]?$/, /\bfiling\.?\s*\d+[a-z]?$/, /\bph\.?\s*\d+[a-z]?$/,
-                /\bphase\.?\s*\d+[a-z]?$/, /\bsec\.?\s*\d+[a-z]?$/, /\bsection\.?\s*\d+[a-z]?$/,
-                /\breplat\.?\s*[a-z0-9]*$/, /\brep\.?\s*[a-z0-9]*$/, /\bamd\.?$/, /\bamended$/,
-                /\bsupp\.?\s*\d*$/, /\bsupplement\.?\s*\d*$/, /\bprcl\.?\s*[a-z0-9]*$/,
-                /\bparcel\.?\s*[a-z0-9]*$/, /\baddition\.?\s*\d*$/, /\badd\.?\s*\d*$/,
-                /\bblk\.?\s*\d+$/, /\bbldg\.?\s*[a-z0-9]*$/, /\bfinal\s*plat$/, /\bsub(division)?$/,
-                /&?\s*\b(1st|2nd|3rd|4th|5th)$/, /\s\d+$/
-            ];
-            for (let pass = 0; pass < 5; pass++) {
-                let stripped = working;
-                for (const p of patterns) {
-                    const cand = working.replace(p, '').trim().replace(/\s+/g, ' ');
-                    if (cand !== working && cand.length > 0) { stripped = cand; break; }
-                }
-                if (stripped === working) break;
-                working = stripped;
-            }
-            working = working.replace(/^the\s+/, '');
-            return working || null;
-        }
-
-        // Live, per-property weighted comp engine for single-family homes.
-        // A street name alone isn't a reliable "nearby" signal — long streets like
-        // Sumner St run through half a dozen unrelated subdivisions over their
-        // length. So instead of averaging every sale on the same street name, this
-        // scores every candidate sale by how close its house number is to the
-        // subject's (on the same street) or whether it shares the subject's actual
-        // platted subdivision (which correctly ties together cross streets in the
-        // same block, e.g. Sumner/Judson/Juniper all tagged "Longmont Land Co 2"),
-        // plus how recent the sale is — then takes a weighted average instead of a
-        // flat median, so a sale two doors down outweighs one a mile up the street.
-        function resolveSfhPsf(streetName, houseNum, subKey) {
-            const citywide = window.SFH_CITYWIDE_STATS || { psf: 260, n: 0 };
-            const raw = window.SFH_RAW_COMPS;
-            if (!raw || !raw.length || (!streetName && !subKey)) {
-                return { psf: citywide.psf, compBasis: 'citywide', compN: citywide.n, compWindow: 'last 12 months', sampleComps: [] };
-            }
-
-            const asOf = new Date('2026-07-02T00:00:00');
-            const scored = [];
-            for (let i = 0; i < raw.length; i++) {
-                const r = raw[i]; // [address, street, houseNum, subdivisionNorm, price, psf, date]
-                const sameStreet = streetName && r[1] === streetName;
-                const sameSub = subKey && r[3] === subKey;
-                if (!sameStreet && !sameSub) continue;
-
-                const monthsStale = Math.max(0, (asOf - new Date(r[6] + 'T00:00:00')) / (1000 * 60 * 60 * 24 * 30));
-                // A citywide-market snapshot from a decade ago isn't useful even at a
-                // heavy discount — cut it rather than let sheer volume of old sales
-                // dilute the average. Same-street matches get a longer leash since
-                // proximity itself is strong evidence; subdivision-only matches need
-                // to be more recent to count at all.
-                if (sameStreet && monthsStale > 120) continue;
-                if (!sameStreet && monthsStale > 72) continue;
-
-                const recencyFactor = 1 / (1 + monthsStale / 24);
-
-                let base;
-                if (sameStreet) {
-                    const numDiff = (typeof houseNum === 'number' && !isNaN(houseNum)) ? Math.abs(r[2] - houseNum) : 400;
-                    base = 1.3 * (1 / (1 + numDiff / 150));
-                    if (sameSub) base *= 1.15; // same street AND same platted subdivision: extra confidence
-                } else {
-                    base = 0.5; // subdivision-only match, no house-number distance to lean on
-                }
-
-                const weight = base * recencyFactor;
-                if (weight > 0.08) scored.push({ addr: r[0], price: r[4], psf: r[5], date: r[6], weight, sameStreet });
-            }
-
-            if (scored.length === 0) {
-                return { psf: citywide.psf, compBasis: 'citywide', compN: citywide.n, compWindow: 'last 12 months', sampleComps: [] };
-            }
-
-            // Only the most relevant comps drive the number — a handful of close,
-            // recent sales should decide this, not hundreds of loosely-related ones.
-            scored.sort((a, b) => b.weight - a.weight);
-            const pool = scored.slice(0, 30);
-
-            let weightSum = 0, psfWeightedSum = 0;
-            pool.forEach(c => { weightSum += c.weight; psfWeightedSum += c.weight * c.psf; });
-            let blendedPsf = psfWeightedSum / weightSum;
-
-            // Thin/low-confidence pools (few close, recent comps) get pulled partway
-            // toward the citywide median rather than trusted outright.
-            const confidence = Math.min(weightSum / 3, 1);
-            blendedPsf = (blendedPsf * confidence) + (citywide.psf * (1 - confidence));
-
-            const sampleComps = pool.slice(0, 5).map(c => ({ address: c.addr, price: c.price, date: c.date, psf: c.psf }));
-
-            const usedStreet = pool.some(c => c.sameStreet && c.weight > 0.15);
-            return {
-                psf: blendedPsf,
-                compBasis: usedStreet ? 'street' : 'subdivision',
-                compN: pool.length,
-                compWindow: 'weighted by distance & recency',
-                sampleComps: sampleComps
-            };
-        }
-
         function calculateEquity(purchasePrice, purchaseDate, renovations = [], conditionThen = null, conditionNow = null, kitchen = null, investmentAmount = null, subdivision = null, multipleOffers = false) {
+            // 2026 LONGMONT BLOCK-LEVEL COMPS (from 476 actual closed sales)
+            // Blocks are rounded to nearest 100 (1200 block = 1200-1299, etc.)
+            const BLOCK_COMPS_2026 = {
+                0: { psf: 291.53, count: 20 }, 100: { psf: 301.29, count: 15 }, 200: { psf: 235.85, count: 16 },
+                300: { psf: 318.58, count: 4 }, 400: { psf: 236.38, count: 8 }, 500: { psf: 235.18, count: 12 },
+                600: { psf: 204.66, count: 16 }, 700: { psf: 282.68, count: 20 }, 800: { psf: 253.5, count: 24 },
+                900: { psf: 325.46, count: 6 }, 1000: { psf: 267.96, count: 21 }, 1100: { psf: 250.2, count: 13 },
+                1200: { psf: 256.93, count: 25 }, 1300: { psf: 280.75, count: 16 }, 1400: { psf: 239.77, count: 16 },
+                1500: { psf: 234.69, count: 20 }, 1600: { psf: 224.14, count: 21 }, 1700: { psf: 194.43, count: 13 },
+                1800: { psf: 273.91, count: 21 }, 1900: { psf: 232.46, count: 13 }, 2000: { psf: 231.36, count: 14 },
+                2100: { psf: 256.75, count: 24 }, 2200: { psf: 239.8, count: 24 }, 2300: { psf: 186.98, count: 17 },
+                2400: { psf: 250.51, count: 15 }, 2500: { psf: 256.76, count: 3 }, 2600: { psf: 258.7, count: 5 },
+                2700: { psf: 345.25, count: 1 }, 2800: { psf: 202.51, count: 3 }, 2900: { psf: 250.0, count: 7 },
+                3100: { psf: 215.87, count: 5 }, 3300: { psf: 260.75, count: 3 }, 3500: { psf: 308.89, count: 2 },
+                3600: { psf: 190.95, count: 2 }, 3700: { psf: 202.97, count: 1 }, 3800: { psf: 229.14, count: 3 },
+                3900: { psf: 290.47, count: 1 }, 4000: { psf: 330.43, count: 1 }, 4200: { psf: 265.4, count: 1 },
+                4300: { psf: 241.16, count: 1 }, 4500: { psf: 250.5, count: 3 }, 4700: { psf: 250.64, count: 1 },
+                4900: { psf: 265.6, count: 1 }, 5000: { psf: 264.36, count: 3 }, 5200: { psf: 211.45, count: 1 },
+                5400: { psf: 213.1, count: 1 }, 5500: { psf: 329.18, count: 3 }, 5600: { psf: 296.91, count: 8 },
+                5700: { psf: 250.0, count: 1 }, 6000: { psf: 301.5, count: 1 }
+            };
+
             const year = parseInt(purchaseDate);
             const currentYear = 2026;
             const yearsOwned = currentYear - year;
 
-            // Resolve subdivision the same way the SFH comp stats build script did,
-            // so lookups actually hit (strips filing/phase/replat suffixes and
-            // common typos, without collapsing genuinely distinct communities like
-            // "Reserve at Renaissance" into plain "Renaissance").
-            const subKey = normalizeSfhSubdivision(subdivision);
+            // EXTRACT BLOCK NUMBER FROM ADDRESS
+            // Block = first 1-4 digits, rounded to nearest 100
+            // e.g., "1747 Sumac St" -> 1700 block, "203 Main" -> 200 block
+            let blockNumber = null;
+            if (document.getElementById('addressInput')) {
+                const address = document.getElementById('addressInput').value;
+                const match = address.match(/^(\d{1,4})/);
+                if (match) {
+                    const firstDigits = parseInt(match[1]);
+                    blockNumber = (firstDigits / 100 | 0) * 100;  // Round down to nearest 100
+                }
+            }
 
-            // Pull the street name straight from whatever's in the address field
-            // right now, so this works whether the address came from the database
-            // or was corrected/typed by hand.
-            const addressInput = document.getElementById('addressInput');
-            const parsedSubject = addressInput ? parseSfhAddress(addressInput.value) : null;
-            const streetName = parsedSubject ? parsedSubject.street : null;
-            const houseNum = parsedSubject ? parsedSubject.houseNum : null;
+            // LOOK UP BLOCK COMPS - primary valuation driver
+            let neighborhoodPsf = 250;  // Default fallback
+            if (blockNumber && BLOCK_COMPS_2026[blockNumber]) {
+                neighborhoodPsf = BLOCK_COMPS_2026[blockNumber].psf;
+            }
 
-            const resolved = resolveSfhPsf(streetName, houseNum, subKey);
-            const neighborhoodPsf = resolved.psf;
+            // VALUATION: Use 2026 actual sold comp estimate
+            let currentValue = purchasePrice; // Fallback
 
-            // VALUATION: sqft x real comps-based $/sqft, leaning heavily on your
-            // own street first, then your subdivision, then the citywide median.
-            let currentValue = purchasePrice; // fallback if sqft is unavailable
-
+            // Try to get sqft from form
             if (document.getElementById('manualSqft')) {
                 const manualSqft = parseFloat(document.getElementById('manualSqft').value);
                 if (!isNaN(manualSqft) && manualSqft > 0) {
+                    // PRIMARY VALUATION: sqft × 2026 neighborhood median SOLD $/sqft
                     currentValue = manualSqft * neighborhoodPsf;
                 }
             }
@@ -1447,10 +1322,11 @@
                 currentValue *= conditionMultiplier;
             }
 
-            // Zone cooling adjustments are no longer applied here: real street- and
-            // subdivision-level comps already reflect how a given pocket of town has
-            // cooled or held up, so layering a hand-tuned discount on top would be
-            // double-counting.
+            // Apply zone cooling adjustments
+            const zoneAdjustment = getZoneAdjustment(subdivision);
+            if (zoneAdjustment < 0) {
+                currentValue *= (1 + zoneAdjustment);
+            }
 
             let renovationBoost = 0;
             renovations.forEach(reno => {
@@ -1472,110 +1348,8 @@
                 equity: Math.round(equity),
                 yearsOwned: yearsOwned,
                 renovationBoost: Math.round(renovationBoost),
-                neighborhoodComps: Math.round(neighborhoodPsf * 100) / 100,
-                neighborhood: subKey || 'default',
-                isAttached: false,
-                compBasis: resolved.compBasis,
-                compN: resolved.compN,
-                compWindow: resolved.compWindow,
-                sampleComps: resolved.sampleComps
-            };
-        }
-
-        // Normalize a subdivision string the same way the attached-unit stats
-        // build script did, so lookups actually hit.
-        function normalizeSubdivisionForAttached(s) {
-            if (!s) return null;
-            let out = s.toLowerCase().trim().replace(/\s+/g, ' ');
-            out = out.replace(/\b(condominiums?|condos?)\b/g, 'condos');
-            return out;
-        }
-
-        // ATTACHED-UNIT VALUATION MODEL
-        // Condos and townhomes vary building-to-building far more than single-family
-        // homes vary block-to-block, so this leans on real building-level comps first,
-        // falling back to the subdivision/complex name, then the citywide attached
-        // median only when nothing more specific is available.
-        function calculateAttachedEquity(purchasePrice, purchaseDate, renovations = [], conditionThen = null, conditionNow = null, kitchen = null, investmentAmount = null, subdivision = null, complexKey = null) {
-            const year = parseInt(purchaseDate);
-            const currentYear = 2026;
-            const yearsOwned = currentYear - year;
-
-            const complexStats = (complexKey && window.ATTACHED_COMPLEX_STATS) ? window.ATTACHED_COMPLEX_STATS[complexKey] : null;
-            const subKey = normalizeSubdivisionForAttached(subdivision);
-            const subStats = (subKey && window.ATTACHED_SUBDIVISION_STATS) ? window.ATTACHED_SUBDIVISION_STATS[subKey] : null;
-            const citywide = window.ATTACHED_CITYWIDE_STATS || { psf: 280, n: 0 };
-
-            // Secondary anchor: prefer the named subdivision/complex over the raw
-            // citywide number whenever we have it.
-            const secondaryPsf = subStats ? subStats.median_psf : citywide.psf;
-            const secondaryLabel = subStats ? `the ${subdivision || 'subdivision'} comps` : 'the citywide attached-home median';
-
-            let blendedPsf, compBasis, compN, compWindow, sampleComps = [];
-
-            if (complexStats && complexStats.n >= 1) {
-                // Weight the building's own comps more heavily as the sample grows,
-                // capping out so a single small building never fully overrides the
-                // broader market.
-                const wComplex = Math.min(0.35 + 0.05 * complexStats.n, 0.85);
-                blendedPsf = (complexStats.median_psf * wComplex) + (secondaryPsf * (1 - wComplex));
-                compBasis = 'complex';
-                compN = complexStats.n;
-                compWindow = complexStats.window;
-                sampleComps = complexStats.sample_comps || [];
-            } else if (subStats) {
-                blendedPsf = (subStats.median_psf * 0.6) + (citywide.psf * 0.4);
-                compBasis = 'subdivision';
-                compN = subStats.n;
-                compWindow = subStats.window;
-            } else {
-                blendedPsf = citywide.psf;
-                compBasis = 'citywide';
-                compN = citywide.n;
-                compWindow = 'last 12 months';
-            }
-
-            let currentValue = purchasePrice; // fallback
-            const sqftField = document.getElementById('manualSqft');
-            if (sqftField) {
-                const manualSqft = parseFloat(sqftField.value);
-                if (!isNaN(manualSqft) && manualSqft > 0) {
-                    currentValue = manualSqft * blendedPsf;
-                }
-            }
-
-            if (conditionThen && conditionNow && kitchen) {
-                const conditionMultiplier = getConditionMultiplier(conditionThen, conditionNow, kitchen, investmentAmount);
-                currentValue *= conditionMultiplier;
-            }
-
-            let renovationBoost = 0;
-            renovations.forEach(reno => {
-                if (reno === 'kitchen') renovationBoost += currentValue * 0.045;
-                if (reno === 'roof') renovationBoost += currentValue * 0.01; // HOA usually owns the roof on attached units
-                if (reno === 'hvac') renovationBoost += currentValue * 0.02;
-                if (reno === 'masterbath') renovationBoost += currentValue * 0.03;
-                if (reno === 'bathroom') renovationBoost += currentValue * 0.025;
-                if (reno === 'flooring') renovationBoost += currentValue * 0.035;
-                if (reno === 'windows') renovationBoost += currentValue * 0.02;
-            });
-
-            currentValue += renovationBoost;
-            const equity = currentValue - purchasePrice;
-
-            return {
-                originalPrice: purchasePrice,
-                currentValue: Math.round(currentValue),
-                equity: Math.round(equity),
-                yearsOwned: yearsOwned,
-                renovationBoost: Math.round(renovationBoost),
-                neighborhoodComps: Math.round(blendedPsf * 100) / 100,
-                neighborhood: subKey || 'default',
-                isAttached: true,
-                compBasis: compBasis,
-                compN: compN,
-                compWindow: compWindow,
-                sampleComps: sampleComps
+                neighborhoodComps: neighborhoodPsf,
+                blockNumber: blockNumber
             };
         }
 
@@ -1593,9 +1367,7 @@
                 return;
             }
 
-            currentCalculation = currentIsAttached
-                ? calculateAttachedEquity(price, year, selectedRenovations, conditionThen, conditionNow, kitchen, investment || null, currentSubdivision, currentComplexKey)
-                : calculateEquity(price, year, selectedRenovations, conditionThen, conditionNow, kitchen, investment || null, currentSubdivision, currentMultipleOffers);
+            currentCalculation = calculateEquity(price, year, selectedRenovations, conditionThen, conditionNow, kitchen, investment || null, currentSubdivision, currentMultipleOffers);
             displayResults(null, { purchasePrice: price, purchaseDate: year });
         }
 
@@ -1623,45 +1395,6 @@
                 document.getElementById('renovationBoostCard').classList.remove('hidden');
             } else {
                 document.getElementById('renovationBoostCard').classList.add('hidden');
-            }
-
-            const midRangeBasisText = document.getElementById('midRangeBasisText');
-            if (midRangeBasisText) {
-                midRangeBasisText.textContent = data.isAttached
-                    ? 'Our best estimate based on 5,700+ Longmont condo and townhome comps, weighted heavily toward sales in your own building'
-                    : 'Our best estimate based on 29,800+ Longmont home sales, weighted heavily toward recent sales on your own street';
-            }
-
-            const compBasisCard = document.getElementById('compBasisCard');
-            if (data.compBasis && compBasisCard) {
-                const headline = document.getElementById('compBasisHeadline');
-                const subtext = document.getElementById('compBasisSubtext');
-                const list = document.getElementById('compBasisList');
-                list.innerHTML = '';
-
-                const locationWord = data.isAttached ? 'building' : 'street';
-                const wideWord = data.isAttached ? 'community' : 'neighborhood';
-
-                if (data.compBasis === 'complex' || data.compBasis === 'street') {
-                    headline.textContent = `Based on ${data.compN} recent sale${data.compN === 1 ? '' : 's'} on your ${locationWord === 'building' ? 'building' : 'street'}`;
-                    subtext.textContent = `Median sold price here: ${formatCurrency(Math.round(data.neighborhoodComps))}/sqft (${data.compWindow}). We lean on your own ${locationWord}'s comps first, blended with the broader area for stability.`;
-                    (data.sampleComps || []).slice(0, 4).forEach(c => {
-                        const row = document.createElement('div');
-                        row.className = 'flex justify-between text-sm text-slate-700 bg-white rounded-lg px-4 py-2 border border-slate-200';
-                        const dateLabel = new Date(c.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-                        row.innerHTML = `<span>${c.address}</span><span class="font-semibold text-navy-900">${formatCurrency(c.price)} &middot; ${dateLabel}</span>`;
-                        list.appendChild(row);
-                    });
-                } else if (data.compBasis === 'subdivision') {
-                    headline.textContent = `Based on ${data.compN} recent sale${data.compN === 1 ? '' : 's'} in this ${wideWord}`;
-                    subtext.textContent = `We didn't find enough recent resales on your exact ${locationWord}, so this leans on comparable sales across the wider ${wideWord} (${data.compWindow}) at roughly ${formatCurrency(Math.round(data.neighborhoodComps))}/sqft.`;
-                } else {
-                    headline.textContent = data.isAttached ? 'Based on the citywide attached-home market' : 'Based on the citywide Longmont market';
-                    subtext.textContent = `We didn't find enough recent comps on your ${locationWord} or in your ${wideWord}, so this estimate leans on Longmont's citywide median${data.isAttached ? ' for condos and townhomes' : ''} (${formatCurrency(Math.round(data.neighborhoodComps))}/sqft, last 12 months).`;
-                }
-                compBasisCard.classList.remove('hidden');
-            } else if (compBasisCard) {
-                compBasisCard.classList.add('hidden');
             }
 
             document.getElementById('manualEntryForm').classList.add('hidden');
@@ -1749,29 +1482,17 @@
                 const kitchen = document.getElementById('manualKitchen').value;
                 const investment = document.getElementById('manualInvestment').value;
 
-                currentCalculation = currentIsAttached
-                    ? calculateAttachedEquity(
-                        currentCalculation.originalPrice,
-                        (2026 - currentCalculation.yearsOwned).toString(),
-                        selectedRenovations,
-                        conditionThen || null,
-                        conditionNow || null,
-                        kitchen || null,
-                        investment || null,
-                        currentSubdivision,
-                        currentComplexKey
-                    )
-                    : calculateEquity(
-                        currentCalculation.originalPrice,
-                        (2026 - currentCalculation.yearsOwned).toString(),
-                        selectedRenovations,
-                        conditionThen || null,
-                        conditionNow || null,
-                        kitchen || null,
-                        investment || null,
-                        currentSubdivision,
-                        currentMultipleOffers
-                    );
+                currentCalculation = calculateEquity(
+                    currentCalculation.originalPrice,
+                    (2026 - currentCalculation.yearsOwned).toString(),
+                    selectedRenovations,
+                    conditionThen || null,
+                    conditionNow || null,
+                    kitchen || null,
+                    investment || null,
+                    currentSubdivision,
+                    currentMultipleOffers
+                );
 
                 document.getElementById('currentValueDisplay').textContent = formatCurrency(currentCalculation.currentValue);
                 document.getElementById('equityDisplay').textContent = formatCurrency(currentCalculation.equity);
@@ -1895,24 +1616,6 @@
         let compsDbLoading = false;
         let compsDbLoaded = false;
 
-        // Loads a script once, tracking its own tiny loaded/loading flags on the
-        // window so multiple call sites can share state without globals collisions.
-        function loadScriptOnce(src, doneFlagName) {
-            return new Promise((resolve) => {
-                if (window[doneFlagName]) { resolve(); return; }
-                const script = document.createElement('script');
-                script.src = src;
-                script.onload = function () {
-                    window[doneFlagName] = true;
-                    resolve();
-                };
-                script.onerror = function () {
-                    resolve(); // don't block the rest of the app on a missing file
-                };
-                document.head.appendChild(script);
-            });
-        }
-
         function loadCompsDatabase() {
             if (compsDbLoading || compsDbLoaded) return;
             compsDbLoading = true;
@@ -1920,16 +1623,18 @@
             const msg = document.getElementById('dbLoadingMsg');
             if (msg) msg.classList.remove('hidden');
 
-            Promise.all([
-                loadScriptOnce('./comps_database.js', '__sfhDbDone'),
-                loadScriptOnce('./sfh_raw_comps.js', '__sfhRawDone'),
-                loadScriptOnce('./attached_comps_database.js', '__attachedDbDone'),
-                loadScriptOnce('./attached_comps_stats.js', '__attachedStatsDone')
-            ]).then(function () {
+            const script = document.createElement('script');
+            script.src = './comps_database.js';
+            script.onload = function () {
                 compsDbLoaded = true;
                 compsDbLoading = false;
                 if (msg) msg.classList.add('hidden');
-            });
+            };
+            script.onerror = function () {
+                compsDbLoading = false;
+                if (msg) msg.classList.add('hidden');
+            };
+            document.head.appendChild(script);
         }
 
         // Trigger 1: start loading as soon as the calculator section scrolls into view,
@@ -1961,23 +1666,6 @@
         const searchButton = document.getElementById('searchButton');
         const manualForm = document.getElementById('manualEntryForm');
 
-        // Both databases are ready once this returns true. Single-family comes from
-        // comps_database.js; condos/townhomes come from the two attached-unit files.
-        function dbsReady() {
-            return !!(window.COMPS_DATABASE && window.ATTACHED_COMPS_DATABASE);
-        }
-
-        // Look up one address key across both databases and return {source, record}.
-        function lookupAnyAddress(key) {
-            if (window.ATTACHED_COMPS_DATABASE && window.ATTACHED_COMPS_DATABASE[key]) {
-                return { source: 'attached', record: window.ATTACHED_COMPS_DATABASE[key] };
-            }
-            if (window.COMPS_DATABASE && window.COMPS_DATABASE[key]) {
-                return { source: 'sfh', record: window.COMPS_DATABASE[key] };
-            }
-            return null;
-        }
-
         addressInput.addEventListener('input', function(e) {
             const query = e.target.value.toLowerCase().trim();
 
@@ -1986,27 +1674,14 @@
                 return;
             }
 
-            if (!dbsReady()) {
+            if (!window.COMPS_DATABASE) {
                 loadCompsDatabase();
                 return;
             }
 
-            // Merge matches from both databases. Some townhome addresses ended up
-            // in both the SFH master list and the attached-unit file; when that
-            // happens, prefer the attached entry since its comps model fits condos/
-            // townhomes better. Prefer addresses that start with the query over ones
-            // that merely contain it, so typing a house number surfaces the right
-            // street first.
-            const sfhKeys = window.COMPS_DATABASE ? Object.keys(window.COMPS_DATABASE) : [];
-            const attachedKeys = window.ATTACHED_COMPS_DATABASE ? Object.keys(window.ATTACHED_COMPS_DATABASE) : [];
-            const seen = new Set();
-            const all = [];
-            attachedKeys.forEach(k => { if (!seen.has(k)) { seen.add(k); all.push({ key: k, source: 'attached' }); } });
-            sfhKeys.forEach(k => { if (!seen.has(k)) { seen.add(k); all.push({ key: k, source: 'sfh' }); } });
-
-            const starts = all.filter(a => a.key.startsWith(query));
-            const contains = all.filter(a => !a.key.startsWith(query) && a.key.includes(query));
-            const matches = starts.concat(contains).slice(0, 8);
+            const matches = Object.keys(window.COMPS_DATABASE)
+                .filter(addr => addr.includes(query))
+                .slice(0, 8);
 
             if (matches.length === 0) {
                 addressDropdown.classList.add('hidden');
@@ -2014,22 +1689,13 @@
             }
 
             addressDropdown.innerHTML = '';
-            matches.forEach(m => {
-                const record = m.source === 'attached' ? window.ATTACHED_COMPS_DATABASE[m.key] : window.COMPS_DATABASE[m.key];
+            matches.forEach(addr => {
                 const div = document.createElement('div');
-                div.className = 'px-4 py-3 border-b border-slate-200 cursor-pointer text-navy-900 hover:bg-navy-50 transition-colors flex items-center justify-between gap-3';
-                const label = document.createElement('span');
-                label.textContent = record.address;
-                div.appendChild(label);
-                if (m.source === 'attached') {
-                    const badge = document.createElement('span');
-                    badge.className = 'text-xs font-semibold text-navy-500 bg-navy-50 px-2 py-0.5 rounded-full whitespace-nowrap';
-                    badge.textContent = 'Condo/Townhome';
-                    div.appendChild(badge);
-                }
+                div.className = 'px-4 py-3 border-b border-slate-200 cursor-pointer text-navy-900 hover:bg-navy-50 transition-colors';
+                div.textContent = window.COMPS_DATABASE[addr].address;
                 div.onclick = (e) => {
                     e.preventDefault();
-                    selectAddress(m.key, m.source);
+                    selectAddress(addr);
                 };
                 addressDropdown.appendChild(div);
             });
@@ -2043,10 +1709,8 @@
             }
         });
 
-        function selectAddress(addr, source) {
-            const lookup = source === 'attached' ? window.ATTACHED_COMPS_DATABASE[addr] : window.COMPS_DATABASE[addr];
-            if (!lookup) return;
-
+        function selectAddress(addr) {
+            const lookup = window.COMPS_DATABASE[addr];
             addressInput.value = lookup.address;
             addressDropdown.classList.add('hidden');
 
@@ -2068,11 +1732,10 @@
                 document.body.appendChild(sqftField);
             }
 
+            // Stash subdivision + multiple-offers so calculateManual() can factor
+            // in zone-specific cooling and the boom-period fair-value adjustment.
             currentSubdivision = lookup.subdivision || null;
-            currentIsAttached = (source === 'attached');
-            currentComplexKey = currentIsAttached ? (lookup.complex_key || null) : null;
-            // Multiple-offers boom adjustment only applies to the single-family model.
-            currentMultipleOffers = currentIsAttached ? false : !!lookup.multiple_offers;
+            currentMultipleOffers = !!lookup.multiple_offers;
 
             manualForm.classList.remove('hidden');
             setTimeout(() => {
@@ -2086,17 +1749,17 @@
 
             addressDropdown.classList.add('hidden');
 
-            // If the databases haven't finished loading yet (e.g. clicked very fast
-            // on a slow connection), wait for them instead of wrongly falling back
+            // If the database hasn't finished loading yet (e.g. clicked very fast
+            // on a slow connection), wait for it instead of wrongly falling back
             // to manual entry.
-            if (!dbsReady()) {
+            if (!window.COMPS_DATABASE) {
                 loadCompsDatabase();
                 const msg = document.getElementById('dbLoadingMsg');
                 if (msg) msg.classList.remove('hidden');
                 let attempts = 0;
                 const waitForDb = setInterval(function () {
                     attempts++;
-                    if (dbsReady()) {
+                    if (window.COMPS_DATABASE) {
                         clearInterval(waitForDb);
                         searchButton.click();
                     } else if (attempts > 40) { // ~10s timeout
@@ -2107,15 +1770,12 @@
                 return;
             }
 
-            const found = lookupAnyAddress(query);
-            if (found) {
-                selectAddress(query, found.source);
+            if (window.COMPS_DATABASE[query]) {
+                selectAddress(query);
             } else {
                 // Address not found - show manual entry.
                 currentSubdivision = null;
                 currentMultipleOffers = false;
-                currentIsAttached = false;
-                currentComplexKey = null;
                 manualForm.classList.remove('hidden');
                 setTimeout(() => {
                     manualForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
