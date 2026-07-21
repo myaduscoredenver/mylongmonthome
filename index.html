@@ -388,6 +388,11 @@
 </div>
 </div>
 <div>
+<label class="block text-sm font-medium text-slate-700 mb-2">Finished Living Area (Sq Ft)</label>
+<input class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualSqft" min="300" placeholder="1800" type="number"/>
+<p class="text-xs text-slate-500 mt-1">Used to compare your home with similarly sized recent sales.</p>
+</div>
+<div>
 <label class="block text-sm font-medium text-slate-700 mb-2">Condition When You Bought It</label>
 <select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualConditionThen">
 <option value="">Select condition</option>
@@ -476,13 +481,18 @@
 <p class="text-slate-700 font-medium mb-2">Renovation Premium Added</p>
 <p class="text-3xl font-semibold text-brass-700" id="renovationBoostDisplay">+$0</p>
 </div>
+<div class="bg-white rounded-xl p-6 mb-8 border border-slate-200" id="compBasisCard">
+<p class="text-navy-900 font-semibold mb-2">Comparable Sales Used</p>
+<p class="text-slate-700 text-sm" id="compBasisText">Loading comparable-sale details…</p>
+<div class="mt-4 space-y-2 text-sm" id="compList"></div>
+</div>
 <!-- Info Text -->
 <div class="bg-navy-50 border-l-4 border-navy-700 rounded-lg p-6 mb-8">
 <p class="text-navy-900 font-semibold mb-2">Understanding Your Range</p>
 <p class="text-slate-700 text-sm mb-3">We show three scenarios because real estate valuation includes uncertainty:</p>
 <ul class="text-slate-700 text-sm space-y-2 ml-4 list-disc">
 <li><strong>Conservative:</strong> Market cools faster than expected, or your home's condition is stronger than we assessed</li>
-<li><strong>Mid-Range:</strong> Our best estimate based on 14,878 Longmont comps and current market trends</li>
+<li><strong>Mid-Range:</strong> A comp-weighted estimate using the most comparable recent Longmont sales</li>
 <li><strong>Optimistic:</strong> Market stabilizes faster, or buyer demand strengthens in your neighborhood</li>
 </ul>
 <p class="text-slate-700 text-sm mt-3">Most homes sell within this range. Next steps? Let's connect to discuss your specific situation.</p>
@@ -1122,666 +1132,178 @@
     </script>
 <!-- Home Value Calculator: valuation engine -->
 <script>
-        let currentCalculation = null;
-        let currentSubdivision = null;
-        let currentMultipleOffers = false;
-        let selectedRenovations = [];
+let currentCalculation = null;
+let currentSubdivision = null;
+let currentMultipleOffers = false;
+let currentPropertyKey = null;
+let currentProperty = null;
+let currentNeighborhood = null;
+let selectedRenovations = [];
 
-        // --- Market value model, calibrated 2026-07 against 152 real Longmont ---
-        // --- active listings matched to their prior sold history.           ---
-        //
-        // Uses the actual observed ratio of (current list price / original
-        // purchase price) for real Longmont properties, grouped by purchase
-        // year, using a conservative percentile (15th for 2020+ purchases,
-        // where the data is noisiest and most consequential; 25th for
-        // earlier years) so the model sits below the low end of real
-        // outcomes rather than the middle. A flat 8% safety margin is
-        // layered on top so estimates stay below real list prices in the
-        // vast majority of cases.
-        function getMarketMultiplier(purchaseYear) {
-            const table = {
-                2006: 2.0315, 2007: 2.3738, 2008: 2.4545, 2009: 2.7786, 2010: 3.2280,
-                2011: 2.5566, 2012: 2.3390, 2013: 2.0148, 2014: 1.9222, 2015: 1.7622,
-                2016: 1.5354, 2017: 1.4496, 2018: 1.4215, 2019: 1.2278, 2020: 1.2814,
-                2021: 1.0138, 2022: 0.9396, 2023: 0.9650, 2024: 0.9769, 2025: 0.9800
-            };
-            const SAFETY_MARGIN = 0.08;
-
-            // The safety margin exists to cover uncertainty that builds up over
-            // years of citywide drift. A purchase from the last ~year doesn't
-            // carry that uncertainty — the sale price itself IS current market
-            // evidence, not something to be second-guessed on top of. So the
-            // most recent purchase year (and this year) skip the margin and
-            // use the table value directly.
-            const RECENT_CUTOFF = 2025;
-
-            if (purchaseYear in table) {
-                const margin = (purchaseYear >= RECENT_CUTOFF) ? 0 : SAFETY_MARGIN;
-                return table[purchaseYear] * (1 - margin);
-            }
-            if (purchaseYear > 2025) {
-                // Purchased this year — not enough market history yet; treat as flat, no margin.
-                return 1.0;
-            }
-            // Before 2006 (outside the real reality-check data): chain the old
-            // flat +4%/year assumption from the purchase year up to 2006, then
-            // apply the real 2006 multiplier from there.
-            const yearsBefore2006 = 2006 - purchaseYear;
-            const preTableGrowth = Math.pow(1.04, yearsBefore2006);
-            return preTableGrowth * table[2006] * (1 - SAFETY_MARGIN);
-        }
-
-        // One-time adjustment for documented premium subdivisions that have
-        // cooled faster than the citywide average since the boom — matched by
-        // exact subdivision name so nearby/compound MLS tags (e.g. "Longs
-        // Peak, Old Town") aren't accidentally swept in.
-        function getZoneAdjustment(subdivision) {
-            if (!subdivision) return 0;
-            const zoneAdjustments = {
-                'old town': -0.05,
-                "brown's replat": -0.04,
-                'browns replat': -0.04,
-                'mountain view west': -0.02,
-                'longmont land co 2': -0.02
-            };
-            const key = subdivision.trim().toLowerCase();
-            return zoneAdjustments.hasOwnProperty(key) ? zoneAdjustments[key] : 0;
-        }
-
-        function getConditionMultiplier(conditionThen, conditionNow, kitchen, investmentAmount = null) {
-            let multiplier = 1.0;
-
-            const conditionKey = `${conditionThen}-${conditionNow}`;
-            const conditionMultipliers = {
-                'fixer-nothing': 0.92,
-                'fixer-improvements': 1.08,
-                'fixer-remodeled': 1.14,
-                'outdated-nothing': 0.96,
-                'outdated-improvements': 1.09,
-                'outdated-remodeled': 1.15,
-                'upgrades-nothing': 1.02,
-                'upgrades-improvements': 1.07,
-                'upgrades-remodeled': 1.12,
-                'remodeled-nothing': 1.04,
-                'remodeled-remodeled': 1.08,
-                'amazing-nothing': 1.05,
-                'amazing-remodeled': 1.07
-            };
-
-            multiplier *= conditionMultipliers[conditionKey] || 1.0;
-
-            const kitchenMultipliers = {
-                'barely': 0.94,
-                'outdated': 1.03,
-                'remodeled': 1.05,
-                'luxury': 1.08
-            };
-
-            multiplier *= kitchenMultipliers[kitchen] || 1.0;
-
-            if (conditionNow === 'improvements' || conditionNow === 'remodeled') {
-                // Two tracks: if the kitchen is remodeled or luxury, assume the
-                // bulk of the reported spend went there — kitchens carry a
-                // stronger renovation ROI than a generic mix of updates (e.g.
-                // basement, cosmetic work), so that spend earns a bigger share
-                // of the condition/kitchen multiplier's upside. Otherwise, use
-                // the general (lower) scaling since the money was more likely
-                // spread across lower-ROI projects.
-                const kitchenFocusedMultipliers = {
-                    '0to10': 0.45,
-                    '10to25': 0.70,
-                    '25to50': 0.95,
-                    '50to75': 1.10,
-                    '75to100': 1.20,
-                    '100to150': 1.30,
-                    'over150': 1.40
-                };
-                const generalInvestmentMultipliers = {
-                    '0to10': 0.35,
-                    '10to25': 0.55,
-                    '25to50': 0.75,
-                    '50to75': 0.90,
-                    '75to100': 1.00,
-                    '100to150': 1.10,
-                    'over150': 1.20
-                };
-
-                const kitchenSpendLikely = (kitchen === 'remodeled' || kitchen === 'luxury');
-                const investmentMultipliers = kitchenSpendLikely ? kitchenFocusedMultipliers : generalInvestmentMultipliers;
-
-                if (investmentAmount && investmentMultipliers[investmentAmount]) {
-                    const investmentFactor = investmentMultipliers[investmentAmount];
-                    multiplier = 1 + ((multiplier - 1) * investmentFactor);
-                }
-            }
-
-            return multiplier;
-        }
-
-        function calculateEquity(purchasePrice, purchaseDate, renovations = [], conditionThen = null, conditionNow = null, kitchen = null, investmentAmount = null, subdivision = null, multipleOffers = false) {
-            // 2026 LONGMONT BLOCK-LEVEL COMPS (from 476 actual closed sales)
-            // Blocks are rounded to nearest 100 (1200 block = 1200-1299, etc.)
-            const BLOCK_COMPS_2026 = {
-                0: { psf: 291.53, count: 20 }, 100: { psf: 301.29, count: 15 }, 200: { psf: 235.85, count: 16 },
-                300: { psf: 318.58, count: 4 }, 400: { psf: 236.38, count: 8 }, 500: { psf: 235.18, count: 12 },
-                600: { psf: 204.66, count: 16 }, 700: { psf: 282.68, count: 20 }, 800: { psf: 253.5, count: 24 },
-                900: { psf: 325.46, count: 6 }, 1000: { psf: 267.96, count: 21 }, 1100: { psf: 250.2, count: 13 },
-                1200: { psf: 256.93, count: 25 }, 1300: { psf: 280.75, count: 16 }, 1400: { psf: 239.77, count: 16 },
-                1500: { psf: 234.69, count: 20 }, 1600: { psf: 224.14, count: 21 }, 1700: { psf: 194.43, count: 13 },
-                1800: { psf: 273.91, count: 21 }, 1900: { psf: 232.46, count: 13 }, 2000: { psf: 231.36, count: 14 },
-                2100: { psf: 256.75, count: 24 }, 2200: { psf: 239.8, count: 24 }, 2300: { psf: 186.98, count: 17 },
-                2400: { psf: 250.51, count: 15 }, 2500: { psf: 256.76, count: 3 }, 2600: { psf: 258.7, count: 5 },
-                2700: { psf: 345.25, count: 1 }, 2800: { psf: 202.51, count: 3 }, 2900: { psf: 250.0, count: 7 },
-                3100: { psf: 215.87, count: 5 }, 3300: { psf: 260.75, count: 3 }, 3500: { psf: 308.89, count: 2 },
-                3600: { psf: 190.95, count: 2 }, 3700: { psf: 202.97, count: 1 }, 3800: { psf: 229.14, count: 3 },
-                3900: { psf: 290.47, count: 1 }, 4000: { psf: 330.43, count: 1 }, 4200: { psf: 265.4, count: 1 },
-                4300: { psf: 241.16, count: 1 }, 4500: { psf: 250.5, count: 3 }, 4700: { psf: 250.64, count: 1 },
-                4900: { psf: 265.6, count: 1 }, 5000: { psf: 264.36, count: 3 }, 5200: { psf: 211.45, count: 1 },
-                5400: { psf: 213.1, count: 1 }, 5500: { psf: 329.18, count: 3 }, 5600: { psf: 296.91, count: 8 },
-                5700: { psf: 250.0, count: 1 }, 6000: { psf: 301.5, count: 1 }
-            };
-
-            const year = parseInt(purchaseDate);
-            const currentYear = 2026;
-            const yearsOwned = currentYear - year;
-
-            // EXTRACT BLOCK NUMBER FROM ADDRESS
-            // Block = first 1-4 digits, rounded to nearest 100
-            // e.g., "1747 Sumac St" -> 1700 block, "203 Main" -> 200 block
-            let blockNumber = null;
-            if (document.getElementById('addressInput')) {
-                const address = document.getElementById('addressInput').value;
-                const match = address.match(/^(\d{1,4})/);
-                if (match) {
-                    const firstDigits = parseInt(match[1]);
-                    blockNumber = (firstDigits / 100 | 0) * 100;  // Round down to nearest 100
-                }
-            }
-
-            // LOOK UP BLOCK COMPS - primary valuation driver
-            let neighborhoodPsf = 250;  // Default fallback
-            if (blockNumber && BLOCK_COMPS_2026[blockNumber]) {
-                neighborhoodPsf = BLOCK_COMPS_2026[blockNumber].psf;
-            }
-
-            // VALUATION: Use 2026 actual sold comp estimate
-            let currentValue = purchasePrice; // Fallback
-
-            // Try to get sqft from form
-            if (document.getElementById('manualSqft')) {
-                const manualSqft = parseFloat(document.getElementById('manualSqft').value);
-                if (!isNaN(manualSqft) && manualSqft > 0) {
-                    // PRIMARY VALUATION: sqft × 2026 neighborhood median SOLD $/sqft
-                    currentValue = manualSqft * neighborhoodPsf;
-                }
-            }
-
-            // Apply condition multipliers ONLY if user selected them
-            if (conditionThen && conditionNow && kitchen) {
-                const conditionMultiplier = getConditionMultiplier(conditionThen, conditionNow, kitchen, investmentAmount);
-                currentValue *= conditionMultiplier;
-            }
-
-            // Apply zone cooling adjustments
-            const zoneAdjustment = getZoneAdjustment(subdivision);
-            if (zoneAdjustment < 0) {
-                currentValue *= (1 + zoneAdjustment);
-            }
-
-            let renovationBoost = 0;
-            renovations.forEach(reno => {
-                if (reno === 'kitchen') renovationBoost += currentValue * 0.045;
-                if (reno === 'roof') renovationBoost += currentValue * 0.025;
-                if (reno === 'hvac') renovationBoost += currentValue * 0.02;
-                if (reno === 'masterbath') renovationBoost += currentValue * 0.03;
-                if (reno === 'bathroom') renovationBoost += currentValue * 0.025;
-                if (reno === 'flooring') renovationBoost += currentValue * 0.035;
-                if (reno === 'windows') renovationBoost += currentValue * 0.02;
-            });
-
-            currentValue += renovationBoost;
-            const equity = currentValue - purchasePrice;
-
-            return {
-                originalPrice: purchasePrice,
-                currentValue: Math.round(currentValue),
-                equity: Math.round(equity),
-                yearsOwned: yearsOwned,
-                renovationBoost: Math.round(renovationBoost),
-                neighborhoodComps: neighborhoodPsf,
-                blockNumber: blockNumber
-            };
-        }
-
-        // Manual entry handler
-        function calculateManual() {
-            const year = document.getElementById('manualPurchaseYear').value;
-            const price = parseFloat(document.getElementById('manualPurchasePrice').value);
-            const conditionThen = document.getElementById('manualConditionThen').value;
-            const conditionNow = document.getElementById('manualConditionNow').value;
-            const kitchen = document.getElementById('manualKitchen').value;
-            const investment = document.getElementById('manualInvestment').value;
-
-            if (!year || !price || !conditionThen || !conditionNow || !kitchen) {
-                alert('Please fill in all required fields');
-                return;
-            }
-
-            currentCalculation = calculateEquity(price, year, selectedRenovations, conditionThen, conditionNow, kitchen, investment || null, currentSubdivision, currentMultipleOffers);
-            displayResults(null, { purchasePrice: price, purchaseDate: year });
-        }
-
-        function displayResults(property, manual = null) {
-            const data = currentCalculation;
-
-            // Calculate range: Conservative (-8%), Mid-Range (base), Optimistic (+8%)
-            const conservative = Math.round(data.currentValue * 0.92);
-            const midRange = Math.round(data.currentValue);
-            const optimistic = Math.round(data.currentValue * 1.08);
-
-            const midRangeEquity = data.equity;
-
-            document.getElementById('purchasePriceDisplay').textContent = formatCurrency(data.originalPrice);
-            document.getElementById('yearsOwnedDisplay').textContent = data.yearsOwned + ' years';
-
-            document.getElementById('conservativeDisplay').textContent = formatCurrency(conservative);
-            document.getElementById('midRangeDisplay').textContent = formatCurrency(midRange);
-            document.getElementById('optimisticDisplay').textContent = formatCurrency(optimistic);
-
-            document.getElementById('equityDisplay').textContent = formatCurrency(midRangeEquity);
-
-            if (data.renovationBoost > 0) {
-                document.getElementById('renovationBoostDisplay').textContent = '+' + formatCurrency(data.renovationBoost);
-                document.getElementById('renovationBoostCard').classList.remove('hidden');
-            } else {
-                document.getElementById('renovationBoostCard').classList.add('hidden');
-            }
-
-            document.getElementById('manualEntryForm').classList.add('hidden');
-            document.getElementById('resultsSection').classList.remove('hidden');
-
-            setTimeout(() => {
-                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
-            }, 200);
-
-            // Capture estimator data to Formspree (fire-and-forget, no UI feedback needed)
-            const conditionThenEl = document.getElementById('manualConditionThen');
-            const conditionNowEl = document.getElementById('manualConditionNow');
-            const kitchenEl = document.getElementById('manualKitchen');
-
-            const conditionLabels = {
-                'fixer': 'A true fixer upper',
-                'outdated': 'OK, but definitely outdated',
-                'upgrades': 'Some upgrades',
-                'remodeled': 'Fully remodeled',
-                'amazing': 'Fully remodeled with amazing features and finishes'
-            };
-            const conditionNowLabels = {
-                'nothing': "I didn't do anything",
-                'improvements': 'A few improvements',
-                'remodeled': 'I completely remodeled it'
-            };
-            const kitchenLabels = {
-                'barely': 'Barely functional',
-                'outdated': 'Outdated but nice',
-                'remodeled': 'Remodeled',
-                'luxury': "Luxury - it's a chef's kitchen"
-            };
-
-            const estimatorPayload = new FormData();
-            estimatorPayload.append('_subject', 'Home Value Check - MyLongmontHome.com');
-            estimatorPayload.append('Form', 'Home Value Check');
-            estimatorPayload.append('Address', document.getElementById('addressInput').value || 'Manual entry');
-            estimatorPayload.append('You Paid', formatCurrency(data.originalPrice));
-            estimatorPayload.append('Years Owned', data.yearsOwned + ' years');
-            estimatorPayload.append('Conservative Value', formatCurrency(conservative));
-            estimatorPayload.append('Mid-Range Value', formatCurrency(midRange));
-            estimatorPayload.append('Optimistic Value', formatCurrency(optimistic));
-            estimatorPayload.append('Equity Built (Mid-Range)', formatCurrency(midRangeEquity));
-            estimatorPayload.append('Condition When Bought', conditionLabels[conditionThenEl.value] || conditionThenEl.value || 'Not specified');
-            estimatorPayload.append('Condition Today', conditionNowLabels[conditionNowEl.value] || conditionNowEl.value || 'Not specified');
-            estimatorPayload.append('Tell Me About the Kitchen', kitchenLabels[kitchenEl.value] || kitchenEl.value || 'Not specified');
-
-            // Use the same Formspree fetch pattern as the working consultation form.
-            // The estimator remains uninterrupted; failures are logged for troubleshooting.
-            fetch('https://formspree.io/f/mlgqdnan', {
-                method: 'POST',
-                body: estimatorPayload,
-                headers: { 'Accept': 'application/json' }
-            }).then(async response => {
-                if (!response.ok) {
-                    const responseData = await response.json().catch(() => ({}));
-                    const message = responseData.errors
-                        ? responseData.errors.map(error => error.message).join(', ')
-                        : (responseData.error || `HTTP ${response.status}`);
-                    throw new Error(message);
-                }
-                console.info('Home Value Check submitted successfully.');
-            }).catch(error => {
-                console.error('Home Value Check submission failed:', error);
-            });
-        }
-
-        function toggleRenovation(type) {
-            const button = event.target.closest('button');
-            const index = selectedRenovations.indexOf(type);
-
-            if (index > -1) {
-                selectedRenovations.splice(index, 1);
-                button.classList.remove('active');
-            } else {
-                selectedRenovations.push(type);
-                button.classList.add('active');
-            }
-        }
-
-        function recalculateWithRenovations() {
-            if (currentCalculation) {
-                const conditionThen = document.getElementById('manualConditionThen').value;
-                const conditionNow = document.getElementById('manualConditionNow').value;
-                const kitchen = document.getElementById('manualKitchen').value;
-                const investment = document.getElementById('manualInvestment').value;
-
-                currentCalculation = calculateEquity(
-                    currentCalculation.originalPrice,
-                    (2026 - currentCalculation.yearsOwned).toString(),
-                    selectedRenovations,
-                    conditionThen || null,
-                    conditionNow || null,
-                    kitchen || null,
-                    investment || null,
-                    currentSubdivision,
-                    currentMultipleOffers
-                );
-
-                document.getElementById('currentValueDisplay').textContent = formatCurrency(currentCalculation.currentValue);
-                document.getElementById('equityDisplay').textContent = formatCurrency(currentCalculation.equity);
-
-                if (currentCalculation.renovationBoost > 0) {
-                    document.getElementById('renovationBoostDisplay').textContent = '+' + formatCurrency(currentCalculation.renovationBoost);
-                    document.getElementById('renovationBoostCard').classList.remove('hidden');
-                } else {
-                    document.getElementById('renovationBoostCard').classList.add('hidden');
-                }
-            }
-        }
-
-        function showFeedbackForm() {
-            const feedbackSection = document.getElementById('feedbackFormSection');
-            const feedbackAddress = document.getElementById('feedbackAddress');
-            const currentAddress = document.getElementById('addressInput').value.trim();
-
-            if (currentAddress && !feedbackAddress.value) {
-                feedbackAddress.value = currentAddress;
-            }
-
-            document.getElementById('feedbackSuccessMessage').classList.add('hidden');
-            document.getElementById('feedbackErrorMessage').classList.add('hidden');
-            feedbackSection.classList.remove('hidden');
-            setTimeout(() => {
-                feedbackSection.scrollIntoView({ behavior: 'smooth' });
-            }, 200);
-        }
-
-        function hideFeedbackForm() {
-            document.getElementById('feedbackFormSection').classList.add('hidden');
-        }
-
-        document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const form = this;
-            const submitButton = document.getElementById('feedbackSubmitButton');
-            const successMessage = document.getElementById('feedbackSuccessMessage');
-            const errorMessage = document.getElementById('feedbackErrorMessage');
-
-            successMessage.classList.add('hidden');
-            errorMessage.classList.add('hidden');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Sending...';
-            submitButton.style.opacity = '0.7';
-
-            const payload = new FormData(form);
-            payload.append('Conservative Value Shown', document.getElementById('conservativeDisplay').textContent);
-            payload.append('Mid-Range Value Shown', document.getElementById('midRangeDisplay').textContent);
-            payload.append('Optimistic Value Shown', document.getElementById('optimisticDisplay').textContent);
-            payload.append('You Paid', document.getElementById('purchasePriceDisplay').textContent);
-            payload.append('Years Owned', document.getElementById('yearsOwnedDisplay').textContent);
-            payload.append('Equity Built (Mid-Range)', document.getElementById('equityDisplay').textContent);
-
-            const conditionThenEl = document.getElementById('manualConditionThen');
-            const conditionNowEl = document.getElementById('manualConditionNow');
-            const kitchenEl = document.getElementById('manualKitchen');
-            const investmentEl = document.getElementById('manualInvestment');
-
-            payload.append('Condition When Bought', conditionThenEl.options[conditionThenEl.selectedIndex]?.text || 'Not specified');
-            payload.append('Condition Today', conditionNowEl.options[conditionNowEl.selectedIndex]?.text || 'Not specified');
-            payload.append('Kitchen', kitchenEl.options[kitchenEl.selectedIndex]?.text || 'Not specified');
-            payload.append('Investment in Improvements', investmentEl.options[investmentEl.selectedIndex]?.text || 'Not specified');
-            payload.append('Submitted At', new Date().toISOString());
-
-            try {
-                const response = await fetch('https://formspree.io/f/mrenblva', {
-                    method: 'POST',
-                    body: payload,
-                    headers: { 'Accept': 'application/json' }
-                });
-
-                const responseData = await response.json().catch(() => ({}));
-                if (!response.ok) {
-                    const message = responseData.errors
-                        ? responseData.errors.map(error => error.message).join(', ')
-                        : (responseData.error || `Formspree returned HTTP ${response.status}`);
-                    throw new Error(message);
-                }
-
-                successMessage.classList.remove('hidden');
-                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                form.reset();
-
-                const currentAddress = document.getElementById('addressInput').value.trim();
-                if (currentAddress) document.getElementById('feedbackAddress').value = currentAddress;
-            } catch (error) {
-                console.error('CMA request submission failed:', error);
-                errorMessage.textContent = `I could not send your request: ${error.message}. Please try again.`;
-                errorMessage.classList.remove('hidden');
-            } finally {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Request My CMA';
-                submitButton.style.opacity = '1';
-            }
-        });
-
-        // Show investment field if improvements were made
-        document.getElementById('manualConditionNow').addEventListener('change', function(e) {
-            const investmentField = document.getElementById('investmentField');
-            if (this.value === 'improvements' || this.value === 'remodeled') {
-                investmentField.classList.remove('hidden');
-            } else {
-                investmentField.classList.add('hidden');
-                document.getElementById('manualInvestment').value = '';
-            }
-        });
-
-        // Allow Enter key to trigger the same real search flow as the button
-        document.getElementById('addressInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                document.getElementById('searchButton').click();
-            }
-        });
-    </script>
-<!-- Home Value Calculator: comps database, lazy-loaded so it doesn't block initial page render -->
+function parseIsoDate(value) { const d = new Date(value + 'T12:00:00'); return isNaN(d) ? null : d; }
+function monthsBetween(a,b){ return Math.max(0,(a.getFullYear()-b.getFullYear())*12 + a.getMonth()-b.getMonth()); }
+function weightedAverage(items){
+    const total=items.reduce((s,x)=>s+x.w,0); return total ? items.reduce((s,x)=>s+x.v*x.w,0)/total : 0;
+}
+function median(values){ const a=values.filter(Number.isFinite).sort((x,y)=>x-y); if(!a.length)return 0; const m=Math.floor(a.length/2); return a.length%2?a[m]:(a[m-1]+a[m])/2; }
+function getFallbackAreas(area){
+    const data=window.HOME_ESTIMATOR_DATA;
+    if(!data || !area) return [];
+    for(const names of Object.values(data.fallbackGroups||{})) if(names.includes(area)) return names.filter(x=>x!==area);
+    return [];
+}
+function getConditionMultiplier(conditionThen, conditionNow, kitchen, investmentAmount){
+    let m=1;
+    const now={nothing:0,improvements:.025,remodeled:.055}[conditionNow]||0;
+    const then={fixer:.025,outdated:.012,upgrades:0,remodeled:-.01,amazing:-.015}[conditionThen]||0;
+    const kit={barely:-.045,outdated:-.018,remodeled:.025,luxury:.045}[kitchen]||0;
+    m += now + then + kit;
+    const spend={"0to10":.003,"10to25":.007,"25to50":.012,"50to75":.018,"75to100":.023,"100to150":.03,"over150":.04}[investmentAmount]||0;
+    if(conditionNow==='improvements'||conditionNow==='remodeled') m+=spend;
+    return Math.min(1.12,Math.max(.88,m));
+}
+function pickComparableSales(subject){
+    const data=window.HOME_ESTIMATOR_DATA;
+    if(!data || !subject || !subject.s) return {comps:[],tier:'No usable subject square footage'};
+    const same=subject.n;
+    const fallbacks=getFallbackAreas(same);
+    const now=parseIsoDate(data.asOf)||new Date();
+    const subjYear=Number(subject.y)||null, subjBeds=Number(subject.b)||null, subjBaths=Number(subject.t)||null;
+    const subjectAddress=(subject.a||'').toLowerCase();
+    const ranked=[];
+    for(const r of data.sales){
+        const [address,area,price,date,sqft,beds,baths,yearBuilt,subdivision,style]=r;
+        if(!sqft || !price || address.toLowerCase()===subjectAddress) continue;
+        const d=parseIsoDate(date); if(!d) continue;
+        const ageMonths=monthsBetween(now,d);
+        let tier=99, areaLabel='Citywide fallback';
+        if(area===same){ tier=0; areaLabel=same; }
+        else if(fallbacks.includes(area)){ tier=1; areaLabel=area; }
+        else tier=2;
+        const sqftDiff=Math.abs(sqft-subject.s)/subject.s;
+        if(sqftDiff>.65 && tier<2) continue;
+        let score=tier*32 + Math.min(48,ageMonths*1.15) + sqftDiff*58;
+        if(subjYear && yearBuilt) score += Math.min(18,Math.abs(yearBuilt-subjYear)*.28);
+        if(subjBeds && beds) score += Math.abs(beds-subjBeds)*4;
+        if(subjBaths && baths) score += Math.abs(baths-subjBaths)*3;
+        if(ageMonths>36) score += (ageMonths-36)*.8;
+        ranked.push({address,area:areaLabel,price,date,sqft,beds,baths,yearBuilt,psf:price/sqft,score,tier,ageMonths});
+    }
+    ranked.sort((a,b)=>a.score-b.score);
+    // Enforce the requested hierarchy: same neighborhood first; then user-defined similar neighborhoods; citywide only if still sparse.
+    let pool=ranked.filter(x=>x.tier===0 && x.ageMonths<=18).slice(0,8);
+    let tier='same neighborhood, 2025-2026';
+    if(pool.length<5){ pool=ranked.filter(x=>x.tier===0 && x.ageMonths<=36).slice(0,8); tier='same neighborhood, expanded recency'; }
+    if(pool.length<5){ pool=ranked.filter(x=>x.tier<=1 && x.ageMonths<=24).slice(0,8); tier='same + similar neighborhoods'; }
+    if(pool.length<5){ pool=ranked.filter(x=>x.tier<=1 && x.ageMonths<=48).slice(0,8); tier='same + similar neighborhoods, expanded recency'; }
+    if(pool.length<3){ pool=ranked.slice(0,8); tier='citywide last-resort matches'; }
+    return {comps:pool,tier};
+}
+function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen=null,conditionNow=null,kitchen=null,investmentAmount=null){
+    const subject=currentProperty||{a:document.getElementById('addressInput').value,n:currentNeighborhood,s:Number(document.getElementById('manualSqft').value)||null,y:null,b:null,t:null};
+    subject.s=Number(document.getElementById('manualSqft').value)||subject.s;
+    const picked=pickComparableSales(subject);
+    if(!picked.comps.length) throw new Error('Not enough comparable sales were available. Please request a CMA.');
+    const weighted=picked.comps.map((c,i)=>({v:c.psf,w:1/Math.pow(1+c.score/25,1.35)}));
+    let basePsf=weightedAverage(weighted);
+    const psfs=picked.comps.map(c=>c.psf);
+    const med=median(psfs);
+    // Clamp weighted result around the comp median to prevent one unusual sale from dominating.
+    basePsf=Math.max(med*.86,Math.min(med*1.14,basePsf));
+    let currentValue=subject.s*basePsf;
+    currentValue*=getConditionMultiplier(conditionThen,conditionNow,kitchen,investmentAmount);
+    let renovationBoost=0;
+    const boosts={kitchen:.018,roof:.009,hvac:.008,masterbath:.012,bathroom:.009,flooring:.008,windows:.008};
+    renovations.forEach(r=>renovationBoost+=currentValue*(boosts[r]||0));
+    currentValue+=renovationBoost;
+    const deviations=psfs.map(x=>Math.abs(x-med)/med);
+    const dispersion=median(deviations);
+    let rangePct=Math.max(.055,Math.min(.13,.045+dispersion*.65+(picked.comps.length<5?.025:0)+(picked.comps.some(c=>c.tier===2)?.02:0)));
+    const year=parseInt(purchaseDate)||2026;
+    return {originalPrice:purchasePrice,currentValue:Math.round(currentValue),equity:Math.round(currentValue-purchasePrice),yearsOwned:Math.max(0,2026-year),renovationBoost:Math.round(renovationBoost),rangePct,comps:picked.comps,tier:picked.tier,basePsf};
+}
+function calculateManual(){
+    const year=document.getElementById('manualPurchaseYear').value;
+    const price=parseFloat(document.getElementById('manualPurchasePrice').value);
+    const sqft=parseFloat(document.getElementById('manualSqft').value);
+    const conditionThen=document.getElementById('manualConditionThen').value;
+    const conditionNow=document.getElementById('manualConditionNow').value;
+    const kitchen=document.getElementById('manualKitchen').value;
+    const investment=document.getElementById('manualInvestment').value;
+    if(!year||!price||!sqft||!conditionThen||!conditionNow||!kitchen){ alert('Please fill in purchase year, purchase price, finished square footage, and condition details.'); return; }
+    try{ currentCalculation=calculateEquity(price,year,selectedRenovations,conditionThen,conditionNow,kitchen,investment||null); displayResults(null,{purchasePrice:price,purchaseDate:year}); }
+    catch(err){ alert(err.message); }
+}
+function displayResults(property,manual=null){
+    const data=currentCalculation, pct=data.rangePct||.08;
+    const conservative=Math.round(data.currentValue*(1-pct)), midRange=Math.round(data.currentValue), optimistic=Math.round(data.currentValue*(1+pct));
+    document.getElementById('purchasePriceDisplay').textContent=formatCurrency(data.originalPrice);
+    document.getElementById('yearsOwnedDisplay').textContent=data.yearsOwned+' years';
+    document.getElementById('conservativeDisplay').textContent=formatCurrency(conservative);
+    document.getElementById('midRangeDisplay').textContent=formatCurrency(midRange);
+    document.getElementById('optimisticDisplay').textContent=formatCurrency(optimistic);
+    document.getElementById('equityDisplay').textContent=formatCurrency(data.equity);
+    const rb=document.getElementById('renovationBoostCard');
+    if(data.renovationBoost>0){document.getElementById('renovationBoostDisplay').textContent='+'+formatCurrency(data.renovationBoost);rb.classList.remove('hidden');}else rb.classList.add('hidden');
+    const basis=document.getElementById('compBasisText');
+    basis.textContent=`Based on ${data.comps.length} weighted sold comps (${data.tier}). The model emphasized 2026 sales, then 2025, and expanded only when needed. Median/weighted comp rate: about ${formatCurrency(data.basePsf)} per finished sq. ft.`;
+    const list=document.getElementById('compList'); list.innerHTML='';
+    data.comps.slice(0,5).forEach(c=>{const d=document.createElement('div');d.className='flex justify-between gap-4 border-t border-slate-100 pt-2';d.innerHTML=`<span class="text-slate-600">${c.address} · ${c.date.slice(0,7)} · ${c.sqft.toLocaleString()} sf</span><span class="font-semibold text-navy-900 whitespace-nowrap">${formatCurrency(c.price)}</span>`;list.appendChild(d);});
+    document.getElementById('manualEntryForm').classList.add('hidden');document.getElementById('resultsSection').classList.remove('hidden');
+    setTimeout(()=>document.getElementById('resultsSection').scrollIntoView({behavior:'smooth'}),200);
+    const payload=new FormData(); payload.append('_subject','Home Value Check - MyLongmontHome.com');payload.append('Form','Home Value Check');payload.append('Address',document.getElementById('addressInput').value||'Manual entry');payload.append('Neighborhood Model',currentNeighborhood||'Unknown');payload.append('Comparable Sales Used',data.comps.length);payload.append('Comp Tier',data.tier);payload.append('Mid-Range Value',formatCurrency(midRange));payload.append('Conservative Value',formatCurrency(conservative));payload.append('Optimistic Value',formatCurrency(optimistic));
+    fetch('https://formspree.io/f/mlgqdnan',{method:'POST',body:payload,headers:{Accept:'application/json'}}).catch(()=>{});
+}
+function toggleRenovation(type){const button=event.target.closest('button');const i=selectedRenovations.indexOf(type);if(i>-1){selectedRenovations.splice(i,1);button.classList.remove('active');}else{selectedRenovations.push(type);button.classList.add('active');}}
+function recalculateWithRenovations(){ if(!currentCalculation)return; calculateManual(); }
+function showFeedbackForm(){
+ const section=document.getElementById('feedbackFormSection');const addr=document.getElementById('addressInput').value.trim();const field=document.getElementById('feedbackAddress');if(addr&&!field.value)field.value=addr;
+ document.getElementById('feedbackSuccessMessage').classList.add('hidden');document.getElementById('feedbackErrorMessage').classList.add('hidden');section.classList.remove('hidden');setTimeout(()=>section.scrollIntoView({behavior:'smooth'}),200);
+}
+function hideFeedbackForm(){document.getElementById('feedbackFormSection').classList.add('hidden');}
+document.getElementById('feedbackForm').addEventListener('submit',async function(e){
+ e.preventDefault();const form=this,button=document.getElementById('feedbackSubmitButton'),ok=document.getElementById('feedbackSuccessMessage'),err=document.getElementById('feedbackErrorMessage');ok.classList.add('hidden');err.classList.add('hidden');button.disabled=true;button.textContent='Sending...';
+ const payload=new FormData(form);payload.append('Conservative Value Shown',document.getElementById('conservativeDisplay').textContent);payload.append('Mid-Range Value Shown',document.getElementById('midRangeDisplay').textContent);payload.append('Optimistic Value Shown',document.getElementById('optimisticDisplay').textContent);payload.append('Comparable Sales Used',currentCalculation?currentCalculation.comps.length:0);payload.append('Comp Tier',currentCalculation?currentCalculation.tier:'Unknown');
+ try{const response=await fetch('https://formspree.io/f/mrenblva',{method:'POST',body:payload,headers:{Accept:'application/json'}});if(!response.ok)throw new Error('Formspree returned '+response.status);ok.classList.remove('hidden');form.reset();}catch(ex){err.textContent='I could not send your request: '+ex.message+'. Please try again.';err.classList.remove('hidden');}finally{button.disabled=false;button.textContent='Request My CMA';}
+});
+document.getElementById('manualConditionNow').addEventListener('change',function(){const field=document.getElementById('investmentField');if(this.value==='improvements'||this.value==='remodeled')field.classList.remove('hidden');else{field.classList.add('hidden');document.getElementById('manualInvestment').value='';}});
+</script>
+<!-- Home Value Calculator: sanitized parcel index + comp data -->
 <script>
-        let compsDbLoading = false;
-        let compsDbLoaded = false;
-
-        function loadCompsDatabase() {
-            if (compsDbLoading || compsDbLoaded) return;
-            compsDbLoading = true;
-
-            const msg = document.getElementById('dbLoadingMsg');
-            if (msg) msg.classList.remove('hidden');
-
-            const script = document.createElement('script');
-            script.src = './comps_database.js';
-            script.onload = function () {
-                compsDbLoaded = true;
-                compsDbLoading = false;
-                if (msg) msg.classList.add('hidden');
-            };
-            script.onerror = function () {
-                compsDbLoading = false;
-                if (msg) msg.classList.add('hidden');
-            };
-            document.head.appendChild(script);
-        }
-
-        // Trigger 1: start loading as soon as the calculator section scrolls into view,
-        // so the data is usually ready before the visitor finishes reading and clicks in.
-        const homeValueCalculatorSection = document.getElementById('home-value-calculator');
-        if (homeValueCalculatorSection && 'IntersectionObserver' in window) {
-            const dbObserver = new IntersectionObserver(function (entries, observer) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        loadCompsDatabase();
-                        observer.disconnect();
-                    }
-                });
-            }, { rootMargin: '200px' });
-            dbObserver.observe(homeValueCalculatorSection);
-        } else {
-            // Fallback for older browsers: just load it on page load.
-            loadCompsDatabase();
-        }
-
-        // Trigger 2: fallback in case the visitor jumps straight to the field
-        // (e.g. an anchor link) before the observer fires.
-        document.getElementById('addressInput').addEventListener('focus', loadCompsDatabase, { once: true });
-    </script>
-<!-- Home Value Calculator: address autocomplete -->
+let estimatorDataLoading=false,estimatorDataLoaded=false;
+function loadEstimatorData(){
+ if(estimatorDataLoading||estimatorDataLoaded)return; estimatorDataLoading=true;
+ const msg=document.getElementById('dbLoadingMsg');if(msg)msg.classList.remove('hidden');
+ const script=document.createElement('script');script.src='./home_estimator_data.js';
+ script.onload=()=>{estimatorDataLoaded=true;estimatorDataLoading=false;if(msg)msg.classList.add('hidden');};
+ script.onerror=()=>{estimatorDataLoading=false;if(msg){msg.textContent='Unable to load estimator data. Please refresh and try again.';msg.classList.remove('hidden');}};
+ document.head.appendChild(script);
+}
+const calcSection=document.getElementById('home-value-calculator');
+if(calcSection&&'IntersectionObserver'in window){const o=new IntersectionObserver((entries,obs)=>{if(entries.some(e=>e.isIntersecting)){loadEstimatorData();obs.disconnect();}},{rootMargin:'250px'});o.observe(calcSection);}else loadEstimatorData();
+document.getElementById('addressInput').addEventListener('focus',loadEstimatorData,{once:true});
+</script>
 <script>
-        const addressInput = document.getElementById('addressInput');
-        const addressDropdown = document.getElementById('addressDropdown');
-        const searchButton = document.getElementById('searchButton');
-        const manualForm = document.getElementById('manualEntryForm');
-
-        addressInput.addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase().trim();
-
-            if (query.length < 2) {
-                addressDropdown.classList.add('hidden');
-                return;
-            }
-
-            if (!window.COMPS_DATABASE) {
-                loadCompsDatabase();
-                return;
-            }
-
-            const matches = Object.keys(window.COMPS_DATABASE)
-                .filter(addr => addr.includes(query))
-                .slice(0, 8);
-
-            if (matches.length === 0) {
-                addressDropdown.classList.add('hidden');
-                return;
-            }
-
-            addressDropdown.innerHTML = '';
-            matches.forEach(addr => {
-                const div = document.createElement('div');
-                div.className = 'px-4 py-3 border-b border-slate-200 cursor-pointer text-navy-900 hover:bg-navy-50 transition-colors';
-                div.textContent = window.COMPS_DATABASE[addr].address;
-                div.onclick = (e) => {
-                    e.preventDefault();
-                    selectAddress(addr);
-                };
-                addressDropdown.appendChild(div);
-            });
-
-            addressDropdown.classList.remove('hidden');
-        });
-
-        document.addEventListener('click', function(e) {
-            if (e.target !== addressInput) {
-                addressDropdown.classList.add('hidden');
-            }
-        });
-
-        function selectAddress(addr) {
-            const lookup = window.COMPS_DATABASE[addr];
-            addressInput.value = lookup.address;
-            addressDropdown.classList.add('hidden');
-
-            document.getElementById('manualPurchaseYear').value = lookup.purchase_year;
-            document.getElementById('manualPurchasePrice').value = lookup.purchase_price;
-            document.getElementById('manualConditionThen').value = 'upgrades';
-            document.getElementById('manualConditionNow').value = 'nothing';
-            document.getElementById('manualKitchen').value = 'outdated';
-
-            // STORE SQFT for valuation
-            if (document.getElementById('manualSqft')) {
-                document.getElementById('manualSqft').value = lookup.sqft || '';
-            } else {
-                // If field doesn't exist, create it as hidden
-                const sqftField = document.createElement('input');
-                sqftField.id = 'manualSqft';
-                sqftField.type = 'hidden';
-                sqftField.value = lookup.sqft || '';
-                document.body.appendChild(sqftField);
-            }
-
-            // Stash subdivision + multiple-offers so calculateManual() can factor
-            // in zone-specific cooling and the boom-period fair-value adjustment.
-            currentSubdivision = lookup.subdivision || null;
-            currentMultipleOffers = !!lookup.multiple_offers;
-
-            manualForm.classList.remove('hidden');
-            setTimeout(() => {
-                manualForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
-        }
-
-        searchButton.addEventListener('click', function() {
-            const query = addressInput.value.toLowerCase().trim();
-            if (!query) return;
-
-            addressDropdown.classList.add('hidden');
-
-            // If the database hasn't finished loading yet (e.g. clicked very fast
-            // on a slow connection), wait for it instead of wrongly falling back
-            // to manual entry.
-            if (!window.COMPS_DATABASE) {
-                loadCompsDatabase();
-                const msg = document.getElementById('dbLoadingMsg');
-                if (msg) msg.classList.remove('hidden');
-                let attempts = 0;
-                const waitForDb = setInterval(function () {
-                    attempts++;
-                    if (window.COMPS_DATABASE) {
-                        clearInterval(waitForDb);
-                        searchButton.click();
-                    } else if (attempts > 40) { // ~10s timeout
-                        clearInterval(waitForDb);
-                        if (msg) msg.textContent = 'Still loading market data. Please try again in a moment.';
-                    }
-                }, 250);
-                return;
-            }
-
-            if (window.COMPS_DATABASE[query]) {
-                selectAddress(query);
-            } else {
-                // Address not found - show manual entry.
-                currentSubdivision = null;
-                currentMultipleOffers = false;
-                manualForm.classList.remove('hidden');
-                setTimeout(() => {
-                    manualForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
-            }
-        });
-    </script>
+const addressInput=document.getElementById('addressInput'),addressDropdown=document.getElementById('addressDropdown'),searchButton=document.getElementById('searchButton'),manualForm=document.getElementById('manualEntryForm');
+function normalizeAddressInput(s){return (s||'').toLowerCase().replace(/[.,]/g,'').replace(/\s+/g,' ').trim();}
+function propertyEntries(){return window.HOME_ESTIMATOR_DATA?Object.entries(window.HOME_ESTIMATOR_DATA.properties):[];}
+addressInput.addEventListener('input',function(e){
+ const q=normalizeAddressInput(e.target.value); if(q.length<2){addressDropdown.classList.add('hidden');return;} if(!window.HOME_ESTIMATOR_DATA){loadEstimatorData();return;}
+ const tokens=q.split(' '); const matches=propertyEntries().filter(([k,p])=>tokens.every(t=>k.includes(t)||p.a.toLowerCase().includes(t))).slice(0,10);
+ if(!matches.length){addressDropdown.classList.add('hidden');return;} addressDropdown.innerHTML='';
+ matches.forEach(([key,p])=>{const div=document.createElement('div');div.className='px-4 py-3 border-b border-slate-200 cursor-pointer text-navy-900 hover:bg-navy-50 transition-colors';div.innerHTML=`<div class="font-medium">${p.a}</div><div class="text-xs text-slate-500">${p.n}</div>`;div.onclick=(ev)=>{ev.preventDefault();selectAddress(key);};addressDropdown.appendChild(div);});addressDropdown.classList.remove('hidden');
+});
+document.addEventListener('click',e=>{if(e.target!==addressInput&&!addressDropdown.contains(e.target))addressDropdown.classList.add('hidden');});
+function selectAddress(key){
+ const p=window.HOME_ESTIMATOR_DATA.properties[key]; if(!p)return; currentPropertyKey=key;currentProperty={...p};currentNeighborhood=p.n;currentSubdivision=p.d||null;addressInput.value=p.a;addressDropdown.classList.add('hidden');
+ document.getElementById('manualPurchaseYear').value=p.q?p.q.slice(0,4):'';document.getElementById('manualPurchasePrice').value=p.p||'';document.getElementById('manualSqft').value=p.s||'';
+ document.getElementById('manualConditionThen').value='upgrades';document.getElementById('manualConditionNow').value='nothing';document.getElementById('manualKitchen').value='outdated';manualForm.classList.remove('hidden');setTimeout(()=>manualForm.scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+searchButton.addEventListener('click',function(){
+ const q=normalizeAddressInput(addressInput.value);if(!q)return;addressDropdown.classList.add('hidden');if(!window.HOME_ESTIMATOR_DATA){loadEstimatorData();setTimeout(()=>searchButton.click(),500);return;}
+ const exact=propertyEntries().find(([k,p])=>k===q||normalizeAddressInput(p.a)===q);if(exact)selectAddress(exact[0]);else{currentProperty=null;currentNeighborhood=null;manualForm.classList.remove('hidden');setTimeout(()=>manualForm.scrollIntoView({behavior:'smooth',block:'start'}),100);}
+});
+addressInput.addEventListener('keypress',e=>{if(e.key==='Enter'){e.preventDefault();searchButton.click();}});
+</script>
 </body>
 </html>
