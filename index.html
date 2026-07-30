@@ -1174,8 +1174,9 @@ function pickComparableSales(subject){
     const subjectAddress=(subject.a||'').toLowerCase();
     const ranked=[];
     for(const r of data.sales){
-        const [address,area,price,date,sqft,beds,baths,yearBuilt,subdivision,style]=r;
+        const [address,area,price,date,sqft,beds,baths,yearBuilt,subdivision,style,propertyType]=r;
         if(!sqft || !price || address.toLowerCase()===subjectAddress) continue;
+        if(!subject.u || !propertyType || propertyType!==subject.u) continue;
         const d=parseIsoDate(date); if(!d) continue;
         const ageMonths=monthsBetween(now,d);
         let tier=99, areaLabel='Citywide fallback';
@@ -1205,7 +1206,7 @@ function pickComparableSales(subject){
     return {comps:pool,tier};
 }
 function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen=null,conditionNow=null,kitchen=null,investmentAmount=null){
-    const subject=currentProperty||{a:document.getElementById('addressInput').value,n:currentNeighborhood,s:Number(document.getElementById('manualSqft').value)||null,y:null,b:null,t:null};
+    const subject=currentProperty||{a:document.getElementById('addressInput').value,n:currentNeighborhood,s:Number(document.getElementById('manualSqft').value)||null,y:null,b:null,t:null,u:(document.getElementById('manualPropertyType')||{}).value||null};
     subject.s=Number(document.getElementById('manualSqft').value)||subject.s;
     const picked=pickComparableSales(subject);
     if(!picked.comps.length) throw new Error('Not enough comparable sales were available. Please request a CMA.');
