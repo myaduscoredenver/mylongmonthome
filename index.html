@@ -1189,12 +1189,15 @@ function pickComparableSales(subject){
         if(subjBeds && beds) score += Math.abs(beds-subjBeds)*4;
         if(subjBaths && baths) score += Math.abs(baths-subjBaths)*3;
         if(ageMonths>36) score += (ageMonths-36)*.8;
-        ranked.push({address,area:areaLabel,price,date,sqft,beds,baths,yearBuilt,psf:price/sqft,score,tier,ageMonths});
+        const monthlyTrend=Number(data.marketTrendMonthly)||0;
+        const trendMonths=Math.min(ageMonths,Number(data.marketTrendMaxMonths)||24);
+        const adjustedPrice=price*Math.pow(1+monthlyTrend,trendMonths);
+        ranked.push({address,area:areaLabel,price,date,sqft,beds,baths,yearBuilt,psf:adjustedPrice/sqft,rawPsf:price/sqft,adjustedPrice,score,tier,ageMonths});
     }
     ranked.sort((a,b)=>a.score-b.score);
     // Enforce the requested hierarchy: same neighborhood first; then user-defined similar neighborhoods; citywide only if still sparse.
     let pool=ranked.filter(x=>x.tier===0 && x.ageMonths<=18).slice(0,8);
-    let tier='same neighborhood, 2025-2026';
+    let tier='same neighborhood, recent sales with soft-market time adjustment';
     if(pool.length<5){ pool=ranked.filter(x=>x.tier===0 && x.ageMonths<=36).slice(0,8); tier='same neighborhood, expanded recency'; }
     if(pool.length<5){ pool=ranked.filter(x=>x.tier<=1 && x.ageMonths<=24).slice(0,8); tier='same + similar neighborhoods'; }
     if(pool.length<5){ pool=ranked.filter(x=>x.tier<=1 && x.ageMonths<=48).slice(0,8); tier='same + similar neighborhoods, expanded recency'; }
@@ -1257,7 +1260,7 @@ function displayResults(property,manual=null){
     const rb=document.getElementById('renovationBoostCard');
     if(data.renovationBoost>0){document.getElementById('renovationBoostDisplay').textContent='+'+formatCurrency(data.renovationBoost);rb.classList.remove('hidden');}else rb.classList.add('hidden');
     const basis=document.getElementById('compBasisText');
-    basis.textContent=`Based on ${data.comps.length} weighted sold comps (${data.tier}). The model emphasized 2026 sales, then 2025, and expanded only when needed. Median/weighted comp rate: about ${formatCurrency(data.basePsf)} per finished sq. ft.`;
+    basis.textContent=`Based on ${data.comps.length} weighted sold comps (${data.tier}). The model emphasizes the newest sales and applies a conservative downward time adjustment to older comps in the current softer market. Median/weighted adjusted comp rate: about ${formatCurrency(data.basePsf)} per finished sq. ft.`;
     const list=document.getElementById('compList'); list.innerHTML='';
     data.comps.slice(0,5).forEach(c=>{const d=document.createElement('div');d.className='flex justify-between gap-4 border-t border-slate-100 pt-2';d.innerHTML=`<span class="text-slate-600">${c.address} · ${c.date.slice(0,7)} · ${c.sqft.toLocaleString()} sf</span><span class="font-semibold text-navy-900 whitespace-nowrap">${formatCurrency(c.price)}</span>`;list.appendChild(d);});
     document.getElementById('manualEntryForm').classList.add('hidden');document.getElementById('resultsSection').classList.remove('hidden');
