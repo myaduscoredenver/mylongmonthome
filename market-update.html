@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Build: 2026-07-30 YTD FIX v3 -->
+
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -781,10 +783,10 @@ document.getElementById('domInsight').innerHTML = `Homes are currently taking <b
 document.getElementById('priceInsight').innerHTML = `The average Longmont home sold for <b class="text-navy-800">${fmtMoney(DATA.avg_price[lastIdx])}</b> so far in 2026, more than double the ${fmtMoney(DATA.avg_price[0])} average back in 2006.`;
 document.getElementById('countInsight').innerHTML = `Longmont is on pace for roughly <b class="text-navy-800">${DATA.proj2026.toLocaleString()} closed sales in 2026</b>, projected from year-to-date activity (${DATA.count_2026_ytd.toLocaleString()} sales through ${new Date(DATA.as_of+'T00:00:00').toLocaleDateString('en-US',{month:'short', day:'numeric'})}), in line with the steadier volume of the last few years, well below the 2020 peak of 1,282.`;
 
-// Bottom at-a-glance card uses the latest verified MLS period (June 1–July 29, 2026).
-document.getElementById('vcAvg').textContent = '$615,418';
-document.getElementById('vcDom').textContent = '21 days';
-document.getElementById('vcCount').textContent = '235';
+// Bottom at-a-glance card uses the full 2026 YTD dataset through July 29, 2026.
+document.getElementById('vcAvg').textContent = fmtMoney(DATA.avg_price[lastIdx]);
+document.getElementById('vcDom').textContent = Math.round(DATA.dom[lastIdx]) + ' days';
+document.getElementById('vcCount').textContent = DATA.proj2026.toLocaleString();
 
 document.getElementById('sellDom').textContent = Math.round(DATA.dom[lastIdx]);
 document.getElementById('sellAvg').textContent = fmtMoney(DATA.avg_price[lastIdx]);
