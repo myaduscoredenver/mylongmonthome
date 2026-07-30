@@ -445,20 +445,22 @@
 <div class="hidden" id="resultsSection">
 <!-- Main Value Card with Range -->
 <div class="bg-emerald-50 rounded-xl p-8 mb-8 border border-emerald-200">
-<p class="text-slate-600 text-sm font-medium mb-4">Your Estimated Home Value Range (July 2026)</p>
-<!-- Range Display -->
+<p class="text-slate-600 text-sm font-medium mb-4">Your Home Value Estimate (July 2026)</p>
+<!-- Estimate Display -->
 <div class="space-y-3 mb-8">
-<div class="bg-white rounded-lg p-4 border border-slate-200">
-<p class="text-slate-500 text-xs font-semibold mb-1">Conservative</p>
-<p class="text-2xl sm:text-3xl font-semibold text-navy-900 truncate" id="conservativeDisplay">$0</p>
+<div class="bg-emerald-600 text-white rounded-lg p-5">
+<p class="text-emerald-100 text-xs font-semibold mb-1">Estimated Market Value</p>
+<p class="text-3xl sm:text-4xl font-semibold truncate" id="estimatedValueDisplay">$0</p>
 </div>
-<div class="bg-emerald-600 text-white rounded-lg p-4">
-<p class="text-emerald-100 text-xs font-semibold mb-1">Mid-Range (Most Likely)</p>
-<p class="text-2xl sm:text-3xl font-semibold truncate" id="midRangeDisplay">$0</p>
+<div class="grid sm:grid-cols-2 gap-3">
+<div class="bg-white rounded-lg p-4 border border-slate-200">
+<p class="text-slate-500 text-xs font-semibold mb-1">Likely Selling Range</p>
+<p class="text-xl sm:text-2xl font-semibold text-navy-900 truncate" id="likelyRangeDisplay">$0–$0</p>
 </div>
 <div class="bg-white rounded-lg p-4 border border-slate-200">
-<p class="text-slate-500 text-xs font-semibold mb-1">Optimistic</p>
-<p class="text-2xl sm:text-3xl font-semibold text-navy-900 truncate" id="optimisticDisplay">$0</p>
+<p class="text-slate-500 text-xs font-semibold mb-1">Confidence</p>
+<p class="text-xl sm:text-2xl font-semibold text-navy-900" id="confidenceDisplay">Limited</p>
+</div>
 </div>
 </div>
 <div class="grid grid-cols-2 gap-4 mb-6">
@@ -472,7 +474,7 @@
 </div>
 </div>
 <div class="bg-emerald-600 text-white rounded-xl p-6">
-<p class="text-emerald-100 text-sm font-medium mb-1">Equity Built (Mid-Range)</p>
+<p class="text-emerald-100 text-sm font-medium mb-1">Estimated Equity</p>
 <p class="text-4xl font-semibold equity-number" id="equityDisplay">$0</p>
 </div>
 </div>
@@ -488,14 +490,14 @@
 </div>
 <!-- Info Text -->
 <div class="bg-navy-50 border-l-4 border-navy-700 rounded-lg p-6 mb-8">
-<p class="text-navy-900 font-semibold mb-2">Understanding Your Range</p>
-<p class="text-slate-700 text-sm mb-3">We show three scenarios because real estate valuation includes uncertainty:</p>
+<p class="text-navy-900 font-semibold mb-2">Understanding Your Estimate</p>
+<p class="text-slate-700 text-sm mb-3">The estimated market value is the model's most likely result based on weighted comparable sales. The likely selling range reflects the uncertainty in those comps.</p>
 <ul class="text-slate-700 text-sm space-y-2 ml-4 list-disc">
-<li><strong>Conservative:</strong> Market cools faster than expected, or your home's condition is stronger than we assessed</li>
-<li><strong>Mid-Range:</strong> A comp-weighted estimate using the most comparable recent Longmont sales</li>
-<li><strong>Optimistic:</strong> Market stabilizes faster, or buyer demand strengthens in your neighborhood</li>
+<li><strong>High confidence:</strong> Several closely matched, consistent recent sales</li>
+<li><strong>Moderate confidence:</strong> Useful comps with some differences or price variation</li>
+<li><strong>Limited confidence:</strong> Fewer close matches or unusually wide variation among comparable sales</li>
 </ul>
-<p class="text-slate-700 text-sm mt-3">Most homes sell within this range. Next steps? Let's connect to discuss your specific situation.</p>
+<p class="text-slate-700 text-sm mt-3">Condition, lot characteristics, basement finish, garages, and major improvements can materially affect value. A personalized CMA can account for details the estimator cannot see.</p>
 </div>
 <!-- This Doesn't Look Right Button -->
 <div class="text-center mb-8">
@@ -1235,13 +1237,22 @@ function calculateManual(){
     catch(err){ alert(err.message); }
 }
 function displayResults(property,manual=null){
-    const data=currentCalculation, pct=data.rangePct||.08;
-    const conservative=Math.round(data.currentValue*(1-pct)), midRange=Math.round(data.currentValue), optimistic=Math.round(data.currentValue*(1+pct));
+    const data=currentCalculation;
+    const modelUncertainty=data.rangePct||.08;
+    let confidence='Limited', likelyPct=.07;
+    if(modelUncertainty<=.07 && data.comps.length>=7 && !data.comps.some(c=>c.tier===2)){
+        confidence='High'; likelyPct=.035;
+    }else if(modelUncertainty<=.10 && data.comps.length>=5){
+        confidence='Moderate'; likelyPct=.05;
+    }
+    const estimatedValue=Math.round(data.currentValue);
+    const likelyLow=Math.round(estimatedValue*(1-likelyPct));
+    const likelyHigh=Math.round(estimatedValue*(1+likelyPct));
     document.getElementById('purchasePriceDisplay').textContent=formatCurrency(data.originalPrice);
     document.getElementById('yearsOwnedDisplay').textContent=data.yearsOwned+' years';
-    document.getElementById('conservativeDisplay').textContent=formatCurrency(conservative);
-    document.getElementById('midRangeDisplay').textContent=formatCurrency(midRange);
-    document.getElementById('optimisticDisplay').textContent=formatCurrency(optimistic);
+    document.getElementById('estimatedValueDisplay').textContent=formatCurrency(estimatedValue);
+    document.getElementById('likelyRangeDisplay').textContent=`${formatCurrency(likelyLow)}–${formatCurrency(likelyHigh)}`;
+    document.getElementById('confidenceDisplay').textContent=confidence;
     document.getElementById('equityDisplay').textContent=formatCurrency(data.equity);
     const rb=document.getElementById('renovationBoostCard');
     if(data.renovationBoost>0){document.getElementById('renovationBoostDisplay').textContent='+'+formatCurrency(data.renovationBoost);rb.classList.remove('hidden');}else rb.classList.add('hidden');
@@ -1251,7 +1262,7 @@ function displayResults(property,manual=null){
     data.comps.slice(0,5).forEach(c=>{const d=document.createElement('div');d.className='flex justify-between gap-4 border-t border-slate-100 pt-2';d.innerHTML=`<span class="text-slate-600">${c.address} · ${c.date.slice(0,7)} · ${c.sqft.toLocaleString()} sf</span><span class="font-semibold text-navy-900 whitespace-nowrap">${formatCurrency(c.price)}</span>`;list.appendChild(d);});
     document.getElementById('manualEntryForm').classList.add('hidden');document.getElementById('resultsSection').classList.remove('hidden');
     setTimeout(()=>document.getElementById('resultsSection').scrollIntoView({behavior:'smooth'}),200);
-    const payload=new FormData(); payload.append('_subject','Home Value Check - MyLongmontHome.com');payload.append('Form','Home Value Check');payload.append('Address',document.getElementById('addressInput').value||'Manual entry');payload.append('Neighborhood Model',currentNeighborhood||'Unknown');payload.append('Comparable Sales Used',data.comps.length);payload.append('Comp Tier',data.tier);payload.append('Mid-Range Value',formatCurrency(midRange));payload.append('Conservative Value',formatCurrency(conservative));payload.append('Optimistic Value',formatCurrency(optimistic));
+    const payload=new FormData(); payload.append('_subject','Home Value Check - MyLongmontHome.com');payload.append('Form','Home Value Check');payload.append('Address',document.getElementById('addressInput').value||'Manual entry');payload.append('Neighborhood Model',currentNeighborhood||'Unknown');payload.append('Comparable Sales Used',data.comps.length);payload.append('Comp Tier',data.tier);payload.append('Estimated Market Value',formatCurrency(estimatedValue));payload.append('Likely Selling Range',`${formatCurrency(likelyLow)} to ${formatCurrency(likelyHigh)}`);payload.append('Confidence',confidence);
     fetch('https://formspree.io/f/mlgqdnan',{method:'POST',body:payload,headers:{Accept:'application/json'}}).catch(()=>{});
 }
 function toggleRenovation(type){const button=event.target.closest('button');const i=selectedRenovations.indexOf(type);if(i>-1){selectedRenovations.splice(i,1);button.classList.remove('active');}else{selectedRenovations.push(type);button.classList.add('active');}}
@@ -1263,7 +1274,7 @@ function showFeedbackForm(){
 function hideFeedbackForm(){document.getElementById('feedbackFormSection').classList.add('hidden');}
 document.getElementById('feedbackForm').addEventListener('submit',async function(e){
  e.preventDefault();const form=this,button=document.getElementById('feedbackSubmitButton'),ok=document.getElementById('feedbackSuccessMessage'),err=document.getElementById('feedbackErrorMessage');ok.classList.add('hidden');err.classList.add('hidden');button.disabled=true;button.textContent='Sending...';
- const payload=new FormData(form);payload.append('Conservative Value Shown',document.getElementById('conservativeDisplay').textContent);payload.append('Mid-Range Value Shown',document.getElementById('midRangeDisplay').textContent);payload.append('Optimistic Value Shown',document.getElementById('optimisticDisplay').textContent);payload.append('Comparable Sales Used',currentCalculation?currentCalculation.comps.length:0);payload.append('Comp Tier',currentCalculation?currentCalculation.tier:'Unknown');
+ const payload=new FormData(form);payload.append('Estimated Market Value Shown',document.getElementById('estimatedValueDisplay').textContent);payload.append('Likely Selling Range Shown',document.getElementById('likelyRangeDisplay').textContent);payload.append('Confidence Shown',document.getElementById('confidenceDisplay').textContent);payload.append('Comparable Sales Used',currentCalculation?currentCalculation.comps.length:0);payload.append('Comp Tier',currentCalculation?currentCalculation.tier:'Unknown');
  try{const response=await fetch('https://formspree.io/f/mrenblva',{method:'POST',body:payload,headers:{Accept:'application/json'}});if(!response.ok)throw new Error('Formspree returned '+response.status);ok.classList.remove('hidden');form.reset();}catch(ex){err.textContent='I could not send your request: '+ex.message+'. Please try again.';err.classList.remove('hidden');}finally{button.disabled=false;button.textContent='Request My CMA';}
 });
 document.getElementById('manualConditionNow').addEventListener('change',function(){const field=document.getElementById('investmentField');if(this.value==='improvements'||this.value==='remodeled')field.classList.remove('hidden');else{field.classList.add('hidden');document.getElementById('manualInvestment').value='';}});
