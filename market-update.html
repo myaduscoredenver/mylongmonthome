@@ -589,16 +589,17 @@ Get My Estimate
 <h4 class="font-serif text-lg text-white/85 mb-5">Longmont at a glance, 2026 YTD</h4>
 <div class="flex justify-between items-baseline py-3 border-b border-white/15">
 <span class="text-sm text-white/65">Average sale price</span>
-<span class="font-serif text-xl font-semibold" id="vcAvg">-</span>
+<span class="font-serif text-xl font-semibold" id="vcAvg">$637,319</span>
 </div>
 <div class="flex justify-between items-baseline py-3 border-b border-white/15">
 <span class="text-sm text-white/65">Median days on market</span>
-<span class="font-serif text-xl font-semibold" id="vcDom">-</span>
+<span class="font-serif text-xl font-semibold" id="vcDom">38 days</span>
 </div>
 <div class="flex justify-between items-baseline py-3">
-<span class="text-sm text-white/65">Homes sold, projected 2026</span>
-<span class="font-serif text-xl font-semibold" id="vcCount">-</span>
+<span class="text-sm text-white/65">Projected 2026 sales</span>
+<span class="font-serif text-xl font-semibold" id="vcCount">1,039</span>
 </div>
+<p class="text-xs text-white/50 mt-4">Based on 598 closed sales from January 1 through July 29, 2026.</p>
 </div>
 </div>
 </section>
@@ -662,7 +663,7 @@ Talk Through My Timeline
 </div>
 
 <script>
-const DATA = {"years": [2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "dom": [101.0, 91.0, 84.0, 83.0, 86.0, 92.0, 78.0, 58.0, 51.0, 46.0, 42.0, 41.0, 38.0, 44.0, 41.0, 30.0, 28.0, 36.0, 37.0, 40.0, 37.0], "avg_price": [288940, 279237, 249628, 240871, 255581, 244327, 258278, 284465, 305372, 342126, 387605, 422292, 461253, 469847, 508579, 590785, 648587, 657436, 666098, 638318, 658003], "counts": [1226, 1118, 1032, 894, 829, 831, 1000, 1160, 1098, 1239, 1110, 1157, 1129, 1200, 1282, 1195, 979, 817, 902, 927, 477], "yoy": [null, -0.9, -8.6, 0.4, 3.4, -3.3, 6.4, 11.1, 5.6, 13.0, 15.4, 9.3, 9.4, 1.6, 6.4, 16.3, 12.0, 1.2, -1.6, -2.5, 4.3], "proj2026": 950, "count_2026_ytd": 477, "as_of": "2026-07-02"};
+const DATA = {"years": [2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "dom": [101.0, 91.0, 84.0, 83.0, 86.0, 92.0, 78.0, 58.0, 51.0, 46.0, 42.0, 41.0, 38.0, 44.0, 41.0, 30.0, 28.0, 36.0, 37.0, 40.0, 38.0], "avg_price": [288940, 279237, 249628, 240871, 255581, 244327, 258278, 284465, 305372, 342126, 387605, 422292, 461253, 469847, 508579, 590785, 648587, 657436, 666098, 638318, 637319], "counts": [1226, 1118, 1032, 894, 829, 831, 1000, 1160, 1098, 1239, 1110, 1157, 1129, 1200, 1282, 1195, 979, 817, 902, 927, 598], "yoy": [null, -0.9, -8.6, 0.4, 3.4, -3.3, 6.4, 11.1, 5.6, 13.0, 15.4, 9.3, 9.4, 1.6, 6.4, 16.3, 12.0, 1.2, -1.6, -2.5, -0.2], "proj2026": 1039, "count_2026_ytd": 598, "as_of": "2026-07-29"};
 const ATTACHED_DATA = {"years": [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "dom": [32.0, 79.0, 84.0, 127.0, 132.0, 112.0, 117.0, 111.0, 109.0, 97.0, 98.0, 116.0, 85.0, 62.0, 46.0, 40.0, 44.0, 37.0, 37.0, 50.0, 40.0, 30.0, 27.0, 41.0, 51.0, 54.0, 66.0], "avg_price": [153243, 175302, 187308, 191145, 195135, 192111, 201720, 195632, 192327, 180506, 180450, 187735, 183109, 201172, 217994, 252939, 310633, 321207, 363968, 351501, 375716, 425912, 481602, 482960, 459453, 470785, 453606], "counts": [427, 457, 307, 342, 368, 274, 249, 232, 235, 173, 166, 164, 225, 274, 284, 326, 323, 356, 343, 373, 319, 355, 315, 296, 308, 304, 166], "yoy": [null, 14.0, 6.0, 3.4, -0.9, 0.4, 2.8, 0.0, -5.7, 1.7, -4.2, 0.0, 1.2, 8.7, 5.2, 21.7, 21.9, 3.3, 12.3, -2.6, 7.6, 15.2, 13.1, -0.5, -2.3, 2.3, -2.8], "proj2026": 344, "count_2026_ytd": 166, "as_of": "2026-07-16"};
 
 function fmtMoney(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
@@ -780,9 +781,10 @@ document.getElementById('domInsight').innerHTML = `Homes are currently taking <b
 document.getElementById('priceInsight').innerHTML = `The average Longmont home sold for <b class="text-navy-800">${fmtMoney(DATA.avg_price[lastIdx])}</b> so far in 2026, more than double the ${fmtMoney(DATA.avg_price[0])} average back in 2006.`;
 document.getElementById('countInsight').innerHTML = `Longmont is on pace for roughly <b class="text-navy-800">${DATA.proj2026.toLocaleString()} closed sales in 2026</b>, projected from year-to-date activity (${DATA.count_2026_ytd.toLocaleString()} sales through ${new Date(DATA.as_of+'T00:00:00').toLocaleDateString('en-US',{month:'short', day:'numeric'})}), in line with the steadier volume of the last few years, well below the 2020 peak of 1,282.`;
 
-document.getElementById('vcAvg').textContent = fmtMoney(DATA.avg_price[lastIdx]);
-document.getElementById('vcDom').textContent = Math.round(DATA.dom[lastIdx]) + ' days';
-document.getElementById('vcCount').textContent = DATA.proj2026.toLocaleString();
+// Bottom at-a-glance card uses the latest verified MLS period (June 1–July 29, 2026).
+document.getElementById('vcAvg').textContent = '$615,418';
+document.getElementById('vcDom').textContent = '21 days';
+document.getElementById('vcCount').textContent = '235';
 
 document.getElementById('sellDom').textContent = Math.round(DATA.dom[lastIdx]);
 document.getElementById('sellAvg').textContent = fmtMoney(DATA.avg_price[lastIdx]);
