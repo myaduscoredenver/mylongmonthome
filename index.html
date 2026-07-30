@@ -1212,10 +1212,14 @@ function pickComparableSales(subject){
 function normalizeMarketAddress(value){
     return String(value||'').toLowerCase().replace(/,\s*longmont\s+\d{5}.*$/,'').replace(/\s+hoa:.*$/,'').replace(/[^a-z0-9]/g,'');
 }
+function normalizeStreetName(value){
+    return String(value||'').toLowerCase().replace(/,\s*longmont\s+\d{5}.*$/,'').replace(/\s+hoa:.*$/,'')
+        .replace(/^\s*\d+[a-z]?\s+/,'').replace(/\s+(?:#?\w+|unit\s+\w+)$/,'').replace(/[^a-z0-9]/g,'');
+}
 function getCurrentMarketReality(subject){
     const data=window.HOME_ESTIMATOR_DATA;
     if(!data || !Array.isArray(data.currentListings) || !subject || !subject.s || !subject.u) return null;
-    const same=subject.n, fallbacks=getFallbackAreas(same), subjAddr=normalizeMarketAddress(subject.a);
+    const same=subject.n, fallbacks=getFallbackAreas(same), subjAddr=normalizeMarketAddress(subject.a), subjStreet=normalizeStreetName(subject.a);
     const subjYear=Number(subject.y)||null, subjBeds=Number(subject.b)||null, subjBaths=Number(subject.t)||null;
     const ranked=[];
     for(const r of data.currentListings){
@@ -1229,10 +1233,13 @@ function getCurrentMarketReality(subject){
         if(subjYear&&yearBuilt) score+=Math.min(16,Math.abs(yearBuilt-subjYear)*.25);
         if(subjBeds&&beds) score+=Math.abs(beds-subjBeds)*4;
         if(subjBaths&&baths) score+=Math.abs(baths-subjBaths)*3;
-        ranked.push({address,area,price,sqft,beds,baths,yearBuilt,propertyType,underContract,score,tier,impliedValue:price/sqft*subject.s,direct:normalizeMarketAddress(address)===subjAddr});
+        const sameStreet=normalizeStreetName(address)===subjStreet;
+        if(sameStreet) score-=12;
+        ranked.push({address,area,price,sqft,beds,baths,yearBuilt,propertyType,underContract,score,tier,impliedValue:price/sqft*subject.s,direct:normalizeMarketAddress(address)===subjAddr,sameStreet});
     }
     ranked.sort((a,b)=>(a.direct===b.direct?0:(a.direct?-1:1))||a.score-b.score);
     const direct=ranked.find(x=>x.direct);
+    const streetAnchors=ranked.filter(x=>x.sameStreet && Math.abs(x.sqft-subject.s)/subject.s<=.25).slice(0,4);
     let pool=ranked.filter(x=>x.tier===0).slice(0,8);
     if(pool.length<3) pool=ranked.filter(x=>x.tier<=1).slice(0,8);
     if(pool.length<3) pool=ranked.slice(0,8);
@@ -1240,7 +1247,7 @@ function getCurrentMarketReality(subject){
     const med=median(pool.map(x=>x.impliedValue));
     const weighted=weightedAverage(pool.map(x=>({v:x.impliedValue,w:(x.underContract?1.25:1)/Math.pow(1+x.score/25,1.25)})));
     const benchmark=Math.max(med*.88,Math.min(med*1.12,weighted||med));
-    return {direct,pool,benchmark,underContractCount:pool.filter(x=>x.underContract).length,asOf:data.currentMarketAsOf};
+    return {direct,streetAnchors,pool,benchmark,underContractCount:pool.filter(x=>x.underContract).length,asOf:data.currentMarketAsOf};
 }
 function applyCurrentMarketReality(value,subject){
     const reality=getCurrentMarketReality(subject);
@@ -1249,6 +1256,10 @@ function applyCurrentMarketReality(value,subject){
     if(reality.direct){
         const cap=reality.direct.price*(reality.direct.underContract?1.04:1.08);
         if(adjusted>cap){ adjusted=cap; reason='direct listing anchor'; }
+    }else if(reality.streetAnchors && reality.streetAnchors.length){
+        const streetBenchmark=median(reality.streetAnchors.map(x=>x.impliedValue));
+        const streetCap=streetBenchmark*1.08;
+        if(adjusted>streetCap){ adjusted=streetCap; reason='same-street current-market anchor'; }
     }else if(reality.pool.length>=3 && reality.benchmark>0){
         const ratio=adjusted/reality.benchmark;
         if(ratio>1.20){ adjusted=Math.min(adjusted*.35+reality.benchmark*.65,reality.benchmark*1.10); reason='strong current-competition adjustment'; }
