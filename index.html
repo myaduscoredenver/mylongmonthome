@@ -488,6 +488,10 @@
 <p class="text-slate-700 text-sm" id="compBasisText">Loading comparable-sale details…</p>
 <div class="mt-4 space-y-2 text-sm" id="compList"></div>
 </div>
+<div class="hidden bg-amber-50 rounded-xl p-6 mb-8 border border-amber-200" id="marketRealityCard">
+<p class="text-navy-900 font-semibold mb-2">Current-Market Reality Check</p>
+<p class="text-slate-700 text-sm" id="marketRealityText"></p>
+</div>
 <!-- Info Text -->
 <div class="bg-navy-50 border-l-4 border-navy-700 rounded-lg p-6 mb-8">
 <p class="text-navy-900 font-semibold mb-2">Understanding Your Estimate</p>
@@ -1205,6 +1209,54 @@ function pickComparableSales(subject){
     if(pool.length<3){ pool=ranked.slice(0,8); tier='citywide last-resort matches'; }
     return {comps:pool,tier};
 }
+function normalizeMarketAddress(value){
+    return String(value||'').toLowerCase().replace(/,\s*longmont\s+\d{5}.*$/,'').replace(/\s+hoa:.*$/,'').replace(/[^a-z0-9]/g,'');
+}
+function getCurrentMarketReality(subject){
+    const data=window.HOME_ESTIMATOR_DATA;
+    if(!data || !Array.isArray(data.currentListings) || !subject || !subject.s || !subject.u) return null;
+    const same=subject.n, fallbacks=getFallbackAreas(same), subjAddr=normalizeMarketAddress(subject.a);
+    const subjYear=Number(subject.y)||null, subjBeds=Number(subject.b)||null, subjBaths=Number(subject.t)||null;
+    const ranked=[];
+    for(const r of data.currentListings){
+        const [address,area,price,sqft,beds,baths,yearBuilt,propertyType,underContract]=r;
+        if(!price||!sqft||propertyType!==subject.u) continue;
+        let tier=2;
+        if(area===same) tier=0; else if(fallbacks.includes(area)) tier=1;
+        const sqftDiff=Math.abs(sqft-subject.s)/subject.s;
+        if(sqftDiff>.55 && normalizeMarketAddress(address)!==subjAddr) continue;
+        let score=tier*35+sqftDiff*62+(underContract?-5:0);
+        if(subjYear&&yearBuilt) score+=Math.min(16,Math.abs(yearBuilt-subjYear)*.25);
+        if(subjBeds&&beds) score+=Math.abs(beds-subjBeds)*4;
+        if(subjBaths&&baths) score+=Math.abs(baths-subjBaths)*3;
+        ranked.push({address,area,price,sqft,beds,baths,yearBuilt,propertyType,underContract,score,tier,impliedValue:price/sqft*subject.s,direct:normalizeMarketAddress(address)===subjAddr});
+    }
+    ranked.sort((a,b)=>(a.direct===b.direct?0:(a.direct?-1:1))||a.score-b.score);
+    const direct=ranked.find(x=>x.direct);
+    let pool=ranked.filter(x=>x.tier===0).slice(0,8);
+    if(pool.length<3) pool=ranked.filter(x=>x.tier<=1).slice(0,8);
+    if(pool.length<3) pool=ranked.slice(0,8);
+    if(!pool.length) return null;
+    const med=median(pool.map(x=>x.impliedValue));
+    const weighted=weightedAverage(pool.map(x=>({v:x.impliedValue,w:(x.underContract?1.25:1)/Math.pow(1+x.score/25,1.25)})));
+    const benchmark=Math.max(med*.88,Math.min(med*1.12,weighted||med));
+    return {direct,pool,benchmark,underContractCount:pool.filter(x=>x.underContract).length,asOf:data.currentMarketAsOf};
+}
+function applyCurrentMarketReality(value,subject){
+    const reality=getCurrentMarketReality(subject);
+    if(!reality) return {value,reality:null,adjustment:0};
+    let adjusted=value, reason='';
+    if(reality.direct){
+        const cap=reality.direct.price*(reality.direct.underContract?1.04:1.08);
+        if(adjusted>cap){ adjusted=cap; reason='direct listing anchor'; }
+    }else if(reality.pool.length>=3 && reality.benchmark>0){
+        const ratio=adjusted/reality.benchmark;
+        if(ratio>1.20){ adjusted=Math.min(adjusted*.35+reality.benchmark*.65,reality.benchmark*1.10); reason='strong current-competition adjustment'; }
+        else if(ratio>1.10){ adjusted=adjusted*.55+reality.benchmark*.45; reason='current-competition adjustment'; }
+        else if(ratio>1.05){ adjusted=adjusted*.75+reality.benchmark*.25; reason='light current-competition adjustment'; }
+    }
+    return {value:adjusted,reality:{...reality,reason,preRealityValue:value,postRealityValue:adjusted},adjustment:value-adjusted};
+}
 function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen=null,conditionNow=null,kitchen=null,investmentAmount=null){
     const subject=currentProperty||{a:document.getElementById('addressInput').value,n:currentNeighborhood,s:Number(document.getElementById('manualSqft').value)||null,y:null,b:null,t:null,u:(document.getElementById('manualPropertyType')||{}).value||null};
     subject.s=Number(document.getElementById('manualSqft').value)||subject.s;
@@ -1222,11 +1274,16 @@ function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen
     const boosts={kitchen:.018,roof:.009,hvac:.008,masterbath:.012,bathroom:.009,flooring:.008,windows:.008};
     renovations.forEach(r=>renovationBoost+=currentValue*(boosts[r]||0));
     currentValue+=renovationBoost;
+    const preRealityValue=currentValue;
+    const realityResult=applyCurrentMarketReality(currentValue,subject);
+    currentValue=realityResult.value;
+    const realityAdjustment=Math.max(0,preRealityValue-currentValue);
     const deviations=psfs.map(x=>Math.abs(x-med)/med);
     const dispersion=median(deviations);
     let rangePct=Math.max(.055,Math.min(.13,.045+dispersion*.65+(picked.comps.length<5?.025:0)+(picked.comps.some(c=>c.tier===2)?.02:0)));
     const year=parseInt(purchaseDate)||2026;
-    return {originalPrice:purchasePrice,currentValue:Math.round(currentValue),equity:Math.round(currentValue-purchasePrice),yearsOwned:Math.max(0,2026-year),renovationBoost:Math.round(renovationBoost),rangePct,comps:picked.comps,tier:picked.tier,basePsf};
+    if(realityAdjustment>0) rangePct=Math.max(rangePct,.08);
+    return {originalPrice:purchasePrice,currentValue:Math.round(currentValue),equity:Math.round(currentValue-purchasePrice),yearsOwned:Math.max(0,2026-year),renovationBoost:Math.round(renovationBoost),rangePct,comps:picked.comps,tier:picked.tier,basePsf,reality:realityResult.reality,realityAdjustment:Math.round(realityAdjustment)};
 }
 function calculateManual(){
     const year=document.getElementById('manualPurchaseYear').value;
@@ -1264,9 +1321,19 @@ function displayResults(property,manual=null){
     basis.textContent=`Based on ${data.comps.length} weighted sold comps (${data.tier}). The model emphasizes the newest sales and applies a conservative downward time adjustment to older comps in the current softer market. Median/weighted adjusted comp rate: about ${formatCurrency(data.basePsf)} per finished sq. ft.`;
     const list=document.getElementById('compList'); list.innerHTML='';
     data.comps.slice(0,5).forEach(c=>{const d=document.createElement('div');d.className='flex justify-between gap-4 border-t border-slate-100 pt-2';d.innerHTML=`<span class="text-slate-600">${c.address} · ${c.date.slice(0,7)} · ${c.sqft.toLocaleString()} sf</span><span class="font-semibold text-navy-900 whitespace-nowrap">${formatCurrency(c.price)}</span>`;list.appendChild(d);});
+    const realityCard=document.getElementById('marketRealityCard'),realityText=document.getElementById('marketRealityText');
+    if(data.reality){
+        const r=data.reality, n=r.pool.length, pending=r.underContractCount;
+        let msg=`Checked against ${n} same-type current listings`;
+        if(pending) msg+=` (${pending} under contract)`;
+        msg+=` as of ${r.asOf}. Current competition implied a benchmark near ${formatCurrency(r.benchmark)}.`;
+        if(data.realityAdjustment>0) msg+=` Because the sold-comp result was materially above current competition, the estimate was reduced by ${formatCurrency(data.realityAdjustment)}.`;
+        else msg+=` The sold-comp result was within a reasonable range of current competition, so no downward adjustment was applied.`;
+        realityText.textContent=msg;realityCard.classList.remove('hidden');
+    }else realityCard.classList.add('hidden');
     document.getElementById('manualEntryForm').classList.add('hidden');document.getElementById('resultsSection').classList.remove('hidden');
     setTimeout(()=>document.getElementById('resultsSection').scrollIntoView({behavior:'smooth'}),200);
-    const payload=new FormData(); payload.append('_subject','Home Value Check - MyLongmontHome.com');payload.append('Form','Home Value Check');payload.append('Address',document.getElementById('addressInput').value||'Manual entry');payload.append('Neighborhood Model',currentNeighborhood||'Unknown');payload.append('Comparable Sales Used',data.comps.length);payload.append('Comp Tier',data.tier);payload.append('Estimated Market Value',formatCurrency(estimatedValue));payload.append('Likely Selling Range',`${formatCurrency(likelyLow)} to ${formatCurrency(likelyHigh)}`);payload.append('Confidence',confidence);
+    const payload=new FormData(); payload.append('_subject','Home Value Check - MyLongmontHome.com');payload.append('Form','Home Value Check');payload.append('Address',document.getElementById('addressInput').value||'Manual entry');payload.append('Neighborhood Model',currentNeighborhood||'Unknown');payload.append('Comparable Sales Used',data.comps.length);payload.append('Comp Tier',data.tier);payload.append('Estimated Market Value',formatCurrency(estimatedValue));payload.append('Likely Selling Range',`${formatCurrency(likelyLow)} to ${formatCurrency(likelyHigh)}`);payload.append('Confidence',confidence);payload.append('Current Market Reality Adjustment',data.realityAdjustment?formatCurrency(data.realityAdjustment):'None');
     fetch('https://formspree.io/f/mlgqdnan',{method:'POST',body:payload,headers:{Accept:'application/json'}}).catch(()=>{});
 }
 function toggleRenovation(type){const button=event.target.closest('button');const i=selectedRenovations.indexOf(type);if(i>-1){selectedRenovations.splice(i,1);button.classList.remove('active');}else{selectedRenovations.push(type);button.classList.add('active');}}
