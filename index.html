@@ -393,15 +393,6 @@
 <p class="text-xs text-slate-500 mt-1">Used to compare your home with similarly sized recent sales.</p>
 </div>
 <div>
-<label class="block text-sm font-medium text-slate-700 mb-2">Property Type</label>
-<select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualPropertyType">
-<option value="">Confirm property type</option>
-<option value="Detached">Detached house</option>
-<option value="Attached">Condo or attached townhome</option>
-</select>
-<p class="text-xs text-slate-500 mt-1">Required. The estimator uses only the property type you confirm. Garage type is ignored.</p>
-</div>
-<div>
 <label class="block text-sm font-medium text-slate-700 mb-2">Condition When You Bought It</label>
 <select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualConditionThen">
 <option value="">Select condition</option>
@@ -1185,6 +1176,7 @@ function pickComparableSales(subject){
     const now=parseIsoDate(data.asOf)||new Date();
     const subjYear=Number(subject.y)||null, subjBeds=Number(subject.b)||null, subjBaths=Number(subject.t)||null;
     const subjectAddress=(subject.a||'').toLowerCase();
+    const subjectStreet=normalizeStreetName(subject.a);
     const ranked=[];
     for(const r of data.sales){
         const [address,area,price,date,sqft,beds,baths,yearBuilt,subdivision,style,propertyType]=r;
@@ -1203,27 +1195,39 @@ function pickComparableSales(subject){
         if(subjBeds && beds) score += Math.abs(beds-subjBeds)*4;
         if(subjBaths && baths) score += Math.abs(baths-subjBaths)*3;
         if(ageMonths>36) score += (ageMonths-36)*.8;
+        const sameStreet=normalizeStreetName(address)===subjectStreet;
+        if(sameStreet) score-=30;
         const monthlyTrend=Number(data.marketTrendMonthly)||0;
         const trendMonths=Math.min(ageMonths,Number(data.marketTrendMaxMonths)||24);
         const adjustedPrice=price*Math.pow(1+monthlyTrend,trendMonths);
-        ranked.push({address,area:areaLabel,price,date,sqft,beds,baths,yearBuilt,psf:adjustedPrice/sqft,rawPsf:price/sqft,adjustedPrice,score,tier,ageMonths});
+        ranked.push({address,area:areaLabel,price,date,sqft,beds,baths,yearBuilt,psf:adjustedPrice/sqft,rawPsf:price/sqft,adjustedPrice,score,tier,ageMonths,sameStreet});
     }
     ranked.sort((a,b)=>a.score-b.score);
-    // Enforce the requested hierarchy: same neighborhood first; then user-defined similar neighborhoods; citywide only if still sparse.
-    let pool=ranked.filter(x=>x.tier===0 && x.ageMonths<=18).slice(0,8);
+    // Same-street sales are the strongest local evidence and must not be crowded out by broader area matches.
+    const streetComps=ranked.filter(x=>x.sameStreet && x.ageMonths<=48 && Math.abs(x.sqft-subject.s)/subject.s<=.55).slice(0,5);
+    let broader=ranked.filter(x=>x.tier===0 && x.ageMonths<=18).slice(0,8);
     let tier='same neighborhood, recent sales with soft-market time adjustment';
-    if(pool.length<5){ pool=ranked.filter(x=>x.tier===0 && x.ageMonths<=36).slice(0,8); tier='same neighborhood, expanded recency'; }
-    if(pool.length<5){ pool=ranked.filter(x=>x.tier<=1 && x.ageMonths<=24).slice(0,8); tier='same + similar neighborhoods'; }
-    if(pool.length<5){ pool=ranked.filter(x=>x.tier<=1 && x.ageMonths<=48).slice(0,8); tier='same + similar neighborhoods, expanded recency'; }
-    if(pool.length<3){ pool=ranked.slice(0,8); tier='citywide last-resort matches'; }
-    return {comps:pool,tier};
+    if(broader.length<5){ broader=ranked.filter(x=>x.tier===0 && x.ageMonths<=36).slice(0,8); tier='same neighborhood, expanded recency'; }
+    if(broader.length<5){ broader=ranked.filter(x=>x.tier<=1 && x.ageMonths<=24).slice(0,8); tier='same + similar neighborhoods'; }
+    if(broader.length<5){ broader=ranked.filter(x=>x.tier<=1 && x.ageMonths<=48).slice(0,8); tier='same + similar neighborhoods, expanded recency'; }
+    if(broader.length<3){ broader=ranked.slice(0,8); tier='citywide last-resort matches'; }
+    const seen=new Set(), pool=[];
+    [...streetComps,...broader].forEach(x=>{const key=normalizeMarketAddress(x.address)+'|'+x.date;if(!seen.has(key)&&pool.length<8){seen.add(key);pool.push(x);}});
+    if(streetComps.length) tier=`${streetComps.length} recent same-street sale${streetComps.length===1?'':'s'} plus ${tier}`;
+    return {comps:pool,tier,streetCompCount:streetComps.length};
 }
 function normalizeMarketAddress(value){
     return String(value||'').toLowerCase().replace(/,\s*longmont\s+\d{5}.*$/,'').replace(/\s+hoa:.*$/,'').replace(/[^a-z0-9]/g,'');
 }
 function normalizeStreetName(value){
-    return String(value||'').toLowerCase().replace(/,\s*longmont\s+\d{5}.*$/,'').replace(/\s+hoa:.*$/,'')
-        .replace(/^\s*\d+[a-z]?\s+/,'').replace(/\s+(?:#?\w+|unit\s+\w+)$/,'').replace(/[^a-z0-9]/g,'');
+    return String(value||'').toLowerCase()
+        .replace(/,\s*longmont\s+\d{5}.*$/,'').replace(/\s+hoa:.*$/,'')
+        .replace(/\b(circle|cir|cr)\b/g,' cir').replace(/\b(court|ct)\b/g,' ct')
+        .replace(/\b(street|st)\b/g,' st').replace(/\b(avenue|ave|av)\b/g,' ave')
+        .replace(/\b(lane|ln)\b/g,' ln').replace(/\b(drive|dr)\b/g,' dr')
+        .replace(/\b(place|pl)\b/g,' pl').replace(/\b(road|rd)\b/g,' rd')
+        .replace(/\b(way)\b/g,' way').replace(/^\s*\d+[a-z]?\s+/,'')
+        .replace(/\s+(?:#\s*\w+|unit\s+\w+)$/,'').replace(/[^a-z0-9]/g,'');
 }
 function getCurrentMarketReality(subject){
     const data=window.HOME_ESTIMATOR_DATA;
@@ -1278,10 +1282,10 @@ function applyCurrentMarketReality(value,subject){
     return {value:adjusted,reality:{...reality,reason,preRealityValue:value,postRealityValue:adjusted},adjustment:value-adjusted};
 }
 function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen=null,conditionNow=null,kitchen=null,investmentAmount=null){
-    const confirmedType=(document.getElementById('manualPropertyType')||{}).value||null;
+    const confirmedType=(currentProperty&&currentProperty.u)||null;
     const subject=currentProperty?{...currentProperty,u:confirmedType}:{a:document.getElementById('addressInput').value,n:currentNeighborhood,s:Number(document.getElementById('manualSqft').value)||null,y:null,b:null,t:null,u:confirmedType};
     subject.s=Number(document.getElementById('manualSqft').value)||subject.s;
-    if(!subject.u) throw new Error('Please confirm whether the property is detached or attached.');
+    if(!subject.u) throw new Error('Please select a recognized Longmont address from the suggestions.');
     const picked=pickComparableSales(subject);
     if(!picked.comps.length) throw new Error('Not enough comparable sales were available. Please request a CMA.');
     const weighted=picked.comps.map((c,i)=>({v:c.psf,w:1/Math.pow(1+c.score/25,1.35)}));
@@ -1315,8 +1319,7 @@ function calculateManual(){
     const conditionNow=document.getElementById('manualConditionNow').value;
     const kitchen=document.getElementById('manualKitchen').value;
     const investment=document.getElementById('manualInvestment').value;
-    const propertyType=document.getElementById('manualPropertyType').value;
-    if(!year||!price||!sqft||!propertyType||!conditionThen||!conditionNow||!kitchen){ alert('Please fill in purchase year, purchase price, finished square footage, property type, and condition details.'); return; }
+    if(!year||!price||!sqft||!conditionThen||!conditionNow||!kitchen){ alert('Please fill in purchase year, purchase price, finished square footage, and condition details.'); return; }
     try{ currentCalculation=calculateEquity(price,year,selectedRenovations,conditionThen,conditionNow,kitchen,investment||null); displayResults(null,{purchasePrice:price,purchaseDate:year}); }
     catch(err){ alert(err.message); }
 }
@@ -1341,7 +1344,7 @@ function displayResults(property,manual=null){
     const rb=document.getElementById('renovationBoostCard');
     if(data.renovationBoost>0){document.getElementById('renovationBoostDisplay').textContent='+'+formatCurrency(data.renovationBoost);rb.classList.remove('hidden');}else rb.classList.add('hidden');
     const basis=document.getElementById('compBasisText');
-    basis.textContent=`Based on ${data.comps.length} weighted ${data.propertyType.toLowerCase()} sold comps only (${data.tier}). Garage descriptions are not used as property type. The model emphasizes the newest sales and applies a conservative downward time adjustment to older comps in the current softer market. Median/weighted adjusted comp rate: about ${formatCurrency(data.basePsf)} per finished sq. ft.`;
+    basis.textContent=`Based on ${data.comps.length} weighted sold comps (${data.tier}). The model emphasizes the newest and most local sales, including recent same-street sales when available, and applies a conservative downward time adjustment to older comps. Median/weighted adjusted comp rate: about ${formatCurrency(data.basePsf)} per finished sq. ft.`;
     const list=document.getElementById('compList'); list.innerHTML='';
     data.comps.slice(0,5).forEach(c=>{const d=document.createElement('div');d.className='flex justify-between gap-4 border-t border-slate-100 pt-2';d.innerHTML=`<span class="text-slate-600">${c.address} · ${c.date.slice(0,7)} · ${c.sqft.toLocaleString()} sf</span><span class="font-semibold text-navy-900 whitespace-nowrap">${formatCurrency(c.price)}</span>`;list.appendChild(d);});
     const realityCard=document.getElementById('marketRealityCard'),realityText=document.getElementById('marketRealityText');
@@ -1350,6 +1353,7 @@ function displayResults(property,manual=null){
         let msg=`Checked against ${n} same-type current listings`;
         if(pending) msg+=` (${pending} under contract)`;
         msg+=` as of ${r.asOf}. Current competition implied a benchmark near ${formatCurrency(r.benchmark)}.`;
+        if(r.streetAnchors&&r.streetAnchors.length){const a=r.streetAnchors[0];msg+=` A same-street listing at ${a.address} is asking ${formatCurrency(a.price)}.`;}
         if(data.realityAdjustment>0) msg+=` Because the sold-comp result was materially above current competition, the estimate was reduced by ${formatCurrency(data.realityAdjustment)}.`;
         else msg+=` The sold-comp result was within a reasonable range of current competition, so no downward adjustment was applied.`;
         realityText.textContent=msg;realityCard.classList.remove('hidden');
@@ -1396,17 +1400,17 @@ addressInput.addEventListener('input',function(e){
  const q=normalizeAddressInput(e.target.value); if(q.length<2){addressDropdown.classList.add('hidden');return;} if(!window.HOME_ESTIMATOR_DATA){loadEstimatorData();return;}
  const tokens=q.split(' '); const matches=propertyEntries().filter(([k,p])=>tokens.every(t=>k.includes(t)||p.a.toLowerCase().includes(t))).slice(0,10);
  if(!matches.length){addressDropdown.classList.add('hidden');return;} addressDropdown.innerHTML='';
- matches.forEach(([key,p])=>{const div=document.createElement('div');div.className='px-4 py-3 border-b border-slate-200 cursor-pointer text-navy-900 hover:bg-navy-50 transition-colors';div.innerHTML=`<div class="font-medium">${p.a}</div><div class="text-xs text-slate-500">${p.u?p.u+' suggestion':'Property type must be confirmed'}</div>`;div.onclick=(ev)=>{ev.preventDefault();selectAddress(key);};addressDropdown.appendChild(div);});addressDropdown.classList.remove('hidden');
+ matches.forEach(([key,p])=>{const div=document.createElement('div');div.className='px-4 py-3 border-b border-slate-200 cursor-pointer text-navy-900 hover:bg-navy-50 transition-colors';div.innerHTML=`<div class="font-medium">${p.a}</div>${p.d?`<div class="text-xs text-slate-500">${p.d}</div>`:''}`;div.onclick=(ev)=>{ev.preventDefault();selectAddress(key);};addressDropdown.appendChild(div);});addressDropdown.classList.remove('hidden');
 });
 document.addEventListener('click',e=>{if(e.target!==addressInput&&!addressDropdown.contains(e.target))addressDropdown.classList.add('hidden');});
 function selectAddress(key){
  const p=window.HOME_ESTIMATOR_DATA.properties[key]; if(!p)return; currentPropertyKey=key;currentProperty={...p};currentNeighborhood=p.n;currentSubdivision=p.d||null;addressInput.value=p.a;addressDropdown.classList.add('hidden');
- document.getElementById('manualPurchaseYear').value=p.q?p.q.slice(0,4):'';document.getElementById('manualPurchasePrice').value=p.p||'';document.getElementById('manualSqft').value=p.s||'';document.getElementById('manualPropertyType').value=['user_confirmed','current_mls_type','historical_source_consensus'].includes(p.z)?(p.u||''):'';
+ document.getElementById('manualPurchaseYear').value=p.q?p.q.slice(0,4):'';document.getElementById('manualPurchasePrice').value=p.p||'';document.getElementById('manualSqft').value=p.s||'';
  document.getElementById('manualConditionThen').value='upgrades';document.getElementById('manualConditionNow').value='nothing';document.getElementById('manualKitchen').value='outdated';manualForm.classList.remove('hidden');setTimeout(()=>manualForm.scrollIntoView({behavior:'smooth',block:'start'}),100);
 }
 searchButton.addEventListener('click',function(){
  const q=normalizeAddressInput(addressInput.value);if(!q)return;addressDropdown.classList.add('hidden');if(!window.HOME_ESTIMATOR_DATA){loadEstimatorData();setTimeout(()=>searchButton.click(),500);return;}
- const exact=propertyEntries().find(([k,p])=>k===q||normalizeAddressInput(p.a)===q);if(exact)selectAddress(exact[0]);else{currentProperty=null;currentNeighborhood=null;document.getElementById('manualPropertyType').value='';manualForm.classList.remove('hidden');setTimeout(()=>manualForm.scrollIntoView({behavior:'smooth',block:'start'}),100);}
+ const exact=propertyEntries().find(([k,p])=>k===q||normalizeAddressInput(p.a)===q);if(exact)selectAddress(exact[0]);else{currentProperty=null;currentNeighborhood=null;alert('Please select your address from the suggestions so the estimator can match the correct property record.');return;}
 });
 addressInput.addEventListener('keypress',e=>{if(e.key==='Enter'){e.preventDefault();searchButton.click();}});
 </script>
