@@ -441,6 +441,12 @@
                         </button>
 </div>
 <p class="text-xs text-slate-500 mt-3 leading-relaxed"><strong>Privacy:</strong> The information you enter and the estimate generated may be securely recorded to help improve this estimator. Using this tool will not add you to a marketing list.</p></div>
+<!-- Outside Longmont CTA -->
+<div class="text-center mb-8">
+<button class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-navy-900 font-semibold py-3 px-6 rounded-lg border border-slate-200 transition-colors" onclick="showFeedbackForm('external')" type="button">
+                            Not in Longmont? Click Here for Your Free CMA
+                        </button>
+</div>
 <!-- Results Display -->
 <div class="hidden" id="resultsSection">
 <!-- Main Value Card with Range -->
@@ -509,13 +515,14 @@
                             This Doesn't Look Right
                         </button>
 </div>
-<!-- Feedback Form (Hidden by default) -->
+</div>
+<!-- Feedback / CMA Request Form (Hidden by default; shared by "This Doesn't Look Right" and "Not in Longmont?") -->
 <div class="hidden bg-white rounded-xl border border-slate-200 p-8" id="feedbackFormSection">
-<h3 class="font-serif text-2xl font-semibold text-navy-900 mb-2">Request a More Accurate CMA</h3>
-<p class="text-slate-600 mb-6">If the estimate does not look right, tell me what the calculator may have missed. I will review the property details and follow up with a more personalized comparative market analysis.</p>
+<h3 class="font-serif text-2xl font-semibold text-navy-900 mb-2" id="feedbackFormHeading">Request a More Accurate CMA</h3>
+<p class="text-slate-600 mb-6" id="feedbackFormIntro">If the estimate does not look right, tell me what the calculator may have missed. I will review the property details and follow up with a more personalized comparative market analysis.</p>
 <form action="https://formspree.io/f/mrenblva" class="space-y-6" id="feedbackForm" method="POST">
-<input name="_subject" type="hidden" value="CMA Request - Home Value Estimate Doesn't Look Right"/>
-<input name="Form" type="hidden" value="Doesn't Look Right / CMA Request"/>
+<input name="_subject" type="hidden" value="CMA Request - Home Value Estimate Doesn't Look Right" id="feedbackSubjectField"/>
+<input name="Form" type="hidden" value="Doesn't Look Right / CMA Request" id="feedbackFormTypeField"/>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 <div>
 <label class="block text-sm font-semibold text-navy-900 mb-2">Name *</label>
@@ -537,7 +544,7 @@
 </div>
 </div>
 <div>
-<label class="block text-sm font-semibold text-navy-900 mb-2">Tell Me About the Improvements You Have Made to the Property During Your Ownership *</label>
+<label class="block text-sm font-semibold text-navy-900 mb-2" id="feedbackImprovementsLabel">Tell Me About the Improvements You Have Made to the Property During Your Ownership *</label>
 <textarea class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent resize-none" id="feedbackImprovements" name="Improvements and Corrections" placeholder="Describe any renovations, upgrades, or improvements you've made (e.g., kitchen remodel in 2018, new roof in 2020, etc.)" required="" rows="6"></textarea>
 </div>
 <div class="flex gap-4">
@@ -553,7 +560,6 @@
                             </div>
 <div class="hidden bg-red-50 border border-red-300 text-red-800 px-5 py-4 rounded-lg text-center font-medium" id="feedbackErrorMessage"></div>
 </form>
-</div>
 </div>
 </div>
 </section>
@@ -1366,8 +1372,22 @@ function displayResults(property,manual=null){
 }
 function toggleRenovation(type){const button=event.target.closest('button');const i=selectedRenovations.indexOf(type);if(i>-1){selectedRenovations.splice(i,1);button.classList.remove('active');}else{selectedRenovations.push(type);button.classList.add('active');}}
 function recalculateWithRenovations(){ if(!currentCalculation)return; calculateManual(); }
-function showFeedbackForm(){
+function showFeedbackForm(source){
  const section=document.getElementById('feedbackFormSection');const addr=document.getElementById('addressInput').value.trim();const field=document.getElementById('feedbackAddress');if(addr&&!field.value)field.value=addr;
+ const heading=document.getElementById('feedbackFormHeading');const intro=document.getElementById('feedbackFormIntro');const subjectField=document.getElementById('feedbackSubjectField');const typeField=document.getElementById('feedbackFormTypeField');const improvementsLabel=document.getElementById('feedbackImprovementsLabel');
+ if(source==='external'){
+   heading.textContent='Get Your Free CMA';
+   intro.textContent="This estimator only covers Longmont right now, but I'm happy to put together a free comparative market analysis for your property wherever it is. Tell me a bit about it and I'll follow up.";
+   subjectField.value='CMA Request - Outside Longmont Service Area';
+   typeField.value='Not in Longmont / Free CMA Request';
+   improvementsLabel.textContent='Tell Me About Your Property *';
+ }else{
+   heading.textContent='Request a More Accurate CMA';
+   intro.textContent='If the estimate does not look right, tell me what the calculator may have missed. I will review the property details and follow up with a more personalized comparative market analysis.';
+   subjectField.value='CMA Request - Home Value Estimate Doesn\'t Look Right';
+   typeField.value='Doesn\'t Look Right / CMA Request';
+   improvementsLabel.textContent='Tell Me About the Improvements You Have Made to the Property During Your Ownership *';
+ }
  document.getElementById('feedbackSuccessMessage').classList.add('hidden');document.getElementById('feedbackErrorMessage').classList.add('hidden');section.classList.remove('hidden');setTimeout(()=>section.scrollIntoView({behavior:'smooth'}),200);
 }
 function hideFeedbackForm(){document.getElementById('feedbackFormSection').classList.add('hidden');}
