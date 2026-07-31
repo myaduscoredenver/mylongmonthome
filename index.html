@@ -393,6 +393,15 @@
 <p class="text-xs text-slate-500 mt-1">Used to compare your home with similarly sized recent sales.</p>
 </div>
 <div>
+<label class="block text-sm font-medium text-slate-700 mb-2">Property Type</label>
+<select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualPropertyType">
+<option value="">Confirm property type</option>
+<option value="Detached">Detached house</option>
+<option value="Attached">Condo or attached townhome</option>
+</select>
+<p class="text-xs text-slate-500 mt-1">Required. The estimator uses only the property type you confirm. Garage type is ignored.</p>
+</div>
+<div>
 <label class="block text-sm font-medium text-slate-700 mb-2">Condition When You Bought It</label>
 <select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualConditionThen">
 <option value="">Select condition</option>
@@ -1269,8 +1278,10 @@ function applyCurrentMarketReality(value,subject){
     return {value:adjusted,reality:{...reality,reason,preRealityValue:value,postRealityValue:adjusted},adjustment:value-adjusted};
 }
 function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen=null,conditionNow=null,kitchen=null,investmentAmount=null){
-    const subject=currentProperty||{a:document.getElementById('addressInput').value,n:currentNeighborhood,s:Number(document.getElementById('manualSqft').value)||null,y:null,b:null,t:null,u:(document.getElementById('manualPropertyType')||{}).value||null};
+    const confirmedType=(document.getElementById('manualPropertyType')||{}).value||null;
+    const subject=currentProperty?{...currentProperty,u:confirmedType}:{a:document.getElementById('addressInput').value,n:currentNeighborhood,s:Number(document.getElementById('manualSqft').value)||null,y:null,b:null,t:null,u:confirmedType};
     subject.s=Number(document.getElementById('manualSqft').value)||subject.s;
+    if(!subject.u) throw new Error('Please confirm whether the property is detached or attached.');
     const picked=pickComparableSales(subject);
     if(!picked.comps.length) throw new Error('Not enough comparable sales were available. Please request a CMA.');
     const weighted=picked.comps.map((c,i)=>({v:c.psf,w:1/Math.pow(1+c.score/25,1.35)}));
@@ -1294,7 +1305,7 @@ function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen
     let rangePct=Math.max(.055,Math.min(.13,.045+dispersion*.65+(picked.comps.length<5?.025:0)+(picked.comps.some(c=>c.tier===2)?.02:0)));
     const year=parseInt(purchaseDate)||2026;
     if(realityAdjustment>0) rangePct=Math.max(rangePct,.08);
-    return {originalPrice:purchasePrice,currentValue:Math.round(currentValue),equity:Math.round(currentValue-purchasePrice),yearsOwned:Math.max(0,2026-year),renovationBoost:Math.round(renovationBoost),rangePct,comps:picked.comps,tier:picked.tier,basePsf,reality:realityResult.reality,realityAdjustment:Math.round(realityAdjustment)};
+    return {originalPrice:purchasePrice,currentValue:Math.round(currentValue),equity:Math.round(currentValue-purchasePrice),yearsOwned:Math.max(0,2026-year),renovationBoost:Math.round(renovationBoost),rangePct,comps:picked.comps,tier:picked.tier,basePsf,reality:realityResult.reality,realityAdjustment:Math.round(realityAdjustment),propertyType:subject.u};
 }
 function calculateManual(){
     const year=document.getElementById('manualPurchaseYear').value;
@@ -1304,7 +1315,8 @@ function calculateManual(){
     const conditionNow=document.getElementById('manualConditionNow').value;
     const kitchen=document.getElementById('manualKitchen').value;
     const investment=document.getElementById('manualInvestment').value;
-    if(!year||!price||!sqft||!conditionThen||!conditionNow||!kitchen){ alert('Please fill in purchase year, purchase price, finished square footage, and condition details.'); return; }
+    const propertyType=document.getElementById('manualPropertyType').value;
+    if(!year||!price||!sqft||!propertyType||!conditionThen||!conditionNow||!kitchen){ alert('Please fill in purchase year, purchase price, finished square footage, property type, and condition details.'); return; }
     try{ currentCalculation=calculateEquity(price,year,selectedRenovations,conditionThen,conditionNow,kitchen,investment||null); displayResults(null,{purchasePrice:price,purchaseDate:year}); }
     catch(err){ alert(err.message); }
 }
@@ -1329,7 +1341,7 @@ function displayResults(property,manual=null){
     const rb=document.getElementById('renovationBoostCard');
     if(data.renovationBoost>0){document.getElementById('renovationBoostDisplay').textContent='+'+formatCurrency(data.renovationBoost);rb.classList.remove('hidden');}else rb.classList.add('hidden');
     const basis=document.getElementById('compBasisText');
-    basis.textContent=`Based on ${data.comps.length} weighted sold comps (${data.tier}). The model emphasizes the newest sales and applies a conservative downward time adjustment to older comps in the current softer market. Median/weighted adjusted comp rate: about ${formatCurrency(data.basePsf)} per finished sq. ft.`;
+    basis.textContent=`Based on ${data.comps.length} weighted ${data.propertyType.toLowerCase()} sold comps only (${data.tier}). Garage descriptions are not used as property type. The model emphasizes the newest sales and applies a conservative downward time adjustment to older comps in the current softer market. Median/weighted adjusted comp rate: about ${formatCurrency(data.basePsf)} per finished sq. ft.`;
     const list=document.getElementById('compList'); list.innerHTML='';
     data.comps.slice(0,5).forEach(c=>{const d=document.createElement('div');d.className='flex justify-between gap-4 border-t border-slate-100 pt-2';d.innerHTML=`<span class="text-slate-600">${c.address} · ${c.date.slice(0,7)} · ${c.sqft.toLocaleString()} sf</span><span class="font-semibold text-navy-900 whitespace-nowrap">${formatCurrency(c.price)}</span>`;list.appendChild(d);});
     const realityCard=document.getElementById('marketRealityCard'),realityText=document.getElementById('marketRealityText');
@@ -1361,7 +1373,7 @@ document.getElementById('feedbackForm').addEventListener('submit',async function
 });
 document.getElementById('manualConditionNow').addEventListener('change',function(){const field=document.getElementById('investmentField');if(this.value==='improvements'||this.value==='remodeled')field.classList.remove('hidden');else{field.classList.add('hidden');document.getElementById('manualInvestment').value='';}});
 </script>
-<!-- Home Value Calculator: sanitized parcel index + comp data -->
+<!-- Home Value Calculator: sanitized parcel index + same-type comp data -->
 <script>
 let estimatorDataLoading=false,estimatorDataLoaded=false;
 function loadEstimatorData(){
@@ -1384,17 +1396,17 @@ addressInput.addEventListener('input',function(e){
  const q=normalizeAddressInput(e.target.value); if(q.length<2){addressDropdown.classList.add('hidden');return;} if(!window.HOME_ESTIMATOR_DATA){loadEstimatorData();return;}
  const tokens=q.split(' '); const matches=propertyEntries().filter(([k,p])=>tokens.every(t=>k.includes(t)||p.a.toLowerCase().includes(t))).slice(0,10);
  if(!matches.length){addressDropdown.classList.add('hidden');return;} addressDropdown.innerHTML='';
- matches.forEach(([key,p])=>{const div=document.createElement('div');div.className='px-4 py-3 border-b border-slate-200 cursor-pointer text-navy-900 hover:bg-navy-50 transition-colors';div.innerHTML=`<div class="font-medium">${p.a}</div>`;div.onclick=(ev)=>{ev.preventDefault();selectAddress(key);};addressDropdown.appendChild(div);});addressDropdown.classList.remove('hidden');
+ matches.forEach(([key,p])=>{const div=document.createElement('div');div.className='px-4 py-3 border-b border-slate-200 cursor-pointer text-navy-900 hover:bg-navy-50 transition-colors';div.innerHTML=`<div class="font-medium">${p.a}</div><div class="text-xs text-slate-500">${p.u?p.u+' suggestion':'Property type must be confirmed'}</div>`;div.onclick=(ev)=>{ev.preventDefault();selectAddress(key);};addressDropdown.appendChild(div);});addressDropdown.classList.remove('hidden');
 });
 document.addEventListener('click',e=>{if(e.target!==addressInput&&!addressDropdown.contains(e.target))addressDropdown.classList.add('hidden');});
 function selectAddress(key){
  const p=window.HOME_ESTIMATOR_DATA.properties[key]; if(!p)return; currentPropertyKey=key;currentProperty={...p};currentNeighborhood=p.n;currentSubdivision=p.d||null;addressInput.value=p.a;addressDropdown.classList.add('hidden');
- document.getElementById('manualPurchaseYear').value=p.q?p.q.slice(0,4):'';document.getElementById('manualPurchasePrice').value=p.p||'';document.getElementById('manualSqft').value=p.s||'';
+ document.getElementById('manualPurchaseYear').value=p.q?p.q.slice(0,4):'';document.getElementById('manualPurchasePrice').value=p.p||'';document.getElementById('manualSqft').value=p.s||'';document.getElementById('manualPropertyType').value=['user_confirmed','current_mls_type','historical_source_consensus'].includes(p.z)?(p.u||''):'';
  document.getElementById('manualConditionThen').value='upgrades';document.getElementById('manualConditionNow').value='nothing';document.getElementById('manualKitchen').value='outdated';manualForm.classList.remove('hidden');setTimeout(()=>manualForm.scrollIntoView({behavior:'smooth',block:'start'}),100);
 }
 searchButton.addEventListener('click',function(){
  const q=normalizeAddressInput(addressInput.value);if(!q)return;addressDropdown.classList.add('hidden');if(!window.HOME_ESTIMATOR_DATA){loadEstimatorData();setTimeout(()=>searchButton.click(),500);return;}
- const exact=propertyEntries().find(([k,p])=>k===q||normalizeAddressInput(p.a)===q);if(exact)selectAddress(exact[0]);else{currentProperty=null;currentNeighborhood=null;manualForm.classList.remove('hidden');setTimeout(()=>manualForm.scrollIntoView({behavior:'smooth',block:'start'}),100);}
+ const exact=propertyEntries().find(([k,p])=>k===q||normalizeAddressInput(p.a)===q);if(exact)selectAddress(exact[0]);else{currentProperty=null;currentNeighborhood=null;document.getElementById('manualPropertyType').value='';manualForm.classList.remove('hidden');setTimeout(()=>manualForm.scrollIntoView({behavior:'smooth',block:'start'}),100);}
 });
 addressInput.addEventListener('keypress',e=>{if(e.key==='Enter'){e.preventDefault();searchButton.click();}});
 </script>
