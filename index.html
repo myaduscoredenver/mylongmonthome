@@ -1271,7 +1271,8 @@ function applyCurrentMarketReality(value,subject){
         if(adjusted>cap){ adjusted=cap; reason='direct listing anchor'; }
     }else if(reality.streetAnchors && reality.streetAnchors.length){
         const streetBenchmark=median(reality.streetAnchors.map(x=>x.impliedValue));
-        const streetCap=streetBenchmark*1.08;
+        const allUnderContract=reality.streetAnchors.every(x=>x.underContract);
+        const streetCap=streetBenchmark*(allUnderContract?1.03:1.05);
         if(adjusted>streetCap){ adjusted=streetCap; reason='same-street current-market anchor'; }
     }else if(reality.pool.length>=3 && reality.benchmark>0){
         const ratio=adjusted/reality.benchmark;
