@@ -7,7 +7,7 @@
 <title>Sell Your Home with Homestead Real Estate - Negotiable Compensation</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&amp;family=Public+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" rel="stylesheet">
@@ -19,39 +19,52 @@
                 extend: {
                     colors: {
                         navy: {
-                            50: '#eef2f6',
-                            100: '#d6e0ea',
-                            200: '#aec2d6',
-                            300: '#7f9cba',
-                            400: '#4f739c',
-                            500: '#345580',
-                            600: '#28436a',
-                            700: '#1f3555',
-                            800: '#182944',
-                            900: '#111e33',
-                            950: '#0a1420'
+                            50: '#eef1ec',
+                            100: '#dce1d6',
+                            200: '#b9c2b0',
+                            300: '#93a187',
+                            400: '#6d7d63',
+                            500: '#57634c',
+                            600: '#46503c',
+                            700: '#3a4740',
+                            800: '#2b332d',
+                            900: '#232b26',
+                            950: '#171d19'
                         },
                         brass: {
-                            50: '#faf6ec',
-                            100: '#f0e6c8',
-                            200: '#e2cd94',
-                            300: '#cfae5f',
-                            400: '#b8934a',
-                            500: '#a37f3c',
-                            600: '#886831',
-                            700: '#6b5227'
+                            50: '#fbf6ea',
+                            100: '#f3e4be',
+                            200: '#e8cc85',
+                            300: '#d9ae56',
+                            400: '#c89b3c',
+                            500: '#b3852e',
+                            600: '#9c5a3c',
+                            700: '#7a4530'
+                        },
+                        slate: {
+                            50: '#f7f4ec',
+                            100: '#efeada',
+                            200: '#ddd5c2',
+                            300: '#c7bca3',
+                            400: '#a79979',
+                            500: '#8b8069',
+                            600: '#6b6552',
+                            700: '#4a4a3f',
+                            800: '#37372f',
+                            900: '#232b26'
                         }
                     },
                     fontFamily: {
-                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
-                        sans: ['Inter', 'system-ui', 'sans-serif']
+                        serif: ['Fraunces', 'Georgia', 'serif'],
+                        sans: ['"Public Sans"', 'system-ui', 'sans-serif'],
+                        mono: ['"IBM Plex Mono"', 'monospace']
                     }
                 }
             }
         }
     </script>
 <style>
-        body { font-family: 'Inter', system-ui, sans-serif; }
+        body { font-family: 'Public Sans', system-ui, sans-serif; }
 
         /* Range slider styling for better mobile interaction */
         input[type="range"] {
@@ -66,10 +79,10 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: #a37f3c;
+            background: #c89b3c;
             cursor: pointer;
             border: 2px solid #faf6ec;
-            box-shadow: 0 1px 4px rgba(10, 20, 32, 0.35);
+            box-shadow: 0 1px 4px rgba(35, 43, 38, 0.35);
         }
 
         /* Firefox */
@@ -77,18 +90,18 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: #a37f3c;
+            background: #c89b3c;
             cursor: pointer;
             border: 2px solid #faf6ec;
-            box-shadow: 0 1px 4px rgba(10, 20, 32, 0.35);
+            box-shadow: 0 1px 4px rgba(35, 43, 38, 0.35);
         }
 
         input[type="range"]::-webkit-slider-thumb:hover {
-            background: #886831;
+            background: #9c5a3c;
         }
 
         input[type="range"]::-moz-range-thumb:hover {
-            background: #886831;
+            background: #9c5a3c;
         }
 
         .equity-number {
@@ -107,11 +120,11 @@
         }
     </style>
 </link></head>
-<body class="bg-white">
+<body class="bg-[#f1ece0]">
 <iframe class="hidden" id="formspreeSilentTarget" name="formspreeSilentTarget" title="Form submission"></iframe>
 <div id="app">
 <!-- Header -->
-<header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+<header class="bg-[#f1ece0]/95 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-50">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
 <div class="flex justify-between items-center gap-4 mb-2 sm:mb-0">
 <a class="flex items-center" href="index.html">
@@ -164,7 +177,7 @@
 <section class="bg-white py-16 sm:py-24 border-t border-slate-200" id="home-value-calculator">
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="text-center mb-10 sm:mb-14">
-<p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">Home Value Estimator</p>
+<p class="text-brass-600 font-mono font-semibold text-sm tracking-widest uppercase mb-3">Home Value Estimator</p>
 <h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">What's Your Longmont Home Worth Today?</h2>
 <p class="text-lg text-slate-600 max-w-2xl mx-auto">Enter your address to see an estimated value range built from Longmont market data.</p>
 </div>
@@ -265,12 +278,12 @@
 <div class="space-y-3 mb-8">
 <div class="bg-emerald-600 text-white rounded-lg p-5">
 <p class="text-emerald-100 text-xs font-semibold mb-1">Estimated Market Value</p>
-<p class="text-3xl sm:text-4xl font-semibold truncate" id="estimatedValueDisplay">$0</p>
+<p class="font-mono text-3xl sm:text-4xl font-semibold truncate" id="estimatedValueDisplay">$0</p>
 </div>
 <div class="grid sm:grid-cols-2 gap-3">
 <div class="bg-white rounded-lg p-4 border border-slate-200">
 <p class="text-slate-500 text-xs font-semibold mb-1">Likely Selling Range</p>
-<p class="text-xl sm:text-2xl font-semibold text-navy-900 truncate" id="likelyRangeDisplay">$0–$0</p>
+<p class="font-mono text-xl sm:text-2xl font-semibold text-navy-900 truncate" id="likelyRangeDisplay">$0–$0</p>
 </div>
 <div class="bg-white rounded-lg p-4 border border-slate-200">
 <p class="text-slate-500 text-xs font-semibold mb-1">Confidence</p>
@@ -290,13 +303,13 @@
 </div>
 <div class="bg-emerald-600 text-white rounded-xl p-6">
 <p class="text-emerald-100 text-sm font-medium mb-1">Estimated Equity</p>
-<p class="text-4xl font-semibold equity-number" id="equityDisplay">$0</p>
+<p class="font-mono text-4xl font-semibold equity-number" id="equityDisplay">$0</p>
 </div>
 </div>
 <!-- Renovation Boost (if applicable) -->
 <div class="hidden bg-brass-50 rounded-xl p-6 mb-8 border border-brass-200" id="renovationBoostCard">
 <p class="text-slate-700 font-medium mb-2">Renovation Premium Added</p>
-<p class="text-3xl font-semibold text-brass-700" id="renovationBoostDisplay">+$0</p>
+<p class="font-mono text-3xl font-semibold text-brass-700" id="renovationBoostDisplay">+$0</p>
 </div>
 <div class="bg-white rounded-xl p-6 mb-8 border border-slate-200" id="compBasisCard">
 <p class="text-navy-900 font-semibold mb-2">Comparable Sales Used</p>
@@ -372,10 +385,10 @@
 </div>
 </div>
 </section>
-<section class="bg-[#faf9f6] py-16 sm:py-24" id="calculator">
+<section class="bg-[#e9e2d2] py-16 sm:py-24" id="calculator">
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="text-center mb-10 sm:mb-16">
-<p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">The Numbers</p>
+<p class="text-brass-600 font-mono font-semibold text-sm tracking-widest uppercase mb-3">The Numbers</p>
 <h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">
                         Compensation Structured Around You
                     </h2>
@@ -390,7 +403,7 @@
                     </label>
 <div class="flex gap-6 items-center mb-4">
 <input class="flex-1 h-2 bg-navy-100 rounded-lg appearance-none cursor-pointer" id="salePrice" max="2000000" min="100000" step="25000" type="range" value="500000"/>
-<div class="text-2xl sm:text-3xl font-semibold text-navy-800 whitespace-nowrap min-w-fit" id="salePriceDisplay">
+<div class="font-mono text-2xl sm:text-3xl font-semibold text-navy-800 whitespace-nowrap min-w-fit" id="salePriceDisplay">
                             $500,000
                         </div>
 </div>
@@ -403,7 +416,7 @@
                     </label>
 <div class="flex gap-6 items-center mb-4">
 <input class="flex-1 h-2 bg-navy-100 rounded-lg appearance-none cursor-pointer" id="listingAgentRate" max="3.2" min="1.7" step="0.1" type="range" value="2.0"/>
-<div class="text-xl sm:text-2xl font-semibold text-navy-800 whitespace-nowrap" id="listingRateDisplay">
+<div class="font-mono text-xl sm:text-2xl font-semibold text-navy-800 whitespace-nowrap" id="listingRateDisplay">
                             2.0%
                         </div>
 </div>
@@ -416,7 +429,7 @@
                     </label>
 <div class="flex gap-6 items-center mb-4">
 <input class="flex-1 h-2 bg-navy-100 rounded-lg appearance-none cursor-pointer" id="buyerAgentRate" max="3.0" min="0" step="0.1" type="range" value="2.0"/>
-<div class="text-xl sm:text-2xl font-semibold text-navy-800 whitespace-nowrap" id="buyerRateDisplay">
+<div class="font-mono text-xl sm:text-2xl font-semibold text-navy-800 whitespace-nowrap" id="buyerRateDisplay">
                             2.0%
                         </div>
 </div>
@@ -431,15 +444,15 @@
 <div class="space-y-3 mb-2">
 <div class="flex justify-between text-sm">
 <span class="text-slate-600">Listing compensation (<span id="yourListRate">2.0</span>%)</span>
-<span class="font-semibold text-navy-900" id="yourListAmt">$10,000</span>
+<span class="font-mono font-semibold text-navy-900" id="yourListAmt">$10,000</span>
 </div>
 <div class="flex justify-between text-sm">
 <span class="text-slate-600">Buyer's agent compensation (<span id="yourBuyerRate">2.0</span>%)</span>
-<span class="font-semibold text-navy-900" id="yourBuyerAmt">$10,000</span>
+<span class="font-mono font-semibold text-navy-900" id="yourBuyerAmt">$10,000</span>
 </div>
 <div class="border-t border-slate-200 pt-3 flex justify-between">
 <span class="font-semibold text-navy-900">Total Compensation</span>
-<span class="font-semibold text-navy-800 text-lg" id="yourTotal">$20,000</span>
+<span class="font-mono font-semibold text-navy-800 text-lg" id="yourTotal">$20,000</span>
 </div>
 </div>
 </div>
@@ -563,7 +576,7 @@
 </div>
 </div>
 <!-- Home Value Calculator Section -->
-<section class="bg-[#faf9f6] py-20 border-t border-slate-200">
+<section class="bg-[#e9e2d2] py-20 border-t border-slate-200">
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="bg-white rounded-xl p-10 md:p-12 border border-slate-200">
 <h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-6">
@@ -589,7 +602,7 @@
 <section class="bg-white py-20 border-t border-slate-200">
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="text-center mb-16">
-<p class="text-brass-600 font-semibold text-sm tracking-widest uppercase mb-3">
+<p class="text-brass-600 font-mono font-semibold text-sm tracking-widest uppercase mb-3">
                         60+ Happy Clients
                     </p>
 <h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">
@@ -651,7 +664,7 @@
 </div>
 </section>
 <!-- Form Section -->
-<section class="bg-[#faf9f6] py-20" id="form">
+<section class="bg-[#e9e2d2] py-20" id="form">
 <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="text-center mb-12">
 <h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">
@@ -1087,7 +1100,7 @@
             const [lat, lng, address, price] = prop;
             const marker = L.circleMarker([lat, lng], {
                 radius: 6,
-                fillColor: "#a37f3c",
+                fillColor: "#9c5a3c",
                 color: "#182944",
                 weight: 2,
                 opacity: 1,
