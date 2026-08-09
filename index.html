@@ -1317,7 +1317,29 @@ function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen
     if(!subject.u) throw new Error('Please select a recognized Longmont address from the suggestions.');
     const picked=pickComparableSales(subject);
     if(!picked.comps.length) throw new Error('Not enough comparable sales were available. Please request a CMA.');
-    const weighted=picked.comps.map((c,i)=>({v:c.psf,w:1/Math.pow(1+c.score/25,1.35)}));
+    // A very recent arm's-length sale of the subject is unusually strong evidence.
+    // Include it as a synthetic comp instead of excluding the home's own sale entirely.
+    const data=window.HOME_ESTIMATOR_DATA;
+    const asOf=parseIsoDate(data.asOf)||new Date();
+    const subjectSaleDate=parseIsoDate(subject.q);
+    let recentSubjectSale=null;
+    if(subject.p && subject.q && subject.s && subjectSaleDate){
+        const ageMonths=monthsBetween(asOf,subjectSaleDate);
+        if(ageMonths<=24){
+            const trendMonths=Math.min(ageMonths,Number(data.marketTrendMaxMonths)||24);
+            const adjustedPrice=Number(subject.p)*Math.pow(1+(Number(data.marketTrendMonthly)||0),trendMonths);
+            recentSubjectSale={address:subject.a,area:subject.n,price:Number(subject.p),date:subject.q,sqft:Number(subject.s),beds:subject.b,baths:subject.t,yearBuilt:subject.y,psf:adjustedPrice/Number(subject.s),rawPsf:Number(subject.p)/Number(subject.s),adjustedPrice,score:0,tier:-1,ageMonths,sameStreet:true,isSubjectSale:true};
+            picked.comps=[recentSubjectSale,...picked.comps].slice(0,9);
+            picked.tier=`recent subject sale anchor plus ${picked.tier}`;
+        }
+    }
+    const weighted=picked.comps.map(c=>{
+        let subjectSaleWeight=1;
+        if(c.isSubjectSale){
+            subjectSaleWeight=c.ageMonths<=12?10:(c.ageMonths<=18?8:6);
+        }
+        return {v:c.psf,w:subjectSaleWeight/Math.pow(1+c.score/25,1.35)};
+    });
     let basePsf=weightedAverage(weighted);
     const psfs=picked.comps.map(c=>c.psf);
     const med=median(psfs);
@@ -1325,6 +1347,14 @@ function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen
     basePsf=Math.max(med*.86,Math.min(med*1.14,basePsf));
     let currentValue=subject.s*basePsf;
     currentValue*=getConditionMultiplier(conditionThen,conditionNow,kitchen,investmentAmount);
+
+    // Guardrail for recent purchasers who report no meaningful improvements: comps can move
+    // the estimate, but they cannot casually imply a huge one-year windfall.
+    const hasReportedImprovements=(conditionNow==='improvements'||conditionNow==='remodeled'||(renovations&&renovations.length));
+    if(recentSubjectSale && !hasReportedImprovements){
+        const maxPremium=recentSubjectSale.ageMonths<=12?.10:.15;
+        currentValue=Math.min(currentValue,recentSubjectSale.adjustedPrice*(1+maxPremium));
+    }
     let renovationBoost=0;
     const boosts={kitchen:.018,roof:.009,hvac:.008,masterbath:.012,bathroom:.009,flooring:.008,windows:.008};
     renovations.forEach(r=>renovationBoost+=currentValue*(boosts[r]||0));
@@ -1348,7 +1378,7 @@ function calculateManual(){
     const conditionNow=document.getElementById('manualConditionNow').value;
     const kitchen=document.getElementById('manualKitchen').value;
     const investment=document.getElementById('manualInvestment').value;
-    if(!year||!price||!sqft||!conditionThen||!conditionNow||!kitchen){ alert('Please fill in purchase year, purchase price, finished square footage, and condition details.'); return; }
+    if(!year||!price||!sqft){ alert('Please fill in purchase year, purchase price, and finished square footage.'); return; }
     try{ currentCalculation=calculateEquity(price,year,selectedRenovations,conditionThen,conditionNow,kitchen,investment||null); displayResults(null,{purchasePrice:price,purchaseDate:year}); }
     catch(err){ alert(err.message); }
 }
@@ -1375,7 +1405,7 @@ function displayResults(property,manual=null){
     const basis=document.getElementById('compBasisText');
     basis.textContent=`Based on ${data.comps.length} weighted sold comps (${data.tier}). The model emphasizes the newest and most local sales, including recent same-street sales when available, and applies a conservative downward time adjustment to older comps. Median/weighted adjusted comp rate: about ${formatCurrency(data.basePsf)} per finished sq. ft.`;
     const list=document.getElementById('compList'); list.innerHTML='';
-    data.comps.slice(0,5).forEach(c=>{const d=document.createElement('div');d.className='flex justify-between gap-4 border-t border-slate-100 pt-2';d.innerHTML=`<span class="text-slate-600">${c.address} · ${c.date.slice(0,7)} · ${c.sqft.toLocaleString()} sf</span><span class="font-semibold text-navy-900 whitespace-nowrap">${formatCurrency(c.price)}</span>`;list.appendChild(d);});
+    data.comps.slice(0,5).forEach(c=>{const d=document.createElement('div');d.className='flex justify-between gap-4 border-t border-slate-100 pt-2';const label=c.isSubjectSale?'Your recent purchase':c.address;d.innerHTML=`<span class="text-slate-600">${label} · ${c.date.slice(0,7)} · ${c.sqft.toLocaleString()} sf</span><span class="font-semibold text-navy-900 whitespace-nowrap">${formatCurrency(c.price)}</span>`;list.appendChild(d);});
     const realityCard=document.getElementById('marketRealityCard'),realityText=document.getElementById('marketRealityText');
     if(data.reality){
         const r=data.reality, n=r.pool.length, pending=r.underContractCount;
@@ -1449,7 +1479,7 @@ document.addEventListener('click',e=>{if(e.target!==addressInput&&!addressDropdo
 function selectAddress(key){
  const p=window.HOME_ESTIMATOR_DATA.properties[key]; if(!p)return; currentPropertyKey=key;currentProperty={...p};currentNeighborhood=p.n;currentSubdivision=p.d||null;addressInput.value=p.a;addressDropdown.classList.add('hidden');
  document.getElementById('manualPurchaseYear').value=p.q?p.q.slice(0,4):'';document.getElementById('manualPurchasePrice').value=p.p||'';document.getElementById('manualSqft').value=p.s||'';
- document.getElementById('manualConditionThen').value='upgrades';document.getElementById('manualConditionNow').value='nothing';document.getElementById('manualKitchen').value='outdated';manualForm.classList.remove('hidden');setTimeout(()=>manualForm.scrollIntoView({behavior:'smooth',block:'start'}),100);
+ document.getElementById('manualConditionThen').value='';document.getElementById('manualConditionNow').value='';document.getElementById('manualKitchen').value='';manualForm.classList.remove('hidden');setTimeout(()=>manualForm.scrollIntoView({behavior:'smooth',block:'start'}),100);
 }
 searchButton.addEventListener('click',function(){
  const q=normalizeAddressInput(addressInput.value);if(!q)return;addressDropdown.classList.add('hidden');if(!window.HOME_ESTIMATOR_DATA){loadEstimatorData();setTimeout(()=>searchButton.click(),500);return;}
