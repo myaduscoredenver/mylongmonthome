@@ -118,6 +118,38 @@
                 transform: translateY(0);
             }
         }
+
+        /* 3-step conversational home-value flow */
+        .guided-step { animation: guidedFade .22s ease-out; }
+        @keyframes guidedFade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .guided-dot { width: 8px; height: 8px; border-radius: 9999px; background: #ddd5c2; transition: all .18s ease; }
+        .guided-dot.active { width: 22px; background: #b3852e; }
+        .guided-dot.complete { background: #46503c; }
+        .guided-choice { border: 1px solid #c7bca3; background: #fff; color: #232b26; transition: border-color .15s ease, background-color .15s ease, color .15s ease, transform .15s ease; }
+        .guided-choice:hover { border-color: #57634c; background: #f7f4ec; }
+        .guided-choice.selected { border-color: #3a4740; background: #eef1ec; color: #232b26; box-shadow: inset 0 0 0 1px #3a4740; }
+        .guided-choice:active { transform: scale(.99); }
+    
+        .tooltip {
+            position: absolute;
+            pointer-events: none;
+            background: #232b26;
+            color: #fff;
+            padding: 7px 11px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            transform: translate(-50%, -115%);
+            opacity: 0;
+            transition: opacity .12s ease;
+            white-space: nowrap;
+            z-index: 10;
+        }
+        .chart-wrap { position: relative; }
+        svg.chart { width: 100%; height: auto; overflow: visible; }
+        .home-market-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 0.95rem; padding: 1.75rem; }
+        .home-market-chart-ready .chart-fade { opacity: 1; }
+    
     </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18239770669">
@@ -203,73 +235,82 @@
                         </button>
 </div>
 <p class="hidden text-sm text-navy-600 mb-4" id="dbLoadingMsg">Loading Longmont market data…</p>
-<!-- Manual Entry Form (Hidden by default) -->
+<!-- Guided Home Value Flow (Hidden until an address is selected) -->
 <div class="hidden border-t border-slate-200 pt-6" id="manualEntryForm">
-<h3 class="font-semibold text-navy-900 mb-4">Tell Us About Your Home</h3>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-2">When Did You Buy?</label>
-<input class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualPurchaseYear" max="2026" min="1980" placeholder="2012" type="number"/>
-</div>
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-2">Purchase Price</label>
-<div class="flex items-center">
-<span class="text-slate-600 mr-2">$</span>
-<input class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualPurchasePrice" placeholder="250000" type="number"/>
+<div class="text-center mb-7">
+<p class="text-sm font-semibold text-navy-900">3 quick questions. No email required.</p>
+<div class="mt-3 flex items-center justify-center gap-2" id="guidedProgress" aria-label="Question progress">
+<span class="guided-dot active" data-dot="1"></span>
+<span class="guided-dot" data-dot="2"></span>
+<span class="guided-dot" data-dot="3"></span>
 </div>
 </div>
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-2">Finished Living Area (Sq Ft)</label>
-<input class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualSqft" min="300" placeholder="1800" type="number"/>
-<p class="text-xs text-slate-500 mt-1">Used to compare your home with similarly sized recent sales.</p>
+
+<!-- Step 1: confirm the facts we already know -->
+<div class="guided-step" id="guidedStep1">
+<p class="text-xs font-semibold tracking-widest uppercase text-brass-600 mb-2">Question 1 of 3</p>
+<h3 class="font-serif text-2xl font-semibold text-navy-900 mb-2">We found your home.</h3>
+<p class="text-slate-600 text-sm mb-5">Before we estimate the value, make sure the basics look right.</p>
+<div class="rounded-xl bg-slate-50 border border-slate-200 p-5 mb-5" id="propertySummary" aria-live="polite"></div>
+<div class="grid sm:grid-cols-2 gap-3" id="propertyConfirmActions">
+<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" id="confirmPropertyButton" type="button">Yes, that's right</button>
+<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" id="editPropertyButton" type="button">Something is wrong</button>
 </div>
+<div class="hidden mt-5 rounded-xl border border-slate-200 bg-white p-5" id="propertyEditFields">
+<p class="font-semibold text-navy-900 mb-4">Update the information we should use</p>
+<div class="grid sm:grid-cols-3 gap-4">
 <div>
-<label class="block text-sm font-medium text-slate-700 mb-2">Condition When You Bought It</label>
-<select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualConditionThen">
-<option value="">Select condition</option>
-<option value="fixer">A true fixer upper!</option>
-<option value="outdated">OK, but definitely outdated</option>
-<option value="upgrades">Some upgrades</option>
-<option value="remodeled">Fully remodeled</option>
-<option value="amazing">Fully remodeled with amazing features and finishes</option>
-</select>
+<label class="block text-sm font-medium text-slate-700 mb-2" for="manualPurchaseYear">Purchase year</label>
+<input class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500" id="manualPurchaseYear" max="2026" min="1980" placeholder="2012" type="number"/>
 </div>
 <div>
-<label class="block text-sm font-medium text-slate-700 mb-2">Condition of Property Today</label>
-<select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualConditionNow">
-<option value="">Select condition</option>
-<option value="nothing">I didn't do anything</option>
-<option value="improvements">A few improvements</option>
-<option value="remodeled">I completely remodeled it</option>
-</select>
+<label class="block text-sm font-medium text-slate-700 mb-2" for="manualPurchasePrice">Purchase price</label>
+<input class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500" id="manualPurchasePrice" min="1" placeholder="450000" type="number"/>
 </div>
-<div class="md:col-span-2">
-<label class="block text-sm font-medium text-slate-700 mb-2">Tell Me About the Kitchen</label>
-<select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualKitchen">
-<option value="">Select kitchen condition</option>
-<option value="barely">Barely functional</option>
-<option value="outdated">Outdated but nice</option>
-<option value="remodeled">Remodeled</option>
-<option value="luxury">Luxury - it's a chef's kitchen!</option>
-</select>
-</div>
-<div class="hidden md:col-span-2" id="investmentField">
-<label class="block text-sm font-medium text-slate-700 mb-2">Approximately How Much Did You Invest in Improvements?</label>
-<select class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent" id="manualInvestment">
-<option value="">Select investment range</option>
-<option value="0to10">$0 - $10,000</option>
-<option value="10to25">$10,000 - $25,000</option>
-<option value="25to50">$25,000 - $50,000</option>
-<option value="50to75">$50,000 - $75,000</option>
-<option value="75to100">$75,000 - $100,000</option>
-<option value="100to150">$100,000 - $150,000</option>
-<option value="over150">More than $150,000</option>
-</select>
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-2" for="manualSqft">Finished sq. ft.</label>
+<input class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500" id="manualSqft" min="300" placeholder="1680" type="number"/>
 </div>
 </div>
-<button class="w-full bg-navy-800 hover:bg-navy-900 text-white font-semibold py-3 rounded-lg transition-colors mb-4" onclick="calculateManual()">
-                            Calculate My Home Value
-                        </button>
+<button class="w-full mt-4 bg-navy-800 hover:bg-navy-900 text-white font-semibold py-3 rounded-lg transition-colors" id="savePropertyButton" type="button">Save and continue</button>
+</div>
+<button class="mt-5 text-sm text-slate-500 hover:text-navy-800 underline underline-offset-4" id="changeAddressButton" type="button">Use a different address</button>
+</div>
+
+<!-- Step 2: condition at purchase -->
+<div class="guided-step hidden" id="guidedStep2">
+<p class="text-xs font-semibold tracking-widest uppercase text-brass-600 mb-2">Question 2 of 3</p>
+<h3 class="font-serif text-2xl font-semibold text-navy-900 mb-2">What was the home like when you bought it?</h3>
+<p class="text-slate-600 text-sm mb-5">Choose the closest description.</p>
+<div class="grid sm:grid-cols-2 gap-3">
+<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionThen" data-value="fixer" type="button">A true fixer upper</button>
+<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionThen" data-value="outdated" type="button">Nice enough, but outdated</button>
+<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionThen" data-value="upgrades" type="button">It already had some updates</button>
+<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionThen" data-value="remodeled" type="button">It was nicely remodeled</button>
+</div>
+<button class="mt-5 text-sm text-slate-500 hover:text-navy-800 underline underline-offset-4 guided-back" data-back="1" type="button">&larr; Go back and change your answer</button>
+</div>
+
+<!-- Step 3: condition today -->
+<div class="guided-step hidden" id="guidedStep3">
+<p class="text-xs font-semibold tracking-widest uppercase text-brass-600 mb-2">Question 3 of 3</p>
+<h3 class="font-serif text-2xl font-semibold text-navy-900 mb-2">What is the home like today?</h3>
+<p class="text-slate-600 text-sm mb-5">Tap the answer that best describes what changed during your ownership.</p>
+<div class="grid sm:grid-cols-2 gap-3">
+<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionNow" data-value="nothing" type="button">About the same</button>
+<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionNow" data-value="improvements" type="button">Some improvements</button>
+<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionNow" data-value="significant" type="button">Significantly updated</button>
+<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionNow" data-value="remodeled" type="button">Completely remodeled</button>
+</div>
+<p class="text-xs text-slate-500 mt-4">Your estimate will appear automatically after you choose.</p>
+<button class="mt-4 text-sm text-slate-500 hover:text-navy-800 underline underline-offset-4 guided-back" data-back="2" type="button">&larr; Go back and change your answer</button>
+</div>
+
+<!-- Hidden model fields retained for the calculator and future fine-tuning -->
+<input id="manualConditionThen" type="hidden" value=""/>
+<input id="manualConditionNow" type="hidden" value=""/>
+<input id="manualKitchen" type="hidden" value=""/>
+<input id="manualInvestment" type="hidden" value=""/>
 </div>
 <p class="text-xs text-slate-500 mt-3 leading-relaxed"><strong>Privacy:</strong> The information you enter and the estimate generated may be securely recorded to help improve this estimator. Using this tool will not add you to a marketing list.</p></div>
 <!-- Outside Longmont CTA -->
@@ -280,6 +321,9 @@
 </div>
 <!-- Results Display -->
 <div class="hidden" id="resultsSection">
+<div class="flex justify-end mb-3">
+<button class="text-sm text-slate-500 hover:text-navy-800 underline underline-offset-4" id="editGuidedAnswersButton" type="button">Go back and change your answers</button>
+</div>
 <!-- Main Value Card with Range -->
 <div class="bg-emerald-50 rounded-xl p-8 mb-8 border border-emerald-200">
 <p class="text-slate-600 text-sm font-medium mb-4">Your Home Value Estimate (July 2026)</p>
@@ -394,6 +438,47 @@
 </div>
 </div>
 </section>
+
+<section class="bg-[#faf9f6] py-16 sm:py-24 border-t border-slate-200" id="homepage-market-preview">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-10 sm:mb-14">
+<p class="text-brass-600 font-mono font-semibold text-sm tracking-widest uppercase mb-3">Longmont Market Snapshot</p>
+<h2 class="font-serif text-3xl md:text-4xl font-semibold text-navy-900 mb-4">See what Longmont home values have really been doing.</h2>
+<p class="text-lg text-slate-600 max-w-3xl mx-auto">These two charts come straight from the same MLS data behind the full market update. They give homeowners the big picture before diving into the details.</p>
+</div>
+<div class="grid lg:grid-cols-2 gap-6">
+<div class="home-market-card">
+<div class="flex justify-between items-start gap-4 flex-wrap mb-1">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">Longmont's Average Sale Price, Over Time</h3>
+<p class="text-sm text-slate-500">Average closed sale price across Longmont, by year</p>
+</div>
+<span class="bg-navy-50 text-navy-800 text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap" id="homePriceBadge">-</span>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="homePriceChart" viewBox="0 0 560 320"></svg><div class="tooltip" id="homePriceTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="homePriceInsight"></p>
+</div>
+<div class="home-market-card">
+<div class="flex justify-between items-start gap-4 flex-wrap mb-1">
+<div>
+<h3 class="font-serif text-xl font-semibold text-navy-900">Year-Over-Year Home Price Appreciation</h3>
+<p class="text-sm text-slate-500">How much the typical Longmont home gained or gave back in value each year</p>
+</div>
+<span class="bg-navy-50 text-navy-800 text-xs font-bold px-3 py-1.5 rounded-full whitespace-nowrap" id="homeYoyBadge">-</span>
+</div>
+<div class="chart-wrap mt-4"><svg class="chart" id="homeYoyChart" viewBox="0 0 560 320"></svg><div class="tooltip" id="homeYoyTip"></div></div>
+<p class="text-sm text-slate-600 leading-relaxed mt-4 pt-4 border-t border-slate-100" id="homeYoyInsight"></p>
+</div>
+</div>
+<div class="text-center mt-10">
+<a class="inline-flex items-center gap-2 bg-navy-800 hover:bg-navy-900 text-white font-semibold py-3.5 px-8 rounded transition-colors" href="market-update.html">
+See the Full Longmont Market Update
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+</section>
+
 <section class="bg-[#e9e2d2] py-16 sm:py-24" id="calculator">
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="text-center mb-10 sm:mb-16">
@@ -1188,7 +1273,7 @@ function getFallbackAreas(area){
 }
 function getConditionMultiplier(conditionThen, conditionNow, kitchen, investmentAmount){
     let m=1;
-    const now={nothing:0,improvements:.025,remodeled:.055}[conditionNow]||0;
+    const now={nothing:0,improvements:.025,significant:.04,remodeled:.055}[conditionNow]||0;
     const then={fixer:.025,outdated:.012,upgrades:0,remodeled:-.01,amazing:-.015}[conditionThen]||0;
     const kit={barely:-.045,outdated:-.018,remodeled:.025,luxury:.045}[kitchen]||0;
     m += now + then + kit;
@@ -1350,7 +1435,7 @@ function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen
 
     // Guardrail for recent purchasers who report no meaningful improvements: comps can move
     // the estimate, but they cannot casually imply a huge one-year windfall.
-    const hasReportedImprovements=(conditionNow==='improvements'||conditionNow==='remodeled'||(renovations&&renovations.length));
+    const hasReportedImprovements=(conditionNow==='improvements'||conditionNow==='significant'||conditionNow==='remodeled'||(renovations&&renovations.length));
     if(recentSubjectSale && !hasReportedImprovements){
         const maxPremium=recentSubjectSale.ageMonths<=12?.10:.15;
         currentValue=Math.min(currentValue,recentSubjectSale.adjustedPrice*(1+maxPremium));
@@ -1419,7 +1504,7 @@ function displayResults(property,manual=null){
     }else realityCard.classList.add('hidden');
     document.getElementById('manualEntryForm').classList.add('hidden');document.getElementById('resultsSection').classList.remove('hidden');
     setTimeout(()=>document.getElementById('resultsSection').scrollIntoView({behavior:'smooth'}),200);
-    const payload=new FormData(); payload.append('_subject','Home Value Check - MyLongmontHome.com');payload.append('Form','Home Value Check');payload.append('Address',document.getElementById('addressInput').value||'Manual entry');payload.append('Neighborhood Model',currentNeighborhood||'Unknown');payload.append('Comparable Sales Used',data.comps.length);payload.append('Comp Tier',data.tier);payload.append('Estimated Market Value',formatCurrency(estimatedValue));payload.append('Likely Selling Range',`${formatCurrency(likelyLow)} to ${formatCurrency(likelyHigh)}`);payload.append('Confidence',confidence);payload.append('Current Market Reality Adjustment',data.realityAdjustment?formatCurrency(data.realityAdjustment):'None');
+    const payload=new FormData(); payload.append('_subject','Home Value Check - MyLongmontHome.com');payload.append('Form','Home Value Check');payload.append('Address',document.getElementById('addressInput').value||'Manual entry');payload.append('Neighborhood Model',currentNeighborhood||'Unknown');payload.append('Comparable Sales Used',data.comps.length);payload.append('Comp Tier',data.tier);payload.append('Estimated Market Value',formatCurrency(estimatedValue));payload.append('Likely Selling Range',`${formatCurrency(likelyLow)} to ${formatCurrency(likelyHigh)}`);payload.append('Confidence',confidence);payload.append('Current Market Reality Adjustment',data.realityAdjustment?formatCurrency(data.realityAdjustment):'None');payload.append('Condition When Purchased',guidedConditionLabel('then',document.getElementById('manualConditionThen').value));payload.append('Condition Today',guidedConditionLabel('now',document.getElementById('manualConditionNow').value));payload.append('Property Details Edited',guidedPropertyFactsEdited?'Yes':'No');
     fetch('https://formspree.io/f/mlgqdnan',{method:'POST',body:payload,headers:{Accept:'application/json'}}).catch(()=>{});
 }
 function toggleRenovation(type){const button=event.target.closest('button');const i=selectedRenovations.indexOf(type);if(i>-1){selectedRenovations.splice(i,1);button.classList.remove('active');}else{selectedRenovations.push(type);button.classList.add('active');}}
@@ -1448,7 +1533,7 @@ document.getElementById('feedbackForm').addEventListener('submit',async function
  const payload=new FormData(form);payload.append('Estimated Market Value Shown',document.getElementById('estimatedValueDisplay').textContent);payload.append('Likely Selling Range Shown',document.getElementById('likelyRangeDisplay').textContent);payload.append('Confidence Shown',document.getElementById('confidenceDisplay').textContent);payload.append('Comparable Sales Used',currentCalculation?currentCalculation.comps.length:0);payload.append('Comp Tier',currentCalculation?currentCalculation.tier:'Unknown');
  try{const response=await fetch('https://formspree.io/f/mrenblva',{method:'POST',body:payload,headers:{Accept:'application/json'}});if(!response.ok)throw new Error('Formspree returned '+response.status);ok.classList.remove('hidden');form.reset();}catch(ex){err.textContent='I could not send your request: '+ex.message+'. Please try again.';err.classList.remove('hidden');}finally{button.disabled=false;button.textContent='Request My CMA';}
 });
-document.getElementById('manualConditionNow').addEventListener('change',function(){const field=document.getElementById('investmentField');if(this.value==='improvements'||this.value==='remodeled')field.classList.remove('hidden');else{field.classList.add('hidden');document.getElementById('manualInvestment').value='';}});
+
 </script>
 <!-- Home Value Calculator: sanitized parcel index + same-type comp data -->
 <script>
@@ -1476,16 +1561,218 @@ addressInput.addEventListener('input',function(e){
  matches.forEach(([key,p])=>{const div=document.createElement('div');div.className='px-4 py-3 border-b border-slate-200 cursor-pointer text-navy-900 hover:bg-navy-50 transition-colors';div.innerHTML=`<div class="font-medium">${p.a}</div>${p.d?`<div class="text-xs text-slate-500">${p.d}</div>`:''}`;div.onclick=(ev)=>{ev.preventDefault();selectAddress(key);};addressDropdown.appendChild(div);});addressDropdown.classList.remove('hidden');
 });
 document.addEventListener('click',e=>{if(e.target!==addressInput&&!addressDropdown.contains(e.target))addressDropdown.classList.add('hidden');});
+let guidedPropertyFactsEdited=false;
+function guidedConditionLabel(which,value){
+ const labels=which==='then'?{fixer:'A true fixer upper',outdated:'Nice enough, but outdated',upgrades:'It already had some updates',remodeled:'It was nicely remodeled'}:{nothing:'About the same',improvements:'Some improvements',significant:'Significantly updated',remodeled:'Completely remodeled'};
+ return labels[value]||'Not answered';
+}
+function guidedPurchaseDateLabel(value){
+ if(!value)return 'Purchase date unavailable';
+ const d=parseIsoDate(value);
+ if(!d)return value;
+ return d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+}
+function updateGuidedProgress(step){
+ document.querySelectorAll('[data-dot]').forEach(dot=>{const n=Number(dot.dataset.dot);dot.classList.toggle('active',n===step);dot.classList.toggle('complete',n<step);});
+}
+function setGuidedStep(step,scroll=true){
+ [1,2,3].forEach(n=>document.getElementById('guidedStep'+n).classList.toggle('hidden',n!==step));
+ updateGuidedProgress(step);
+ if(scroll)setTimeout(()=>manualForm.scrollIntoView({behavior:'smooth',block:'center'}),80);
+}
+function renderGuidedPropertySummary(){
+ const p=currentProperty||{};
+ const price=Number(document.getElementById('manualPurchasePrice').value)||Number(p.p)||0;
+ const sqft=Number(document.getElementById('manualSqft').value)||Number(p.s)||0;
+ const year=document.getElementById('manualPurchaseYear').value||((p.q||'').slice(0,4));
+ const purchaseText=p.q&&!guidedPropertyFactsEdited?guidedPurchaseDateLabel(p.q):(year?year:'Purchase year unavailable');
+ const pieces=[];
+ if(price)pieces.push(`Purchased ${purchaseText} for <strong>${formatCurrency(price)}</strong>`); else pieces.push(`<strong>${purchaseText}</strong>`);
+ if(sqft)pieces.push(`<strong>${sqft.toLocaleString()} finished sq. ft.</strong>`);
+ if(p.b||p.t)pieces.push(`${p.b||'?'} beds &middot; ${p.t||'?'} baths`);
+ document.getElementById('propertySummary').innerHTML=`<p class="font-semibold text-navy-900 mb-2">${p.a||addressInput.value}</p><p class="text-sm text-slate-700 leading-7">${pieces.join('<br>')}</p>`;
+ const needsDetails=!document.getElementById('manualPurchaseYear').value||!price||!sqft;
+ document.getElementById('propertyEditFields').classList.toggle('hidden',!needsDetails);
+ document.getElementById('propertyConfirmActions').classList.toggle('hidden',needsDetails);
+}
+function resetGuidedChoices(){
+ document.getElementById('manualConditionThen').value='';document.getElementById('manualConditionNow').value='';document.getElementById('manualKitchen').value='';document.getElementById('manualInvestment').value='';
+ document.querySelectorAll('.guided-choice[data-question]').forEach(b=>{b.classList.remove('selected');b.setAttribute('aria-pressed','false');});
+}
 function selectAddress(key){
  const p=window.HOME_ESTIMATOR_DATA.properties[key]; if(!p)return; currentPropertyKey=key;currentProperty={...p};currentNeighborhood=p.n;currentSubdivision=p.d||null;addressInput.value=p.a;addressDropdown.classList.add('hidden');
  document.getElementById('manualPurchaseYear').value=p.q?p.q.slice(0,4):'';document.getElementById('manualPurchasePrice').value=p.p||'';document.getElementById('manualSqft').value=p.s||'';
- document.getElementById('manualConditionThen').value='';document.getElementById('manualConditionNow').value='';document.getElementById('manualKitchen').value='';manualForm.classList.remove('hidden');setTimeout(()=>manualForm.scrollIntoView({behavior:'smooth',block:'start'}),100);
+ guidedPropertyFactsEdited=false;resetGuidedChoices();selectedRenovations=[];document.getElementById('resultsSection').classList.add('hidden');manualForm.classList.remove('hidden');renderGuidedPropertySummary();setGuidedStep(1);
 }
+document.getElementById('confirmPropertyButton').addEventListener('click',()=>setGuidedStep(2));
+document.getElementById('editPropertyButton').addEventListener('click',()=>{document.getElementById('propertyEditFields').classList.remove('hidden');document.getElementById('propertyConfirmActions').classList.add('hidden');document.getElementById('manualPurchaseYear').focus();});
+document.getElementById('savePropertyButton').addEventListener('click',()=>{
+ const year=document.getElementById('manualPurchaseYear').value,price=Number(document.getElementById('manualPurchasePrice').value),sqft=Number(document.getElementById('manualSqft').value);
+ if(!year||!price||!sqft){alert('Please enter purchase year, purchase price, and finished square footage.');return;}
+ const originalYear=(currentProperty&&currentProperty.q)?currentProperty.q.slice(0,4):'';const originalPrice=Number(currentProperty&&currentProperty.p)||0;
+ guidedPropertyFactsEdited=true;if(currentProperty){currentProperty.s=sqft;if(String(year)!==String(originalYear)||Math.abs(price-originalPrice)>1){currentProperty.p=price;currentProperty.q=null;currentProperty.userPurchaseOverride=true;}}
+ renderGuidedPropertySummary();setGuidedStep(2);
+});
+document.getElementById('changeAddressButton').addEventListener('click',()=>{manualForm.classList.add('hidden');document.getElementById('resultsSection').classList.add('hidden');addressInput.focus();addressInput.select();});
+document.querySelectorAll('.guided-choice[data-question]').forEach(button=>button.addEventListener('click',()=>{
+ const question=button.dataset.question,value=button.dataset.value,inputId=question==='conditionThen'?'manualConditionThen':'manualConditionNow';
+ document.getElementById(inputId).value=value;
+ document.querySelectorAll(`.guided-choice[data-question="${question}"]`).forEach(b=>{const selected=b===button;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',selected?'true':'false');});
+ if(question==='conditionThen')setTimeout(()=>setGuidedStep(3),160);else setTimeout(()=>calculateManual(),180);
+}));
+document.querySelectorAll('.guided-back').forEach(button=>button.addEventListener('click',()=>setGuidedStep(Number(button.dataset.back))));
+document.getElementById('editGuidedAnswersButton').addEventListener('click',()=>{document.getElementById('resultsSection').classList.add('hidden');manualForm.classList.remove('hidden');setGuidedStep(3);});
 searchButton.addEventListener('click',function(){
  const q=normalizeAddressInput(addressInput.value);if(!q)return;addressDropdown.classList.add('hidden');if(!window.HOME_ESTIMATOR_DATA){loadEstimatorData();setTimeout(()=>searchButton.click(),500);return;}
  const exact=propertyEntries().find(([k,p])=>k===q||normalizeAddressInput(p.a)===q);if(exact)selectAddress(exact[0]);else{currentProperty=null;currentNeighborhood=null;alert('Please select your address from the suggestions so the estimator can match the correct property record.');return;}
 });
 addressInput.addEventListener('keypress',e=>{if(e.key==='Enter'){e.preventDefault();searchButton.click();}});
 </script>
+
+<script>
+const HOME_MARKET_DATA = {
+  years: [2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
+  avg_price: [288940, 279237, 249628, 240871, 255581, 244327, 258278, 284465, 305372, 342126, 387605, 422292, 461253, 469847, 508579, 590785, 648587, 657436, 666098, 638318, 637319],
+  yoy: [null, -0.9, -8.6, 0.4, 3.4, -3.3, 6.4, 11.1, 5.6, 13.0, 15.4, 9.3, 9.4, 1.6, 6.4, 16.3, 12.0, 1.2, -1.6, -2.5, -0.2]
+};
+function initHomepageMarketPreview(){
+  const preview = document.getElementById('homepage-market-preview');
+  if(!preview) return;
+  const fmtMoney = v => '$' + Math.round(v).toLocaleString();
+  const fmtPct = v => (v>0?'+':'') + Number(v).toFixed(1) + '%';
+  function el(N, tag, attrs){ const e = document.createElementNS(N, tag); for(const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+  function buildAnimatedLineChart(svgEl, tipEl, cfg){
+    const {years, values, w, h, pad, color, fillOpacity, fmt} = cfg;
+    svgEl.innerHTML='';
+    const N = svgEl.namespaceURI;
+    const innerW = w - pad.l - pad.r, innerH = h - pad.t - pad.b;
+    const minVal = Math.min(...values), maxVal = Math.max(...values), valuePad = (maxVal-minVal)*0.12;
+    const yMin = Math.max(0, minVal-valuePad), yMax = maxVal+valuePad;
+    const x = i => pad.l + (i/(values.length-1))*innerW;
+    const y = v => pad.t + innerH - ((v-yMin)/(yMax-yMin))*innerH;
+    for(let g=0; g<4; g++){
+      const gv = yMin + (yMax-yMin)*(g/3);
+      const gy = y(gv);
+      svgEl.appendChild(el(N,'line',{x1:pad.l,x2:w-pad.r,y1:gy,y2:gy,stroke:'#E8E4DA','stroke-width':1}));
+      const lbl = el(N,'text',{x:pad.l-8,y:gy+4,'text-anchor':'end','font-size':11,fill:'#8b8069','font-family':'Public Sans, sans-serif'});
+      lbl.textContent = fmtMoney(gv).replace(',000','k').replace(/000k$/,'M');
+      svgEl.appendChild(lbl);
+    }
+    let dArea = `M ${x(0)} ${y(values[0])}`;
+    for(let i=1;i<values.length;i++) dArea += ` L ${x(i)} ${y(values[i])}`;
+    dArea += ` L ${x(values.length-1)} ${y(yMin)} L ${x(0)} ${y(yMin)} Z`;
+    const gradId='home-grad-'+Math.random().toString(36).slice(2,8);
+    const defs=el(N,'defs',{}), grad=el(N,'linearGradient',{id:gradId,x1:'0',y1:'0',x2:'0',y2:'1'});
+    grad.appendChild(el(N,'stop',{offset:'0%','stop-color':color,'stop-opacity':fillOpacity}));
+    grad.appendChild(el(N,'stop',{offset:'100%','stop-color':color,'stop-opacity':'0'}));
+    defs.appendChild(grad); svgEl.appendChild(defs);
+    const area = el(N,'path',{d:dArea,fill:`url(#${gradId})`,opacity:'0',class:'chart-fade'}); svgEl.appendChild(area);
+    let dLine = `M ${x(0)} ${y(values[0])}`;
+    for(let i=1;i<values.length;i++) dLine += ` L ${x(i)} ${y(values[i])}`;
+    const line = el(N,'path',{d:dLine,fill:'none',stroke:color,'stroke-width':3,'stroke-linecap':'round','stroke-linejoin':'round'});
+    svgEl.appendChild(line);
+    const totalLength = line.getTotalLength();
+    line.style.strokeDasharray = totalLength;
+    line.style.strokeDashoffset = totalLength;
+    line.style.transition = 'stroke-dashoffset 1.4s ease';
+    const pts=[];
+    values.forEach((v,i)=>{
+      const c = el(N,'circle',{cx:x(i),cy:y(v),r:i===values.length-1?5.5:4,fill:'#fff',stroke:color,'stroke-width':2.4,opacity:'0'});
+      c.style.transition='opacity .18s ease';
+      svgEl.appendChild(c); pts.push(c);
+      const hit = el(N,'circle',{cx:x(i),cy:y(v),r:12,fill:'transparent',style:'cursor:pointer'});
+      hit.addEventListener('mousemove', ()=>{ const rect = svgEl.getBoundingClientRect(); tipEl.style.left=((x(i)/w)*rect.width)+'px'; tipEl.style.top=((y(v)/h)*rect.height)+'px'; tipEl.style.opacity=1; tipEl.textContent=years[i]+' · '+fmt(v);});
+      hit.addEventListener('mouseleave', ()=>{tipEl.style.opacity=0;});
+      svgEl.appendChild(hit);
+    });
+    const step = years.length > 14 ? 2 : 1;
+    years.forEach((yr,i)=>{
+      if(i % step !== 0 && i !== years.length-1) return;
+      const t = el(N,'text',{x:x(i),y:h-pad.b+22,'text-anchor':'middle','font-size':11,fill:'#8b8069','font-family':'Public Sans, sans-serif'});
+      t.textContent = yr; svgEl.appendChild(t);
+    });
+    const lastI = values.length-1;
+    const lbl = el(N,'text',{x:x(lastI)-8,y:y(values[lastI])-16,'text-anchor':'end','font-size':13,'font-weight':700,fill:color,'font-family':'Fraunces, Georgia, serif'});
+    lbl.textContent = fmt(values[lastI]); svgEl.appendChild(lbl);
+    requestAnimationFrame(()=>{
+      area.style.opacity='1';
+      line.style.strokeDashoffset = '0';
+      pts.forEach((p,i)=>setTimeout(()=>{p.style.opacity='1';}, 250 + i*35));
+    });
+  }
+  function buildAnimatedYoyBarChart(svgEl, tipEl, cfg){
+    const {years, values, w, h, pad, color, fmt} = cfg;
+    svgEl.innerHTML='';
+    const N = svgEl.namespaceURI;
+    const innerW = w - pad.l - pad.r, innerH = h - pad.t - pad.b;
+    const vmin = Math.min(0, ...values), vmax = Math.max(...values), vpad = (vmax-vmin)*0.12;
+    const yMin = vmin - vpad, yMax = vmax + vpad;
+    const y = v => pad.t + innerH - ((v-yMin)/(yMax-yMin))*innerH;
+    const zeroY = y(0);
+    const barW = Math.min(24, (innerW - years.length * 3) / years.length);
+    const gap = (innerW - barW*years.length)/(years.length+1);
+    for(let g=0; g<=4; g++){
+      const gv = yMin + (yMax-yMin)*(g/4), gy = y(gv);
+      svgEl.appendChild(el(N,'line',{x1:pad.l,x2:w-pad.r,y1:gy,y2:gy,stroke:'#E8E4DA','stroke-width':1}));
+      const lbl = el(N,'text',{x:pad.l-8,y:gy+4,'text-anchor':'end','font-size':11,fill:'#8b8069','font-family':'Public Sans, sans-serif'});
+      lbl.textContent = Number(gv).toFixed(0)+'%'; svgEl.appendChild(lbl);
+    }
+    svgEl.appendChild(el(N,'line',{x1:pad.l,x2:w-pad.r,y1:zeroY,y2:zeroY,stroke:'#C7BCA3','stroke-width':1.4}));
+    const bars=[];
+    values.forEach((v,i)=>{
+      const x = pad.l + gap + i*(barW+gap);
+      const targetY = y(Math.max(0,v));
+      const targetH = Math.abs(y(v)-zeroY);
+      const fill = v >= 0 ? color : '#9c5a3c';
+      const rect = el(N,'rect',{x:x,y:zeroY,width:barW,height:0,rx:2,fill});
+      rect.style.transition='y .45s ease, height .45s ease';
+      svgEl.appendChild(rect); bars.push({rect,targetY,targetH,v,i});
+      const hit = el(N,'rect',{x:x,y:pad.t,width:barW,height:innerH,fill:'transparent',style:'cursor:pointer'});
+      hit.addEventListener('mousemove', ()=>{ const rectBox = svgEl.getBoundingClientRect(); tipEl.style.left=(((x+barW/2)/w)*rectBox.width)+'px'; tipEl.style.top=(((targetY+zeroY)/2/h)*rectBox.height)+'px'; tipEl.style.opacity=1; tipEl.textContent=years[i]+' · '+fmt(v);});
+      hit.addEventListener('mouseleave', ()=>{tipEl.style.opacity=0;});
+      svgEl.appendChild(hit);
+    });
+    const step = years.length > 14 ? 2 : 1;
+    years.forEach((yr,i)=>{
+      if(i % step !== 0 && i !== years.length-1) return;
+      const x = pad.l + gap + i*(barW+gap) + barW/2;
+      const t = el(N,'text',{x:x,y:h-pad.b+22,'text-anchor':'middle','font-size':11,fill:'#8b8069','font-family':'Public Sans, sans-serif'});
+      t.textContent = yr; svgEl.appendChild(t);
+    });
+    const lastI = values.length-1;
+    const lastX = pad.l + gap + lastI*(barW+gap) + barW/2;
+    const lbl = el(N,'text',{x:lastX,y:y(values[lastI])-10,'text-anchor':'middle','font-size':13,'font-weight':700,fill:values[lastI] >= 0 ? color : '#9c5a3c','font-family':'Fraunces, Georgia, serif'});
+    lbl.textContent = fmt(values[lastI]); svgEl.appendChild(lbl);
+    bars.forEach(({rect,targetY,targetH,v},i)=>setTimeout(()=>{ if(v >= 0){ rect.setAttribute('y', targetY); rect.setAttribute('height', targetH); } else { rect.setAttribute('y', zeroY); rect.setAttribute('height', targetH); } }, 140 + i*55));
+  }
+  const years = HOME_MARKET_DATA.years;
+  const avg = HOME_MARKET_DATA.avg_price;
+  const yoyYears = HOME_MARKET_DATA.years.slice(1,-1);
+  const yoyVals = HOME_MARKET_DATA.yoy.slice(1,-1);
+  const lastAvg = avg[avg.length-1];
+  document.getElementById('homePriceBadge').textContent = fmtMoney(lastAvg) + ' · 2026';
+  document.getElementById('homePriceInsight').innerHTML = `The average Longmont home sold for <b class="text-navy-800">${fmtMoney(lastAvg)}</b> so far in 2026, more than double the ${fmtMoney(avg[0])} average back in 2006.`;
+  document.getElementById('homeYoyBadge').textContent = fmtPct(yoyVals[yoyVals.length-1]) + ' · 2025';
+  document.getElementById('homeYoyInsight').innerHTML = `After a run of double-digit years, Longmont price growth settled to <b class="text-navy-800">${fmtPct(yoyVals[yoyVals.length-1])}</b> in 2025, a more normal pace than the double-digit surges of 2021 and 2022.`;
+  let chartsDrawn = false;
+  const renderCharts = ()=>{
+    if(chartsDrawn) return; chartsDrawn = true;
+    buildAnimatedLineChart(document.getElementById('homePriceChart'), document.getElementById('homePriceTip'), {
+      years, values:avg, w:560, h:320, pad:{l:56,r:20,t:24,b:44}, color:'#46503c', fillOpacity:0.18, fmt:v=>fmtMoney(v)
+    });
+    buildAnimatedYoyBarChart(document.getElementById('homeYoyChart'), document.getElementById('homeYoyTip'), {
+      years:yoyYears, values:yoyVals, w:560, h:320, pad:{l:46,r:20,t:24,b:44}, color:'#b3852e', fmt:v=>fmtPct(v)
+    });
+  };
+  if('IntersectionObserver' in window){
+    const obs = new IntersectionObserver((entries,observer)=>{ if(entries.some(e=>e.isIntersecting)){ renderCharts(); observer.disconnect(); } }, {rootMargin:'0px 0px -12% 0px'});
+    obs.observe(preview);
+  } else {
+    renderCharts();
+  }
+}
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initHomepageMarketPreview); else initHomepageMarketPreview();
+</script>
+
 </body>
 </html>
