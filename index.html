@@ -1272,14 +1272,21 @@ function getFallbackAreas(area){
     return [];
 }
 function getConditionMultiplier(conditionThen, conditionNow, kitchen, investmentAmount){
+    // Keep homeowner-reported condition as a secondary adjustment. Comparable sales remain the primary value signal.
     let m=1;
-    const now={nothing:0,improvements:.025,significant:.04,remodeled:.055}[conditionNow]||0;
-    const then={fixer:.025,outdated:.012,upgrades:0,remodeled:-.01,amazing:-.015}[conditionThen]||0;
-    const kit={barely:-.045,outdated:-.018,remodeled:.025,luxury:.045}[kitchen]||0;
+    const now={nothing:0,improvements:.012,significant:.020,remodeled:.030}[conditionNow]||0;
+    const then={fixer:.012,outdated:.006,upgrades:0,remodeled:-.005,amazing:-.008}[conditionThen]||0;
+    const kit={barely:-.025,outdated:-.010,remodeled:.015,luxury:.025}[kitchen]||0;
     m += now + then + kit;
-    const spend={"0to10":.003,"10to25":.007,"25to50":.012,"50to75":.018,"75to100":.023,"100to150":.03,"over150":.04}[investmentAmount]||0;
-    if(conditionNow==='improvements'||conditionNow==='remodeled') m+=spend;
-    return Math.min(1.12,Math.max(.88,m));
+    const spend={"0to10":.002,"10to25":.004,"25to50":.007,"50to75":.010,"75to100":.013,"100to150":.016,"over150":.020}[investmentAmount]||0;
+    if(conditionNow==='improvements'||conditionNow==='significant'||conditionNow==='remodeled') m+=spend;
+    return Math.min(1.07,Math.max(.94,m));
+}
+function normalizeSubdivisionName(value){
+    return String(value||'').toLowerCase()
+        .replace(/addition/g,' add ').replace(/filing/g,' flg ')
+        .replace(/subdivision/g,' ').replace(/lg/g,' ')
+        .replace(/[^a-z0-9]/g,'');
 }
 function pickComparableSales(subject){
     const data=window.HOME_ESTIMATOR_DATA;
@@ -1288,46 +1295,74 @@ function pickComparableSales(subject){
     const fallbacks=getFallbackAreas(same);
     const now=parseIsoDate(data.asOf)||new Date();
     const subjYear=Number(subject.y)||null, subjBeds=Number(subject.b)||null, subjBaths=Number(subject.t)||null;
-    const subjectAddress=(subject.a||'').toLowerCase();
-    const subjectStreet=normalizeStreetName(subject.a);
+    const subjectAddress=normalizeMarketAddress(subject.a), subjectStreet=normalizeStreetName(subject.a);
+    const subjectSubdivision=normalizeSubdivisionName(subject.d);
     const ranked=[];
     for(const r of data.sales){
         const [address,area,price,date,sqft,beds,baths,yearBuilt,subdivision,style,propertyType]=r;
-        if(!sqft || !price || address.toLowerCase()===subjectAddress) continue;
+        if(!sqft || !price || normalizeMarketAddress(address)===subjectAddress) continue;
         if(!subject.u || !propertyType || propertyType!==subject.u) continue;
         const d=parseIsoDate(date); if(!d) continue;
         const ageMonths=monthsBetween(now,d);
-        let tier=99, areaLabel='Citywide fallback';
+        let tier=2, areaLabel='Citywide fallback';
         if(area===same){ tier=0; areaLabel=same; }
         else if(fallbacks.includes(area)){ tier=1; areaLabel=area; }
-        else tier=2;
+
         const sqftDiff=Math.abs(sqft-subject.s)/subject.s;
-        if(sqftDiff>.65 && tier<2) continue;
-        let score=tier*32 + Math.min(48,ageMonths*1.15) + sqftDiff*58;
-        if(subjYear && yearBuilt) score += Math.min(18,Math.abs(yearBuilt-subjYear)*.28);
-        if(subjBeds && beds) score += Math.abs(beds-subjBeds)*4;
-        if(subjBaths && baths) score += Math.abs(baths-subjBaths)*3;
-        if(ageMonths>36) score += (ageMonths-36)*.8;
+        // As geography broadens, require tighter physical similarity.
+        if(tier===0 && sqftDiff>.55) continue;
+        if(tier===1 && sqftDiff>.45) continue;
+        if(tier===2 && sqftDiff>.35) continue;
+
         const sameStreet=normalizeStreetName(address)===subjectStreet;
-        if(sameStreet) score-=30;
+        const sameSubdivision=!!subjectSubdivision && normalizeSubdivisionName(subdivision)===subjectSubdivision;
+
+        // Quality is bounded 5-100. No negative scores, so same-street comps can never create NaN weights.
+        let quality=100;
+        quality -= tier===0 ? 0 : (tier===1 ? 22 : 48);
+        quality -= Math.min(45,ageMonths*1.0); // recency matters more than street name
+        quality -= Math.min(25,sqftDiff*45);
+        if(subjYear && yearBuilt) quality -= Math.min(12,Math.abs(yearBuilt-subjYear)*.30);
+        if(subjBeds && beds) quality -= Math.min(10,Math.abs(beds-subjBeds)*2.5);
+        if(subjBaths && baths) quality -= Math.min(8,Math.abs(baths-subjBaths)*2);
+        if(sameSubdivision) quality += 8;
+        if(sameStreet) quality += Math.max(2,10-ageMonths*.30); // useful tie-breaker, never an override
+        if(ageMonths<=12) quality += 3;
+        quality=Math.max(5,Math.min(100,quality));
+
         const monthlyTrend=Number(data.marketTrendMonthly)||0;
         const trendMonths=Math.min(ageMonths,Number(data.marketTrendMaxMonths)||24);
         const adjustedPrice=price*Math.pow(1+monthlyTrend,trendMonths);
-        ranked.push({address,area:areaLabel,price,date,sqft,beds,baths,yearBuilt,psf:adjustedPrice/sqft,rawPsf:price/sqft,adjustedPrice,score,tier,ageMonths,sameStreet});
+        ranked.push({address,area:areaLabel,price,date,sqft,beds,baths,yearBuilt,subdivision,
+            psf:adjustedPrice/sqft,rawPsf:price/sqft,adjustedPrice,quality,tier,ageMonths,sameStreet,sameSubdivision});
     }
-    ranked.sort((a,b)=>a.score-b.score);
-    // Same-street sales are the strongest local evidence and must not be crowded out by broader area matches.
-    const streetComps=ranked.filter(x=>x.sameStreet && x.ageMonths<=48 && Math.abs(x.sqft-subject.s)/subject.s<=.55).slice(0,5);
-    let broader=ranked.filter(x=>x.tier===0 && x.ageMonths<=18).slice(0,8);
-    let tier='same neighborhood, recent sales with soft-market time adjustment';
-    if(broader.length<5){ broader=ranked.filter(x=>x.tier===0 && x.ageMonths<=36).slice(0,8); tier='same neighborhood, expanded recency'; }
-    if(broader.length<5){ broader=ranked.filter(x=>x.tier<=1 && x.ageMonths<=24).slice(0,8); tier='same + similar neighborhoods'; }
-    if(broader.length<5){ broader=ranked.filter(x=>x.tier<=1 && x.ageMonths<=48).slice(0,8); tier='same + similar neighborhoods, expanded recency'; }
-    if(broader.length<3){ broader=ranked.slice(0,8); tier='citywide last-resort matches'; }
+    ranked.sort((a,b)=>(b.quality-a.quality)||(a.ageMonths-b.ageMonths));
+
     const seen=new Set(), pool=[];
-    [...streetComps,...broader].forEach(x=>{const key=normalizeMarketAddress(x.address)+'|'+x.date;if(!seen.has(key)&&pool.length<8){seen.add(key);pool.push(x);}});
-    if(streetComps.length) tier=`${streetComps.length} recent same-street sale${streetComps.length===1?'':'s'} plus ${tier}`;
-    return {comps:pool,tier,streetCompCount:streetComps.length};
+    const add=(items)=>{
+        for(const x of items){
+            const key=normalizeMarketAddress(x.address)+'|'+x.date;
+            if(!seen.has(key) && pool.length<8){ seen.add(key); pool.push(x); }
+        }
+    };
+
+    // Recent same-neighborhood sales are the core of the CMA. Same-street/subdivision status improves quality
+    // inside this pool but does not let a 2-3 year-old comp crowd out a strong 2026 sale a few blocks away.
+    add(ranked.filter(x=>x.tier===0 && x.ageMonths<=18));
+    let tier='recent same-neighborhood comparable sales';
+    if(pool.length<6){ add(ranked.filter(x=>x.tier===0 && x.ageMonths<=30)); tier='same-neighborhood comparable sales with expanded recency'; }
+    if(pool.length<6){ add(ranked.filter(x=>x.tier<=1 && x.ageMonths<=18)); tier='recent same + similar-neighborhood comparable sales'; }
+    if(pool.length<5){ add(ranked.filter(x=>x.tier<=1 && x.ageMonths<=30)); tier='same + similar-neighborhood comparable sales with expanded recency'; }
+    if(pool.length<4){ add(ranked.filter(x=>x.ageMonths<=18)); tier='recent citywide last-resort matches'; }
+    if(pool.length<3){ add(ranked); tier='citywide last-resort matches'; }
+
+    return {
+        comps:pool,
+        tier,
+        streetCompCount:pool.filter(x=>x.sameStreet).length,
+        subdivisionCompCount:pool.filter(x=>x.sameSubdivision).length,
+        averageCompQuality:pool.length?pool.reduce((s,x)=>s+x.quality,0)/pool.length:0
+    };
 }
 function normalizeMarketAddress(value){
     return String(value||'').toLowerCase().replace(/,\s*longmont\s+\d{5}.*$/,'').replace(/\s+hoa:.*$/,'').replace(/[^a-z0-9]/g,'');
@@ -1348,51 +1383,58 @@ function getCurrentMarketReality(subject){
     const same=subject.n, fallbacks=getFallbackAreas(same), subjAddr=normalizeMarketAddress(subject.a), subjStreet=normalizeStreetName(subject.a);
     const subjYear=Number(subject.y)||null, subjBeds=Number(subject.b)||null, subjBaths=Number(subject.t)||null;
     const ranked=[];
+    let direct=null;
     for(const r of data.currentListings){
         const [address,area,price,sqft,beds,baths,yearBuilt,propertyType,underContract]=r;
         if(!price||!sqft||propertyType!==subject.u) continue;
+        const isDirect=normalizeMarketAddress(address)===subjAddr;
+        if(isDirect){ direct={address,area,price,sqft,beds,baths,yearBuilt,propertyType,underContract}; continue; } // show if useful, never value from it
         let tier=2;
         if(area===same) tier=0; else if(fallbacks.includes(area)) tier=1;
         const sqftDiff=Math.abs(sqft-subject.s)/subject.s;
-        if(sqftDiff>.55 && normalizeMarketAddress(address)!==subjAddr) continue;
-        let score=tier*35+sqftDiff*62+(underContract?-5:0);
-        if(subjYear&&yearBuilt) score+=Math.min(16,Math.abs(yearBuilt-subjYear)*.25);
-        if(subjBeds&&beds) score+=Math.abs(beds-subjBeds)*4;
-        if(subjBaths&&baths) score+=Math.abs(baths-subjBaths)*3;
+        if(tier===0 && sqftDiff>.45) continue;
+        if(tier===1 && sqftDiff>.35) continue;
+        if(tier===2 && sqftDiff>.25) continue;
+
         const sameStreet=normalizeStreetName(address)===subjStreet;
-        if(sameStreet) score-=12;
-        ranked.push({address,area,price,sqft,beds,baths,yearBuilt,propertyType,underContract,score,tier,impliedValue:price/sqft*subject.s,direct:normalizeMarketAddress(address)===subjAddr,sameStreet});
+        let quality=100-(tier===0?0:(tier===1?25:50))-Math.min(28,sqftDiff*55);
+        if(subjYear&&yearBuilt) quality-=Math.min(12,Math.abs(yearBuilt-subjYear)*.30);
+        if(subjBeds&&beds) quality-=Math.min(10,Math.abs(beds-subjBeds)*2.5);
+        if(subjBaths&&baths) quality-=Math.min(8,Math.abs(baths-subjBaths)*2);
+        if(underContract) quality+=5;
+        if(sameStreet) quality+=6;
+        quality=Math.max(5,Math.min(100,quality));
+
+        // Current listings are evidence, not truth. Pending/TBO gets almost full ask; active competition is discounted more.
+        const marketFactor=underContract?.99:.97;
+        ranked.push({address,area,price,sqft,beds,baths,yearBuilt,propertyType,underContract,quality,tier,
+            impliedValue:(price*marketFactor)/sqft*subject.s,sameStreet});
     }
-    ranked.sort((a,b)=>(a.direct===b.direct?0:(a.direct?-1:1))||a.score-b.score);
-    const direct=ranked.find(x=>x.direct);
-    const streetAnchors=ranked.filter(x=>x.sameStreet && Math.abs(x.sqft-subject.s)/subject.s<=.25).slice(0,4);
-    let pool=ranked.filter(x=>x.tier===0).slice(0,8);
-    if(pool.length<3) pool=ranked.filter(x=>x.tier<=1).slice(0,8);
-    if(pool.length<3) pool=ranked.slice(0,8);
-    if(!pool.length) return null;
+    ranked.sort((a,b)=>(b.quality-a.quality));
+    let pool=ranked.filter(x=>x.tier===0 && x.quality>=55).slice(0,8);
+    if(pool.length<3) pool=ranked.filter(x=>x.tier<=1 && x.quality>=55).slice(0,8);
+    if(pool.length<3) return {direct,pool:[],benchmark:0,underContractCount:0,streetAnchors:[],asOf:data.currentMarketAsOf};
+    const streetAnchors=pool.filter(x=>x.sameStreet).slice(0,4);
     const med=median(pool.map(x=>x.impliedValue));
-    const weighted=weightedAverage(pool.map(x=>({v:x.impliedValue,w:(x.underContract?1.25:1)/Math.pow(1+x.score/25,1.25)})));
-    const benchmark=Math.max(med*.88,Math.min(med*1.12,weighted||med));
+    const weighted=weightedAverage(pool.map(x=>({v:x.impliedValue,w:Math.pow(x.quality/100,3)*(x.underContract?1.15:1)})));
+    const benchmark=Math.max(med*.90,Math.min(med*1.10,(weighted*.85+med*.15)||med));
     return {direct,streetAnchors,pool,benchmark,underContractCount:pool.filter(x=>x.underContract).length,asOf:data.currentMarketAsOf};
 }
 function applyCurrentMarketReality(value,subject){
     const reality=getCurrentMarketReality(subject);
-    if(!reality) return {value,reality:null,adjustment:0};
+    if(!reality || !reality.pool || reality.pool.length<3 || !reality.benchmark) return {value,reality:reality||null,adjustment:0};
     let adjusted=value, reason='';
-    if(reality.direct){
-        const cap=reality.direct.price*(reality.direct.underContract?1.04:1.08);
-        if(adjusted>cap){ adjusted=cap; reason='direct listing anchor'; }
-    }else if(reality.streetAnchors && reality.streetAnchors.length){
-        const streetBenchmark=median(reality.streetAnchors.map(x=>x.impliedValue));
-        const allUnderContract=reality.streetAnchors.every(x=>x.underContract);
-        const streetCap=streetBenchmark*(allUnderContract?1.03:1.05);
-        if(adjusted>streetCap){ adjusted=streetCap; reason='same-street current-market anchor'; }
-    }else if(reality.pool.length>=3 && reality.benchmark>0){
-        const ratio=adjusted/reality.benchmark;
-        if(ratio>1.20){ adjusted=Math.min(adjusted*.35+reality.benchmark*.65,reality.benchmark*1.10); reason='strong current-competition adjustment'; }
-        else if(ratio>1.10){ adjusted=adjusted*.55+reality.benchmark*.45; reason='current-competition adjustment'; }
-        else if(ratio>1.05){ adjusted=adjusted*.75+reality.benchmark*.25; reason='light current-competition adjustment'; }
-    }
+    const ratio=value/reality.benchmark;
+
+    // Two-sided, conservative reconciliation. Current competition can rescue an obviously low sold-comp result
+    // just as it can temper an obviously high one, but sold comps remain the majority of the final signal.
+    if(ratio>1.20){ adjusted=value*.65+reality.benchmark*.35; reason='strong current-market reconciliation'; }
+    else if(ratio>1.10){ adjusted=value*.78+reality.benchmark*.22; reason='current-market reconciliation'; }
+    else if(ratio>1.05){ adjusted=value*.90+reality.benchmark*.10; reason='light current-market reconciliation'; }
+    else if(ratio<.80){ adjusted=value*.65+reality.benchmark*.35; reason='strong upward current-market reconciliation'; }
+    else if(ratio<.90){ adjusted=value*.78+reality.benchmark*.22; reason='upward current-market reconciliation'; }
+    else if(ratio<.95){ adjusted=value*.90+reality.benchmark*.10; reason='light upward current-market reconciliation'; }
+
     return {value:adjusted,reality:{...reality,reason,preRealityValue:value,postRealityValue:adjusted},adjustment:value-adjusted};
 }
 function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen=null,conditionNow=null,kitchen=null,investmentAmount=null){
@@ -1413,7 +1455,7 @@ function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen
         if(ageMonths<=24){
             const trendMonths=Math.min(ageMonths,Number(data.marketTrendMaxMonths)||24);
             const adjustedPrice=Number(subject.p)*Math.pow(1+(Number(data.marketTrendMonthly)||0),trendMonths);
-            recentSubjectSale={address:subject.a,area:subject.n,price:Number(subject.p),date:subject.q,sqft:Number(subject.s),beds:subject.b,baths:subject.t,yearBuilt:subject.y,psf:adjustedPrice/Number(subject.s),rawPsf:Number(subject.p)/Number(subject.s),adjustedPrice,score:0,tier:-1,ageMonths,sameStreet:true,isSubjectSale:true};
+            recentSubjectSale={address:subject.a,area:subject.n,price:Number(subject.p),date:subject.q,sqft:Number(subject.s),beds:subject.b,baths:subject.t,yearBuilt:subject.y,psf:adjustedPrice/Number(subject.s),rawPsf:Number(subject.p)/Number(subject.s),adjustedPrice,quality:100,score:0,tier:-1,ageMonths,sameStreet:true,sameSubdivision:true,isSubjectSale:true};
             picked.comps=[recentSubjectSale,...picked.comps].slice(0,9);
             picked.tier=`recent subject sale anchor plus ${picked.tier}`;
         }
@@ -1423,13 +1465,14 @@ function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen
         if(c.isSubjectSale){
             subjectSaleWeight=c.ageMonths<=12?10:(c.ageMonths<=18?8:6);
         }
-        return {v:c.psf,w:subjectSaleWeight/Math.pow(1+c.score/25,1.35)};
+        const q=Math.max(.05,Math.min(1,Number(c.quality||70)/100)); return {v:c.psf,w:subjectSaleWeight*Math.pow(q,3)};
     });
     let basePsf=weightedAverage(weighted);
     const psfs=picked.comps.map(c=>c.psf);
     const med=median(psfs);
     // Clamp weighted result around the comp median to prevent one unusual sale from dominating.
-    basePsf=Math.max(med*.86,Math.min(med*1.14,basePsf));
+    basePsf=basePsf*.85+med*.15;
+    basePsf=Math.max(med*.90,Math.min(med*1.10,basePsf));
     let currentValue=subject.s*basePsf;
     currentValue*=getConditionMultiplier(conditionThen,conditionNow,kitchen,investmentAmount);
 
@@ -1441,8 +1484,9 @@ function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen
         currentValue=Math.min(currentValue,recentSubjectSale.adjustedPrice*(1+maxPremium));
     }
     let renovationBoost=0;
-    const boosts={kitchen:.018,roof:.009,hvac:.008,masterbath:.012,bathroom:.009,flooring:.008,windows:.008};
+    const boosts={kitchen:.010,roof:.005,hvac:.004,masterbath:.007,bathroom:.005,flooring:.004,windows:.004};
     renovations.forEach(r=>renovationBoost+=currentValue*(boosts[r]||0));
+    renovationBoost=Math.min(renovationBoost,currentValue*.04);
     currentValue+=renovationBoost;
     const preRealityValue=currentValue;
     const realityResult=applyCurrentMarketReality(currentValue,subject);
