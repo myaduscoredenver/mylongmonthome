@@ -1147,5 +1147,121 @@ buildBarChart(document.getElementById('deepFeatureFreqChart'), document.getEleme
 
 </script>
 
+
+<script>
+/* Scroll-triggered chart animations, matched to the homepage market preview. */
+(function initMarketChartAnimations(){
+  const charts = Array.from(document.querySelectorAll('svg.chart'));
+  if (!charts.length) return;
+
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) return;
+
+  function visibleFill(el){
+    const fill = (el.getAttribute('fill') || '').trim().toLowerCase();
+    return fill && fill !== 'none' && fill !== 'transparent';
+  }
+  function visibleStroke(el){
+    const stroke = (el.getAttribute('stroke') || '').trim().toLowerCase();
+    return stroke && stroke !== 'none' && stroke !== 'transparent';
+  }
+
+  function prepare(svg){
+    if (svg.dataset.chartAnimationPrepared === 'true') return;
+    svg.dataset.chartAnimationPrepared = 'true';
+
+    const areas = Array.from(svg.querySelectorAll('path')).filter(p => visibleFill(p));
+    const lines = Array.from(svg.querySelectorAll('path')).filter(p => visibleStroke(p) && !visibleFill(p));
+    const bars = Array.from(svg.querySelectorAll('rect')).filter(r => visibleFill(r));
+    const points = Array.from(svg.querySelectorAll('circle')).filter(c => visibleFill(c));
+
+    areas.forEach(area => {
+      area.dataset.finalOpacity = area.getAttribute('opacity') || '1';
+      area.style.opacity = '0';
+      area.style.transition = 'opacity .55s ease .18s';
+    });
+
+    lines.forEach(line => {
+      const existingDash = line.getAttribute('stroke-dasharray');
+      if (existingDash) {
+        // Preserve intentionally dashed projected segments; fade those in instead.
+        line.dataset.chartDashedSegment = 'true';
+        line.dataset.finalOpacity = line.getAttribute('opacity') || '1';
+        line.style.opacity = '0';
+        line.style.transition = 'opacity .45s ease .65s';
+        return;
+      }
+      try {
+        const length = line.getTotalLength();
+        if (!Number.isFinite(length) || length <= 0) return;
+        line.style.strokeDasharray = String(length);
+        line.style.strokeDashoffset = String(length);
+        line.style.transition = 'stroke-dashoffset 1.4s ease';
+      } catch (_) {}
+    });
+
+    bars.forEach((bar, i) => {
+      const width = parseFloat(bar.getAttribute('width')) || 0;
+      const height = parseFloat(bar.getAttribute('height')) || 0;
+      if (width <= 0 || height <= 0) return;
+      bar.style.transformBox = 'fill-box';
+      bar.style.transformOrigin = width > height * 1.35 ? 'left center' : 'center bottom';
+      bar.style.transform = width > height * 1.35 ? 'scaleX(0)' : 'scaleY(0)';
+      bar.style.transition = 'transform .48s ease';
+      bar.style.transitionDelay = Math.min(i * 45, 650) + 'ms';
+    });
+
+    points.forEach((point, i) => {
+      point.dataset.finalOpacity = point.getAttribute('opacity') || '1';
+      point.style.opacity = '0';
+      point.style.transition = 'opacity .18s ease';
+      point.style.transitionDelay = (220 + Math.min(i * 28, 600)) + 'ms';
+    });
+
+    svg.dataset.chartAreas = String(areas.length);
+  }
+
+  function play(svg){
+    if (svg.dataset.chartAnimationPlayed === 'true') return;
+    svg.dataset.chartAnimationPlayed = 'true';
+
+    requestAnimationFrame(() => {
+      svg.querySelectorAll('path').forEach(path => {
+        if (path.dataset.chartDashedSegment === 'true') {
+          path.style.opacity = path.dataset.finalOpacity || '1';
+        } else if (visibleFill(path)) {
+          path.style.opacity = path.dataset.finalOpacity || '1';
+        } else if (visibleStroke(path) && path.style.strokeDasharray) {
+          path.style.strokeDashoffset = '0';
+        }
+      });
+      svg.querySelectorAll('rect').forEach(rect => {
+        if (!visibleFill(rect)) return;
+        rect.style.transform = 'scale(1)';
+      });
+      svg.querySelectorAll('circle').forEach(circle => {
+        if (!visibleFill(circle)) return;
+        circle.style.opacity = circle.dataset.finalOpacity || '1';
+      });
+    });
+  }
+
+  charts.forEach(prepare);
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        play(entry.target);
+        obs.unobserve(entry.target);
+      });
+    }, { threshold: 0.16, rootMargin: '0px 0px -8% 0px' });
+    charts.forEach(chart => observer.observe(chart));
+  } else {
+    charts.forEach(play);
+  }
+})();
+</script>
+
 </body>
 </html>
