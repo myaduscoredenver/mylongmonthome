@@ -1493,7 +1493,7 @@ function calculateManual(){
         equity:Number.isFinite(Number(p.eg))?Number(p.eg):(purchasePrice?Number(p.vm)-purchasePrice:null),
         yearsOwned:purchaseYear?Math.max(0,2026-purchaseYear):null,
         renovationBoost:0,
-        comps:[],
+        comps:Array.isArray(p.c)?p.c:[],
         compCount:Number(p.cc)||0,
         tier:'Comp Engine v1 master valuation',
         valueLow:Number(p.vl)||null,
@@ -1518,8 +1518,16 @@ function displayResults(property,manual=null){
     document.getElementById('equityDisplay').textContent=Number.isFinite(Number(data.equity))?formatCurrency(data.equity):'Not available';
     const rb=document.getElementById('renovationBoostCard'); if(rb)rb.classList.add('hidden');
     const basis=document.getElementById('compBasisText');
-    basis.textContent=data.valuationReason||`Comp Engine v1 used ${data.compCount||0} comparable sales to estimate this property.`;
-    const list=document.getElementById('compList'); if(list)list.innerHTML='';
+    const list=document.getElementById('compList');
+    if(Array.isArray(data.comps) && data.comps.length){
+        basis.textContent=`Here are the ${data.comps.length} strongest comparable sales used in the valuation:`;
+        const dateLabel=(raw)=>{ if(!raw) return 'Date unavailable'; const d=new Date(raw+'T00:00:00'); return Number.isNaN(d.getTime())?raw:d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); };
+        const detail=(c)=>[c.s?`${Number(c.s).toLocaleString()} sq ft`:null,c.b!==null&&c.b!==undefined?`${c.b} bed${Number(c.b)===1?'':'s'}`:null,c.t!==null&&c.t!==undefined?`${c.t} bath${Number(c.t)===1?'':'s'}`:null].filter(Boolean).join(' • ');
+        list.innerHTML=data.comps.map(c=>`<div class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3"><div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1"><span class="font-semibold text-navy-900">${c.a||'Comparable sale'}</span><span class="font-semibold text-navy-900">${formatCurrency(c.p)}</span></div><div class="text-slate-600 mt-1">Sold ${dateLabel(c.d)}${detail(c)?` • ${detail(c)}`:''}</div></div>`).join('');
+    } else {
+        basis.textContent=`Comp Engine v1 used ${data.compCount||0} comparable sales to estimate this property.`;
+        if(list) list.innerHTML='';
+    }
     const realityCard=document.getElementById('marketRealityCard'); if(realityCard)realityCard.classList.add('hidden');
     document.getElementById('manualEntryForm').classList.add('hidden');
     document.getElementById('resultsSection').classList.remove('hidden');
@@ -1565,7 +1573,7 @@ document.getElementById('feedbackForm').addEventListener('submit',async function
 });
 
 </script>
-<!-- Home Value Calculator: sanitized parcel index + same-type comp data -->
+<!-- Home Value Calculator: precomputed parcel values + displayed top comparable sales -->
 <script>
 let estimatorDataLoading=false,estimatorDataLoaded=false;
 function loadEstimatorData(){
