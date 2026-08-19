@@ -119,7 +119,7 @@
             }
         }
 
-        /* 3-step conversational home-value flow */
+        /* Single-step home confirmation flow */
         .guided-step { animation: guidedFade .22s ease-out; }
         @keyframes guidedFade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .guided-dot { width: 8px; height: 8px; border-radius: 9999px; background: #ddd5c2; transition: all .18s ease; }
@@ -235,84 +235,20 @@
                         </button>
 </div>
 <p class="hidden text-sm text-navy-600 mb-4" id="dbLoadingMsg">Loading Longmont market data…</p>
-<!-- Guided Home Value Flow (Hidden until an address is selected) -->
+<!-- Home confirmation (Hidden until an address is selected) -->
 <div class="hidden border-t border-slate-200 pt-6" id="manualEntryForm">
-<div class="text-center mb-7">
-<p class="text-sm font-semibold text-navy-900">3 quick questions. No email required.</p>
-<div class="mt-3 flex items-center justify-center gap-2" id="guidedProgress" aria-label="Question progress">
-<span class="guided-dot active" data-dot="1"></span>
-<span class="guided-dot" data-dot="2"></span>
-<span class="guided-dot" data-dot="3"></span>
-</div>
-</div>
-
-<!-- Step 1: confirm the facts we already know -->
 <div class="guided-step" id="guidedStep1">
-<p class="text-xs font-semibold tracking-widest uppercase text-brass-600 mb-2">Question 1 of 3</p>
-<h3 class="font-serif text-2xl font-semibold text-navy-900 mb-2">We found your home.</h3>
-<p class="text-slate-600 text-sm mb-5">Before we estimate the value, make sure the basics look right.</p>
+<p class="text-xs font-semibold tracking-widest uppercase text-brass-600 mb-2">Confirm your home</p>
+<h3 class="font-serif text-2xl font-semibold text-navy-900 mb-2">We found your home. Is this correct?</h3>
+<p class="text-slate-600 text-sm mb-5">Make sure we matched the right Longmont property before we show the estimate.</p>
 <div class="rounded-xl bg-slate-50 border border-slate-200 p-5 mb-5" id="propertySummary" aria-live="polite"></div>
 <div class="grid sm:grid-cols-2 gap-3" id="propertyConfirmActions">
-<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" id="confirmPropertyButton" type="button">Yes, that's right</button>
-<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" id="editPropertyButton" type="button">Something is wrong</button>
-</div>
-<div class="hidden mt-5 rounded-xl border border-slate-200 bg-white p-5" id="propertyEditFields">
-<p class="font-semibold text-navy-900 mb-4">Update the information we should use</p>
-<div class="grid sm:grid-cols-3 gap-4">
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-2" for="manualPurchaseYear">Purchase year</label>
-<input class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500" id="manualPurchaseYear" max="2026" min="1980" placeholder="2012" type="number"/>
-</div>
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-2" for="manualPurchasePrice">Purchase price</label>
-<input class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500" id="manualPurchasePrice" min="1" placeholder="450000" type="number"/>
-</div>
-<div>
-<label class="block text-sm font-medium text-slate-700 mb-2" for="manualSqft">Finished sq. ft.</label>
-<input class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500" id="manualSqft" min="300" placeholder="1680" type="number"/>
+<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" id="confirmPropertyButton" type="button">Yes, that's my home</button>
+<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" id="changeAddressButton" type="button">No, use a different address</button>
 </div>
 </div>
-<button class="w-full mt-4 bg-navy-800 hover:bg-navy-900 text-white font-semibold py-3 rounded-lg transition-colors" id="savePropertyButton" type="button">Save and continue</button>
 </div>
-<button class="mt-5 text-sm text-slate-500 hover:text-navy-800 underline underline-offset-4" id="changeAddressButton" type="button">Use a different address</button>
-</div>
-
-<!-- Step 2: condition at purchase -->
-<div class="guided-step hidden" id="guidedStep2">
-<p class="text-xs font-semibold tracking-widest uppercase text-brass-600 mb-2">Question 2 of 3</p>
-<h3 class="font-serif text-2xl font-semibold text-navy-900 mb-2">What was the home like when you bought it?</h3>
-<p class="text-slate-600 text-sm mb-5">Choose the closest description.</p>
-<div class="grid sm:grid-cols-2 gap-3">
-<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionThen" data-value="fixer" type="button">A true fixer upper</button>
-<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionThen" data-value="outdated" type="button">Nice enough, but outdated</button>
-<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionThen" data-value="upgrades" type="button">It already had some updates</button>
-<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionThen" data-value="remodeled" type="button">It was nicely remodeled</button>
-</div>
-<button class="mt-5 text-sm text-slate-500 hover:text-navy-800 underline underline-offset-4 guided-back" data-back="1" type="button">&larr; Go back and change your answer</button>
-</div>
-
-<!-- Step 3: condition today -->
-<div class="guided-step hidden" id="guidedStep3">
-<p class="text-xs font-semibold tracking-widest uppercase text-brass-600 mb-2">Question 3 of 3</p>
-<h3 class="font-serif text-2xl font-semibold text-navy-900 mb-2">What is the home like today?</h3>
-<p class="text-slate-600 text-sm mb-5">Tap the answer that best describes what changed during your ownership.</p>
-<div class="grid sm:grid-cols-2 gap-3">
-<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionNow" data-value="nothing" type="button">About the same</button>
-<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionNow" data-value="improvements" type="button">Some improvements</button>
-<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionNow" data-value="significant" type="button">Significantly updated</button>
-<button class="guided-choice rounded-xl px-5 py-4 text-left font-semibold" data-question="conditionNow" data-value="remodeled" type="button">Completely remodeled</button>
-</div>
-<p class="text-xs text-slate-500 mt-4">Your estimate will appear automatically after you choose.</p>
-<button class="mt-4 text-sm text-slate-500 hover:text-navy-800 underline underline-offset-4 guided-back" data-back="2" type="button">&larr; Go back and change your answer</button>
-</div>
-
-<!-- Hidden model fields retained for the calculator and future fine-tuning -->
-<input id="manualConditionThen" type="hidden" value=""/>
-<input id="manualConditionNow" type="hidden" value=""/>
-<input id="manualKitchen" type="hidden" value=""/>
-<input id="manualInvestment" type="hidden" value=""/>
-</div>
-<p class="text-xs text-slate-500 mt-3 leading-relaxed"><strong>Privacy:</strong> The information you enter and the estimate generated may be securely recorded to help improve this estimator. Using this tool will not add you to a marketing list.</p></div>
+<p class="text-xs text-slate-500 mt-3 leading-relaxed"><strong>Privacy:</strong> The address selected and estimate generated may be securely recorded to help improve this estimator. Using this tool will not add you to a marketing list.</p></div>
 <!-- Outside Longmont CTA -->
 <div class="text-center mb-8">
 <button class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-navy-900 font-semibold py-3 px-6 rounded-lg border border-slate-200 transition-colors" onclick="showFeedbackForm('external')" type="button">
@@ -322,11 +258,11 @@
 <!-- Results Display -->
 <div class="hidden" id="resultsSection">
 <div class="flex justify-end mb-3">
-<button class="text-sm text-slate-500 hover:text-navy-800 underline underline-offset-4" id="editGuidedAnswersButton" type="button">Go back and change your answers</button>
+<button class="text-sm text-slate-500 hover:text-navy-800 underline underline-offset-4" id="editGuidedAnswersButton" type="button">Check a different address</button>
 </div>
 <!-- Main Value Card with Range -->
 <div class="bg-emerald-50 rounded-xl p-8 mb-8 border border-emerald-200">
-<p class="text-slate-600 text-sm font-medium mb-4">Your Home Value Estimate (July 2026)</p>
+<p class="text-slate-600 text-sm font-medium mb-4">Your Home Value Estimate (August 2026)</p>
 <!-- Estimate Display -->
 <div class="space-y-3 mb-8">
 <div class="bg-emerald-600 text-white rounded-lg p-5">
@@ -1542,55 +1478,63 @@ function calculateEquity(purchasePrice,purchaseDate,renovations=[],conditionThen
     };
 }
 function calculateManual(){
-    const year=document.getElementById('manualPurchaseYear').value;
-    const price=parseFloat(document.getElementById('manualPurchasePrice').value);
-    const sqft=parseFloat(document.getElementById('manualSqft').value);
-    const conditionThen=document.getElementById('manualConditionThen').value;
-    const conditionNow=document.getElementById('manualConditionNow').value;
-    const kitchen=document.getElementById('manualKitchen').value;
-    const investment=document.getElementById('manualInvestment').value;
-    if(!year||!price||!sqft){ alert('Please fill in purchase year, purchase price, and finished square footage.'); return; }
-    try{ currentCalculation=calculateEquity(price,year,selectedRenovations,conditionThen,conditionNow,kitchen,investment||null); displayResults(null,{purchasePrice:price,purchaseDate:year}); }
-    catch(err){ alert(err.message); }
+    const p=currentProperty;
+    if(!p || !Number(p.vm)){
+        alert("We found the property, but Comp Engine v1 does not yet have enough reliable comparable-sale evidence for an automated value. You can request a free CMA instead.");
+        showFeedbackForm('estimate');
+        return;
+    }
+    const purchasePrice=Number(p.p)||0;
+    const purchaseYear=p.q?parseInt(String(p.q).slice(0,4)):null;
+    currentCalculation={
+        precomputed:true,
+        originalPrice:purchasePrice,
+        currentValue:Number(p.vm),
+        equity:Number.isFinite(Number(p.eg))?Number(p.eg):(purchasePrice?Number(p.vm)-purchasePrice:null),
+        yearsOwned:purchaseYear?Math.max(0,2026-purchaseYear):null,
+        renovationBoost:0,
+        comps:[],
+        compCount:Number(p.cc)||0,
+        tier:'Comp Engine v1 master valuation',
+        valueLow:Number(p.vl)||null,
+        valueHigh:Number(p.vh)||null,
+        confidence:p.cf||'Limited',
+        valuationReason:p.vr||'Comp Engine v1 master valuation.',
+        propertyType:p.u
+    };
+    displayResults();
 }
 function displayResults(property,manual=null){
     const data=currentCalculation;
-    const modelUncertainty=data.rangePct||.08;
-    let confidence='Limited', likelyPct=.07;
-    if(modelUncertainty<=.07 && data.comps.length>=7 && !data.comps.some(c=>c.tier===2)){
-        confidence='High'; likelyPct=.035;
-    }else if(modelUncertainty<=.10 && data.comps.length>=5){
-        confidence='Moderate'; likelyPct=.05;
-    }
     const estimatedValue=Math.round(data.currentValue);
-    const likelyLow=Math.round(estimatedValue*(1-likelyPct));
-    const likelyHigh=Math.round(estimatedValue*(1+likelyPct));
-    document.getElementById('purchasePriceDisplay').textContent=formatCurrency(data.originalPrice);
-    document.getElementById('yearsOwnedDisplay').textContent=data.yearsOwned+' years';
+    const likelyLow=data.valueLow?Math.round(data.valueLow):Math.round(estimatedValue*.93);
+    const likelyHigh=data.valueHigh?Math.round(data.valueHigh):Math.round(estimatedValue*1.07);
+    const confidence=data.confidence||'Limited';
+    document.getElementById('purchasePriceDisplay').textContent=data.originalPrice?formatCurrency(data.originalPrice):'Not available';
+    document.getElementById('yearsOwnedDisplay').textContent=data.yearsOwned===null||data.yearsOwned===undefined?'Not available':data.yearsOwned+' years';
     document.getElementById('estimatedValueDisplay').textContent=formatCurrency(estimatedValue);
     document.getElementById('likelyRangeDisplay').textContent=`${formatCurrency(likelyLow)}–${formatCurrency(likelyHigh)}`;
     document.getElementById('confidenceDisplay').textContent=confidence;
-    document.getElementById('equityDisplay').textContent=formatCurrency(data.equity);
-    const rb=document.getElementById('renovationBoostCard');
-    if(data.renovationBoost>0){document.getElementById('renovationBoostDisplay').textContent='+'+formatCurrency(data.renovationBoost);rb.classList.remove('hidden');}else rb.classList.add('hidden');
+    document.getElementById('equityDisplay').textContent=Number.isFinite(Number(data.equity))?formatCurrency(data.equity):'Not available';
+    const rb=document.getElementById('renovationBoostCard'); if(rb)rb.classList.add('hidden');
     const basis=document.getElementById('compBasisText');
-    basis.textContent=`Based on ${data.comps.length} recent sold comps (${data.tier}). The estimator searches your neighborhood first, favors recent and physically similar homes, and uses same-street/subdivision matches only as modest tie-breakers. The selected comp cluster implies about ${formatCurrency(data.basePsf)} per finished sq. ft. for this home.`;
-    const list=document.getElementById('compList'); list.innerHTML='';
-    data.comps.slice(0,5).forEach(c=>{const d=document.createElement('div');d.className='flex justify-between gap-4 border-t border-slate-100 pt-2';const label=c.isSubjectSale?'Your recent purchase':c.address;d.innerHTML=`<span class="text-slate-600">${label} · ${c.date.slice(0,7)} · ${c.sqft.toLocaleString()} sf</span><span class="font-semibold text-navy-900 whitespace-nowrap">${formatCurrency(c.price)}</span>`;list.appendChild(d);});
-    const realityCard=document.getElementById('marketRealityCard'),realityText=document.getElementById('marketRealityText');
-    if(data.reality){
-        const r=data.reality, n=r.pool.length, pending=r.underContractCount;
-        let msg=`Checked against ${n} same-type current listings`;
-        if(pending) msg+=` (${pending} under contract)`;
-        msg+=` as of ${r.asOf}. Current competition implied a benchmark near ${formatCurrency(r.benchmark)}.`;
-        if(r.streetAnchors&&r.streetAnchors.length){const a=r.streetAnchors[0];msg+=` A same-street listing at ${a.address} is asking ${formatCurrency(a.price)}.`;}
-        if(data.realityAdjustment>0){ const dir=data.realityDirection==='up'?'upward':'downward'; msg+=` Because several nearby current comps materially disagreed with the sold-comp result, the estimate was reconciled ${dir} by ${formatCurrency(data.realityAdjustment)}.`; }
-        else msg+=` The sold-comp result was within a reasonable range of current competition, so no market reconciliation was needed.`;
-        realityText.textContent=msg;realityCard.classList.remove('hidden');
-    }else realityCard.classList.add('hidden');
-    document.getElementById('manualEntryForm').classList.add('hidden');document.getElementById('resultsSection').classList.remove('hidden');
+    basis.textContent=data.valuationReason||`Comp Engine v1 used ${data.compCount||0} comparable sales to estimate this property.`;
+    const list=document.getElementById('compList'); if(list)list.innerHTML='';
+    const realityCard=document.getElementById('marketRealityCard'); if(realityCard)realityCard.classList.add('hidden');
+    document.getElementById('manualEntryForm').classList.add('hidden');
+    document.getElementById('resultsSection').classList.remove('hidden');
     setTimeout(()=>document.getElementById('resultsSection').scrollIntoView({behavior:'smooth'}),200);
-    const payload=new FormData(); payload.append('_subject','Home Value Check - MyLongmontHome.com');payload.append('Form','Home Value Check');payload.append('Address',document.getElementById('addressInput').value||'Manual entry');payload.append('Neighborhood Model',currentNeighborhood||'Unknown');payload.append('Comparable Sales Used',data.comps.length);payload.append('Comp Tier',data.tier);payload.append('Estimated Market Value',formatCurrency(estimatedValue));payload.append('Likely Selling Range',`${formatCurrency(likelyLow)} to ${formatCurrency(likelyHigh)}`);payload.append('Confidence',confidence);payload.append('Current Market Reality Adjustment',data.realityAdjustment?formatCurrency(data.realityAdjustment):'None');payload.append('Condition When Purchased',guidedConditionLabel('then',document.getElementById('manualConditionThen').value));payload.append('Condition Today',guidedConditionLabel('now',document.getElementById('manualConditionNow').value));payload.append('Property Details Edited',guidedPropertyFactsEdited?'Yes':'No');
+    const payload=new FormData();
+    payload.append('_subject','Home Value Check - MyLongmontHome.com');
+    payload.append('Form','Home Value Check');
+    payload.append('Address',document.getElementById('addressInput').value||'Unknown');
+    payload.append('Neighborhood Model',currentNeighborhood||'Unknown');
+    payload.append('Comparable Sales Used',data.compCount||0);
+    payload.append('Comp Tier','Comp Engine v1 master valuation');
+    payload.append('Estimated Market Value',formatCurrency(estimatedValue));
+    payload.append('Likely Selling Range',`${formatCurrency(likelyLow)} to ${formatCurrency(likelyHigh)}`);
+    payload.append('Confidence',confidence);
+    payload.append('Valuation Reason',data.valuationReason||'');
     fetch('https://formspree.io/f/mlgqdnan',{method:'POST',body:payload,headers:{Accept:'application/json'}}).catch(()=>{});
 }
 function toggleRenovation(type){const button=event.target.closest('button');const i=selectedRenovations.indexOf(type);if(i>-1){selectedRenovations.splice(i,1);button.classList.remove('active');}else{selectedRenovations.push(type);button.classList.add('active');}}
@@ -1647,67 +1591,49 @@ addressInput.addEventListener('input',function(e){
  matches.forEach(([key,p])=>{const div=document.createElement('div');div.className='px-4 py-3 border-b border-slate-200 cursor-pointer text-navy-900 hover:bg-navy-50 transition-colors';div.innerHTML=`<div class="font-medium">${p.a}</div>${p.d?`<div class="text-xs text-slate-500">${p.d}</div>`:''}`;div.onclick=(ev)=>{ev.preventDefault();selectAddress(key);};addressDropdown.appendChild(div);});addressDropdown.classList.remove('hidden');
 });
 document.addEventListener('click',e=>{if(e.target!==addressInput&&!addressDropdown.contains(e.target))addressDropdown.classList.add('hidden');});
-let guidedPropertyFactsEdited=false;
-function guidedConditionLabel(which,value){
- const labels=which==='then'?{fixer:'A true fixer upper',outdated:'Nice enough, but outdated',upgrades:'It already had some updates',remodeled:'It was nicely remodeled'}:{nothing:'About the same',improvements:'Some improvements',significant:'Significantly updated',remodeled:'Completely remodeled'};
- return labels[value]||'Not answered';
-}
 function guidedPurchaseDateLabel(value){
- if(!value)return 'Purchase date unavailable';
+ if(!value)return 'Last sale date unavailable';
  const d=parseIsoDate(value);
  if(!d)return value;
  return d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
 }
-function updateGuidedProgress(step){
- document.querySelectorAll('[data-dot]').forEach(dot=>{const n=Number(dot.dataset.dot);dot.classList.toggle('active',n===step);dot.classList.toggle('complete',n<step);});
-}
-function setGuidedStep(step,scroll=true){
- [1,2,3].forEach(n=>document.getElementById('guidedStep'+n).classList.toggle('hidden',n!==step));
- updateGuidedProgress(step);
- if(scroll)setTimeout(()=>manualForm.scrollIntoView({behavior:'smooth',block:'center'}),80);
-}
 function renderGuidedPropertySummary(){
  const p=currentProperty||{};
- const price=Number(document.getElementById('manualPurchasePrice').value)||Number(p.p)||0;
- const sqft=Number(document.getElementById('manualSqft').value)||Number(p.s)||0;
- const year=document.getElementById('manualPurchaseYear').value||((p.q||'').slice(0,4));
- const purchaseText=p.q&&!guidedPropertyFactsEdited?guidedPurchaseDateLabel(p.q):(year?year:'Purchase year unavailable');
  const pieces=[];
- if(price)pieces.push(`Purchased ${purchaseText} for <strong>${formatCurrency(price)}</strong>`); else pieces.push(`<strong>${purchaseText}</strong>`);
- if(sqft)pieces.push(`<strong>${sqft.toLocaleString()} finished sq. ft.</strong>`);
- if(p.b||p.t)pieces.push(`${p.b||'?'} beds &middot; ${p.t||'?'} baths`);
+ if(p.s) pieces.push(`<strong>${Number(p.s).toLocaleString()} finished sq. ft.</strong>`);
+ if(p.b||p.t) pieces.push(`${p.b||'?'} beds &middot; ${p.t||'?'} baths`);
+ if(p.y) pieces.push(`Built ${p.y}`);
+ if(p.p&&p.q) pieces.push(`Last known sale: <strong>${formatCurrency(Number(p.p))}</strong> in ${guidedPurchaseDateLabel(p.q)}`);
  document.getElementById('propertySummary').innerHTML=`<p class="font-semibold text-navy-900 mb-2">${p.a||addressInput.value}</p><p class="text-sm text-slate-700 leading-7">${pieces.join('<br>')}</p>`;
- const needsDetails=!document.getElementById('manualPurchaseYear').value||!price||!sqft;
- document.getElementById('propertyEditFields').classList.toggle('hidden',!needsDetails);
- document.getElementById('propertyConfirmActions').classList.toggle('hidden',needsDetails);
-}
-function resetGuidedChoices(){
- document.getElementById('manualConditionThen').value='';document.getElementById('manualConditionNow').value='';document.getElementById('manualKitchen').value='';document.getElementById('manualInvestment').value='';
- document.querySelectorAll('.guided-choice[data-question]').forEach(b=>{b.classList.remove('selected');b.setAttribute('aria-pressed','false');});
 }
 function selectAddress(key){
- const p=window.HOME_ESTIMATOR_DATA.properties[key]; if(!p)return; currentPropertyKey=key;currentProperty={...p};currentNeighborhood=p.n;currentSubdivision=p.d||null;addressInput.value=p.a;addressDropdown.classList.add('hidden');
- document.getElementById('manualPurchaseYear').value=p.q?p.q.slice(0,4):'';document.getElementById('manualPurchasePrice').value=p.p||'';document.getElementById('manualSqft').value=p.s||'';
- guidedPropertyFactsEdited=false;resetGuidedChoices();selectedRenovations=[];document.getElementById('resultsSection').classList.add('hidden');manualForm.classList.remove('hidden');renderGuidedPropertySummary();setGuidedStep(1);
+ const p=window.HOME_ESTIMATOR_DATA.properties[key];
+ if(!p)return;
+ currentPropertyKey=key;
+ currentProperty={...p};
+ currentNeighborhood=p.n;
+ currentSubdivision=p.d||null;
+ addressInput.value=p.a;
+ addressDropdown.classList.add('hidden');
+ selectedRenovations=[];
+ document.getElementById('resultsSection').classList.add('hidden');
+ manualForm.classList.remove('hidden');
+ renderGuidedPropertySummary();
+ setTimeout(()=>manualForm.scrollIntoView({behavior:'smooth',block:'center'}),80);
 }
-document.getElementById('confirmPropertyButton').addEventListener('click',()=>setGuidedStep(2));
-document.getElementById('editPropertyButton').addEventListener('click',()=>{document.getElementById('propertyEditFields').classList.remove('hidden');document.getElementById('propertyConfirmActions').classList.add('hidden');document.getElementById('manualPurchaseYear').focus();});
-document.getElementById('savePropertyButton').addEventListener('click',()=>{
- const year=document.getElementById('manualPurchaseYear').value,price=Number(document.getElementById('manualPurchasePrice').value),sqft=Number(document.getElementById('manualSqft').value);
- if(!year||!price||!sqft){alert('Please enter purchase year, purchase price, and finished square footage.');return;}
- const originalYear=(currentProperty&&currentProperty.q)?currentProperty.q.slice(0,4):'';const originalPrice=Number(currentProperty&&currentProperty.p)||0;
- guidedPropertyFactsEdited=true;if(currentProperty){currentProperty.s=sqft;if(String(year)!==String(originalYear)||Math.abs(price-originalPrice)>1){currentProperty.p=price;currentProperty.q=null;currentProperty.userPurchaseOverride=true;}}
- renderGuidedPropertySummary();setGuidedStep(2);
+document.getElementById('confirmPropertyButton').addEventListener('click',()=>calculateManual());
+document.getElementById('changeAddressButton').addEventListener('click',()=>{
+ manualForm.classList.add('hidden');
+ document.getElementById('resultsSection').classList.add('hidden');
+ addressInput.focus();
+ addressInput.select();
 });
-document.getElementById('changeAddressButton').addEventListener('click',()=>{manualForm.classList.add('hidden');document.getElementById('resultsSection').classList.add('hidden');addressInput.focus();addressInput.select();});
-document.querySelectorAll('.guided-choice[data-question]').forEach(button=>button.addEventListener('click',()=>{
- const question=button.dataset.question,value=button.dataset.value,inputId=question==='conditionThen'?'manualConditionThen':'manualConditionNow';
- document.getElementById(inputId).value=value;
- document.querySelectorAll(`.guided-choice[data-question="${question}"]`).forEach(b=>{const selected=b===button;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',selected?'true':'false');});
- if(question==='conditionThen')setTimeout(()=>setGuidedStep(3),160);else setTimeout(()=>calculateManual(),180);
-}));
-document.querySelectorAll('.guided-back').forEach(button=>button.addEventListener('click',()=>setGuidedStep(Number(button.dataset.back))));
-document.getElementById('editGuidedAnswersButton').addEventListener('click',()=>{document.getElementById('resultsSection').classList.add('hidden');manualForm.classList.remove('hidden');setGuidedStep(3);});
+document.getElementById('editGuidedAnswersButton').addEventListener('click',()=>{
+ document.getElementById('resultsSection').classList.add('hidden');
+ manualForm.classList.add('hidden');
+ addressInput.focus();
+ addressInput.select();
+});
 searchButton.addEventListener('click',function(){
  const q=normalizeAddressInput(addressInput.value);if(!q)return;addressDropdown.classList.add('hidden');if(!window.HOME_ESTIMATOR_DATA){loadEstimatorData();setTimeout(()=>searchButton.click(),500);return;}
  const exact=propertyEntries().find(([k,p])=>k===q||normalizeAddressInput(p.a)===q);if(exact)selectAddress(exact[0]);else{currentProperty=null;currentNeighborhood=null;alert('Please select your address from the suggestions so the estimator can match the correct property record.');return;}
